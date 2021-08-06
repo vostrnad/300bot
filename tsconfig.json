@@ -2,13 +2,17 @@
   "compilerOptions": {
     "target": "es5",
     "module": "commonjs",
-    "baseUrl": "./src",
-    "outDir": "./dist",
+    "baseUrl": ".",
+    "outDir": "dist",
     "strict": true,
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
-    "paths": {}
+    "paths": {
+      "@app/*": ["src/*"],
+      "@commands/*": ["src/modules/commands/*"],
+      "@planetside/*": ["src/modules/planetside/*"]
+    }
   }
 }

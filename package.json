@@ -20,7 +20,11 @@
   },
   "homepage": "https://github.com/vostrnad/300bot#readme",
   "dependencies": {
-    "discord.js": "^12.5.3"
+    "camelcase-keys": "^7.0.0",
+    "discord.js": "^12.5.3",
+    "dotenv": "^10.0.0",
+    "got": "^11.8.2",
+    "snakecase-keys": "^4.0.2"
   },
   "devDependencies": {
     "@types/node": "^16.4.12",
@@ -30,7 +34,13 @@
     "eslint-config-prettier": "^8.3.0",
     "husky": "^4.3.8",
     "lint-staged": "^11.1.1",
+    "module-alias": "^2.2.2",
     "prettier": "^2.3.2",
     "typescript": "^4.3.5"
+  },
+  "_moduleAliases": {
+    "@app": "dist",
+    "@commands": "dist/modules/commands",
+    "@planetside": "dist/modules/planetside"
   }
 }
