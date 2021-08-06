@@ -9,4 +9,10 @@ export const constants = {
       spartans: '37581022577821398',
     },
   },
+  discord: {
+    channelIds: {
+      // #public
+      brutracker: '198313979863367680',
+    },
+  },
 }

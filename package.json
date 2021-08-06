@@ -24,10 +24,12 @@
     "discord.js": "^12.5.3",
     "dotenv": "^10.0.0",
     "got": "^11.8.2",
-    "snakecase-keys": "^4.0.2"
+    "snakecase-keys": "^4.0.2",
+    "ws": "^8.0.0"
   },
   "devDependencies": {
     "@types/node": "^16.4.12",
+    "@types/ws": "^7.4.7",
     "@typescript-eslint/eslint-plugin": "^4.29.0",
     "@typescript-eslint/parser": "^4.29.0",
     "eslint": "^7.32.0",
@@ -41,6 +43,7 @@
   "_moduleAliases": {
     "@app": "dist",
     "@commands": "dist/modules/commands",
+    "@discord": "dist/modules/discord",
     "@planetside": "dist/modules/planetside"
   }
 }

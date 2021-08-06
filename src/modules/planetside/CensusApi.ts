@@ -104,9 +104,4 @@ class CensusApi {
   }
 }
 
-const serviceId = env.daybreakCensusServiceId || 'example'
-if (serviceId === 'example') {
-  console.warn('Using default Daybreak Census Service ID')
-}
-
-export const censusApi = new CensusApi(serviceId)
+export const censusApi = new CensusApi(env.daybreakCensusServiceId)

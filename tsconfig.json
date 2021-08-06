@@ -12,6 +12,7 @@
     "paths": {
       "@app/*": ["src/*"],
       "@commands/*": ["src/modules/commands/*"],
+      "@discord/*": ["src/modules/discord/*"],
       "@planetside/*": ["src/modules/planetside/*"]
     }
   }

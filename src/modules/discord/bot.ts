@@ -1,12 +1,58 @@
 import discord from 'discord.js'
 import { commands } from '@commands/index'
 import { CommandHandler, CommandMessage } from '@commands/CommandHandler'
+import { streamingApi } from '@planetside/StreamingApi'
+import { getTextChannel } from '@discord/utils'
+import { constants } from '@app/global/constants'
+import { getUTCShort } from '@app/utils/time'
 import { env } from '@app/env'
 
 const client = new discord.Client()
 
+/**
+ * Sends a message with UTC timestamp and optionally an emoji.
+ */
+const sendAnnouncement = (
+  channelId: string,
+  emojiName: string | null,
+  message: string,
+) => {
+  const channel = getTextChannel(client, channelId)
+  if (!channel) {
+    console.warn(`Could not find text channel ${channelId}`)
+    return
+  }
+  const emoji = emojiName
+    ? channel.guild.emojis.cache.find(({ name }) => name === emojiName)
+    : null
+  void channel.send(
+    `[${getUTCShort()}] ${emoji ? emoji.toString() + ' ' : ''}${message}`,
+  )
+}
+
 client.on('ready', () => {
   console.log('Discord bot ready')
+
+  streamingApi.init()
+
+  streamingApi.on('PlayerLogin', ({ characterId }) => {
+    if (characterId === constants.planetside.characterIds.bru) {
+      sendAnnouncement(
+        constants.discord.channelIds.brutracker,
+        'spartan_helmet',
+        'Bru is online!',
+      )
+    }
+  })
+  streamingApi.on('PlayerLogout', ({ characterId }) => {
+    if (characterId === constants.planetside.characterIds.bru) {
+      sendAnnouncement(
+        constants.discord.channelIds.brutracker,
+        'spartan_helmet',
+        'Bru is offline.',
+      )
+    }
+  })
 })
 
 client.on('error', (e) => {
