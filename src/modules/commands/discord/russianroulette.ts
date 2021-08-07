@@ -7,13 +7,14 @@ export default new Command<discord.Message>({
   keyword: 'russianroulette',
   description: 'kill yourself for fun purposes',
   help: 'Usage: `{prefix}russianroulette` - kill yourself for fun purposes',
-  callback: async ({ author, reply, raw }) => {
+  callback: async ({ args, author, reply, raw }) => {
+    if (args.length > 0) return
     const rounds = 6
     const rolled = randomBigInt(BigInt(rounds)) + BigInt(1)
     const Deadrole = raw.guild?.roles.cache.find((role) => role.name === 'Dead')
 
     if (!(Deadrole instanceof discord.Role)) {
-      return reply('The Dead role is not defined')
+      return reply('The Dead role is not defined.')
     }
 
     if (rolled === BigInt(1)) {
