@@ -5,8 +5,9 @@
   "main": "dist/index.js",
   "scripts": {
     "build": "tsc",
-    "lint": "eslint src",
-    "start": "yarn build && node ."
+    "lint": "prettier --check . && eslint src",
+    "start": "yarn build && node .",
+    "test": "jest src"
   },
   "repository": {
     "type": "git",
@@ -28,6 +29,7 @@
     "ws": "^8.0.0"
   },
   "devDependencies": {
+    "@types/jest": "^26.0.24",
     "@types/node": "^16.4.12",
     "@types/ws": "^7.4.7",
     "@typescript-eslint/eslint-plugin": "^4.29.0",
@@ -35,9 +37,11 @@
     "eslint": "^7.32.0",
     "eslint-config-prettier": "^8.3.0",
     "husky": "^4.3.8",
+    "jest": "^27.0.6",
     "lint-staged": "^11.1.1",
     "module-alias": "^2.2.2",
     "prettier": "^2.3.2",
+    "ts-jest": "^27.0.4",
     "typescript": "^4.3.5"
   },
   "_moduleAliases": {

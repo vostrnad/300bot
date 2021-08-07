@@ -14,6 +14,9 @@ module.exports = {
     node: true,
   },
   rules: {
+    // increasing error level from recommended preset
+    '@typescript-eslint/no-unused-vars': 2,
+
     // typescript-eslint
     '@typescript-eslint/array-type': [1, { default: 'array-simple' }],
     '@typescript-eslint/no-confusing-non-null-assertion': 1,
