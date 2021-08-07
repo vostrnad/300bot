@@ -12,3 +12,29 @@ export const getUTCShort = (): string => {
   const minutes = padTime(date.getUTCMinutes())
   return `${hours}:${minutes} UTC`
 }
+
+const months: Record<string, string | undefined> = {
+  '1': 'January',
+  '2': 'February',
+  '3': 'March',
+  '4': 'April',
+  '5': 'May',
+  '6': 'June',
+  '7': 'July',
+  '8': 'August',
+  '9': 'September',
+  '10': 'October',
+  '11': 'November',
+  '12': 'December',
+}
+
+export const getShortDate = (date: Date): string => {
+  const day = date.getUTCDate()
+  const month = date.getUTCMonth() + 1
+  const year = date.getUTCFullYear()
+
+  const dayName =
+    day === 1 ? '1st' : day === 2 ? '2nd' : day === 3 ? '3rd' : `${day}th`
+  const monthName = months[month.toString()] || 'unknown'
+  return `${dayName} ${monthName} ${year}`
+}
