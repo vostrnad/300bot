@@ -3,6 +3,7 @@ import camelcaseKeys from 'camelcase-keys'
 import snakecaseKeys from 'snakecase-keys'
 import { isRecord } from '@app/validators/object'
 import { env } from '@app/env'
+import { getFactionName } from './resources'
 
 type CollectionMap = {
   characters_online_status: {
@@ -20,10 +21,31 @@ type CollectionMap = {
     leaderCharacterId: string
     memberCount: string
   }
+  title: {
+    titleId: string
+    name: { en: string }
+  }
+  world: {
+    worldId: string
+    name: { en: string }
+  }
   [other: string]: unknown
 }
 
 type Collection = keyof CollectionMap
+
+type QueryObject = { [key: string]: string | QueryObject }
+
+const flatten = (query: QueryObject, c = '') => {
+  const result: Record<string, string> = {}
+  for (const key in query) {
+    const item = query[key]
+    if (typeof item === 'object')
+      Object.assign(result, flatten(item, c + '.' + key))
+    else result[(c + '.' + key).replace(/^\./, '')] = item
+  }
+  return result
+}
 
 class CensusApi {
   private _serviceId: string
@@ -35,12 +57,12 @@ class CensusApi {
   async getList<T extends Collection>(
     collection: T,
     /** All query keys will be converted to snake case. */
-    query: Record<string, string>,
+    query: QueryObject,
     /** All modifiers will be prefixed with `c:`. */
     modifiers?: Record<string, string>,
     joins?: string[],
   ): Promise<Array<CollectionMap[T]>> {
-    const params = new URLSearchParams(snakecaseKeys(query))
+    const params = new URLSearchParams(flatten(snakecaseKeys(query)))
     Object.entries(modifiers ?? {}).forEach(([modifier, value]) => {
       params.append(`c:${modifier}`, value)
     })
@@ -86,6 +108,65 @@ class CensusApi {
     return list[0].onlineStatus !== '0'
   }
 
+  async getDetailedCharacterByName(name: string) {
+    type Item = {
+      characterId: string
+      name: { first: string; firstLower: string }
+      factionId: string
+      titleId: string
+      times: { creation: string; lastLogin: string; minutesPlayed: string }
+      battleRank: { value: string }
+      prestigeLevel: string
+      worldId: string
+      onlineStatus: string
+      outfitMember?: {
+        leaderCharacterId: string
+        name: string
+        alias: string
+        memberSince: string
+      }
+      stats?: {
+        statHistory: Array<{ allTime: string }>
+      }
+    }
+    const list = (await this.getList(
+      'character',
+      { name: { firstLower: name.toLowerCase() } },
+      {
+        resolve: 'world,outfit_member_extended,stat_history,online_status',
+      },
+    )) as Item[]
+    if (list.length === 0) return null
+    const character = list[0]
+    const title = await this.getTitleById(character.titleId)
+    const world = await this.getWorldById(character.worldId)
+    return {
+      name: character.name.first,
+      faction: getFactionName(character.factionId),
+      title: title?.name.en,
+      creation: character.times.creation,
+      lastLogin: character.times.lastLogin,
+      minutesPlayed: character.times.minutesPlayed,
+      battleRank: character.battleRank.value,
+      prestigeLevel: character.prestigeLevel,
+      world: world?.name.en,
+      online: character.onlineStatus !== '0',
+      outfit: character.outfitMember
+        ? {
+            name: character.outfitMember.name,
+            alias: character.outfitMember.alias,
+            memberSince: character.outfitMember.memberSince,
+            isLeader:
+              character.outfitMember.leaderCharacterId ===
+              character.characterId,
+          }
+        : undefined,
+      kills: character.stats?.statHistory[5].allTime,
+      deaths: character.stats?.statHistory[2].allTime,
+      score: character.stats?.statHistory[8].allTime,
+    }
+  }
+
   async getOnlineOutfitMembers(outfitId: string) {
     type Item = {
       characterId: string
@@ -96,9 +177,7 @@ class CensusApi {
     }
     const list = (await this.getList(
       'outfit_member',
-      {
-        outfitId,
-      },
+      { outfitId },
       {
         show: 'character_id',
         limit: '65535',
@@ -126,6 +205,19 @@ class CensusApi {
     const list = await this.getList('outfit', {
       aliasLower,
     })
+    if (list.length === 0) return null
+    return list[0]
+  }
+
+  async getTitleById(titleId: string) {
+    if (titleId === '0') return null
+    const list = await this.getList('title', { titleId })
+    if (list.length === 0) return null
+    return list[0]
+  }
+
+  async getWorldById(worldId: string) {
+    const list = await this.getList('world', { worldId })
     if (list.length === 0) return null
     return list[0]
   }
