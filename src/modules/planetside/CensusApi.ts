@@ -9,6 +9,17 @@ type CollectionMap = {
     characterId: string
     onlineStatus: string
   }
+  outfit: {
+    outfitId: string
+    name: string
+    nameLower: string
+    alias: string
+    aliasLower: string
+    timeCreated: string
+    timeCreatedDate: string
+    leaderCharacterId: string
+    memberCount: string
+  }
   [other: string]: unknown
 }
 
@@ -101,6 +112,14 @@ class CensusApi {
       .filter((item) => item.character.onlineStatus !== '0')
       .map((item) => item.character.name.first)
       .sort((a, b) => Intl.Collator().compare(a, b))
+  }
+
+  async getOutfitMembersCount(outfitId: string) {
+    const list = await this.getList('outfit', {
+      outfitId,
+    })
+    if (list.length === 0) return null
+    return list[0].memberCount
   }
 }
 
