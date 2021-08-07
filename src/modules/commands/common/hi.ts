@@ -1,5 +1,6 @@
 import { Command } from '@commands/CommandHandler'
 
+//Change to create a new branch
 export default new Command({
   keyword: 'hi',
   description: 'Says hi!',
