@@ -1,6 +1,5 @@
 import { Command } from '@commands/CommandHandler'
-import { randomBigInt } from '@app/utils/random'
-import { randomChoice } from '@app/utils/random'
+import { randomBigInt, randomChoice } from '@app/utils/random'
 
 export default new Command({
   keyword: 'russianroulette',
@@ -10,14 +9,14 @@ export default new Command({
     if (args.length > 0) return
     const rounds = 6
     const rolled = randomBigInt(BigInt(rounds)) + BigInt(1)
-    if (rolled === 0) {
+    if (rolled === BigInt(1)) {
       reply(
         `**${author.displayName}** ` +
           randomChoice([
             'died.',
             'failed at this game.',
             'brutally died.',
-            'now hqs a sixth hole in his head.',
+            'now has a sixth hole in their head.',
           ]),
       )
     } else {
@@ -27,7 +26,7 @@ export default new Command({
             'gets to live another day.',
             'was lucky this time.',
             'survived this round.',
-            'should stop playing this dangerous game before it is too late',
+            'should stop playing this dangerous game before it is too late.',
           ]),
       )
     }
