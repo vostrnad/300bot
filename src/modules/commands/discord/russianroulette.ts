@@ -7,14 +7,18 @@ export default new Command<discord.Message>({
   keyword: 'russianroulette',
   description: 'kill yourself for fun purposes',
   help: 'Usage: `{prefix}russianroulette` - kill yourself for fun purposes',
-  callback: async ({ args, reply, author, raw }) => {
-    if (args.length > 0 || raw === null) return
+  callback: async ({ author, reply, raw }) => {
     const rounds = 6
     const rolled = randomBigInt(BigInt(rounds)) + BigInt(1)
-    const Deadrole = raw.guild.roles.cache.find((role) => role.name === 'Dead')
+    const Deadrole = raw.guild?.roles.cache.find((role) => role.name === 'Dead')
+
+    if (!(Deadrole instanceof discord.Role)) {
+      return reply('The Dead role is not defined')
+    }
 
     if (rolled === BigInt(1)) {
-      await raw.author.roles.add(Deadrole)
+      await raw.member?.roles.add(Deadrole)
+
       reply(
         `**${author.displayName}** ` +
           randomChoice([
@@ -25,7 +29,7 @@ export default new Command<discord.Message>({
           ]),
       )
       await sleep(10 * 1000)
-      await raw.author.roles.remove(Deadrole)
+      await raw.member?.roles.remove(Deadrole)
     } else {
       reply(
         `**${author.displayName}** ` +

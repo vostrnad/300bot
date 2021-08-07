@@ -5,7 +5,6 @@ import help from './help'
 import isbruonline from './isbruonline'
 import whoisonline from './whoisonline'
 import hello from './hello'
-import russianroulette from './russianroulette'
 
 export const commonCommands: Command[] = [
   coinflip,
@@ -14,5 +13,4 @@ export const commonCommands: Command[] = [
   isbruonline,
   whoisonline,
   hello,
-  russianroulette,
 ]
