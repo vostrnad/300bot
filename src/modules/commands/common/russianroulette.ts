@@ -1,15 +1,23 @@
+import discord from 'discord.js'
 import { Command } from '@commands/CommandHandler'
 import { randomBigInt, randomChoice } from '@app/utils/random'
+import { sleep } from '@app/utils/async'
 
 export default new Command({
   keyword: 'russianroulette',
   description: 'kill yourself for fun purposes',
   help: 'Usage: `{prefix}russianroulette` - kill yourself for fun purposes',
-  callback: ({ args, reply, author }) => {
+  callback: ({ args, reply, author, raw }) => {
     if (args.length > 0) return
+
     const rounds = 6
     const rolled = randomBigInt(BigInt(rounds)) + BigInt(1)
+    const Deadrole = member.guild.roles.cache.find(
+      (role) => role.name === 'Dead',
+    )
+
     if (rolled === BigInt(1)) {
+      raw.author.roles.add(Deadrole)
       reply(
         `**${author.displayName}** ` +
           randomChoice([
@@ -19,6 +27,7 @@ export default new Command({
             'now has a sixth hole in their head.',
           ]),
       )
+      sleep(10 * 1000)
     } else {
       reply(
         `**${author.displayName}** ` +
