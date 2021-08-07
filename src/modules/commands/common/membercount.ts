@@ -5,15 +5,17 @@ import { constants } from '@app/global/constants'
 export default new Command({
   keyword: 'membercount',
   description: 'count the members of the outfit',
-  help: 'Usage: `{prefix}membercount` - count the members of the outfit',
+  help: 'Usage: \n`{prefix}membercount` - count the members of the outfit\n`{prefix}membercount <alias>` - count the members of any outfit by alias',
   callback: async ({ args, reply }) => {
-    if (args.length > 0) return
+    if (args.length > 1) return reply('Error: too many arguments.')
+    let outfit
+    if (args.length === 0)
+      outfit = await censusApi.getOutfitFromId(
+        constants.planetside.outfitIds.spartans,
+      )
+    else outfit = await censusApi.getOutfitFromAlias(args[0].toLowerCase())
 
-    const memberCount = await censusApi.getOutfitMembersCount(
-      constants.planetside.outfitIds.spartans,
-    )
-    if (memberCount === null)
-      return reply('No outfit corresponds to this request.')
-    reply(`There are ${memberCount} members in the outfit.`)
+    if (outfit === null) return reply('No outfit corresponds to this request.')
+    reply(`The outfit ${outfit.name} have ${outfit.memberCount} members.`)
   },
 })

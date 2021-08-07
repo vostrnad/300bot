@@ -193,12 +193,20 @@ class CensusApi {
       .sort((a, b) => Intl.Collator().compare(a, b))
   }
 
-  async getOutfitMembersCount(outfitId: string) {
+  async getOutfitFromId(outfitId: string) {
     const list = await this.getList('outfit', {
       outfitId,
     })
     if (list.length === 0) return null
-    return list[0].memberCount
+    return list[0]
+  }
+
+  async getOutfitFromAlias(aliasLower: string) {
+    const list = await this.getList('outfit', {
+      aliasLower,
+    })
+    if (list.length === 0) return null
+    return list[0]
   }
 
   async getTitleById(titleId: string) {
