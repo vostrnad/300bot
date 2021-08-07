@@ -7,6 +7,6 @@ export default new Command({
   help: 'Usage: `{prefix}hello` - say hello',
   callback: ({ args, reply, author }) => {
     if (args.length > 0) return
-    reply(`Hello ${author.displayName}!`)
+    reply(`Hello **${author.displayName}**!`)
   },
 })
