@@ -11,14 +11,14 @@ export default new Command<discord.Message>({
     if (args.length > 0) return
     const rounds = 6
     const rolled = randomBigInt(BigInt(rounds)) + BigInt(1)
-    const Deadrole = raw.guild?.roles.cache.find((role) => role.name === 'Dead')
+    const deadRole = raw.guild?.roles.cache.find((role) => role.name === 'Dead')
 
-    if (!(Deadrole instanceof discord.Role)) {
+    if (!(deadRole instanceof discord.Role)) {
       return reply('The Dead role is not defined.')
     }
 
     if (rolled === BigInt(1)) {
-      await raw.member?.roles.add(Deadrole)
+      await raw.member?.roles.add(deadRole)
 
       reply(
         `**${author.displayName}** ` +
