@@ -7,4 +7,10 @@ export const staticCommands: StaticCommand[] = [
     help: 'Usage: `{prefix}rickroll` - get rickrolled',
     response: 'Never gonna give you up, never gonna let you down.',
   }),
+  new StaticCommand({
+    keyword: 'hi',
+    description: 'says Hi!',
+    help: 'Usage: `{prefix}hi` - says Hi!',
+    response: 'Hi!',
+  }),
 ]
