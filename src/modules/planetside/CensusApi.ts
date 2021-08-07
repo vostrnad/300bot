@@ -3,49 +3,30 @@ import camelcaseKeys from 'camelcase-keys'
 import snakecaseKeys from 'snakecase-keys'
 import { isRecord } from '@app/validators/object'
 import { env } from '@app/env'
+import { flatten } from '@app/utils/object'
+import { DeepPartial } from '@app/utils/types'
 import { getFactionName } from './resources'
+import {
+  Character,
+  CharactersOnlineStatus,
+  Outfit,
+  OutfitMember,
+  Title,
+  World,
+} from './types'
 
 type CollectionMap = {
-  characters_online_status: {
-    characterId: string
-    onlineStatus: string
-  }
-  outfit: {
-    outfitId: string
-    name: string
-    nameLower: string
-    alias: string
-    aliasLower: string
-    timeCreated: string
-    timeCreatedDate: string
-    leaderCharacterId: string
-    memberCount: string
-  }
-  title: {
-    titleId: string
-    name: { en: string }
-  }
-  world: {
-    worldId: string
-    name: { en: string }
-  }
-  [other: string]: unknown
+  character: Character
+  characters_online_status: CharactersOnlineStatus
+  outfit: Outfit
+  outfit_member: OutfitMember
+  title: Title
+  world: World
 }
 
-type Collection = keyof CollectionMap
+type CollectionName = keyof CollectionMap
 
-type QueryObject = { [key: string]: string | QueryObject }
-
-const flatten = (query: QueryObject, c = '') => {
-  const result: Record<string, string> = {}
-  for (const key in query) {
-    const item = query[key]
-    if (typeof item === 'object')
-      Object.assign(result, flatten(item, c + '.' + key))
-    else result[(c + '.' + key).replace(/^\./, '')] = item
-  }
-  return result
-}
+type QueryObject<T extends CollectionMap[keyof CollectionMap]> = DeepPartial<T>
 
 class CensusApi {
   private _serviceId: string
@@ -54,10 +35,10 @@ class CensusApi {
     this._serviceId = serviceId
   }
 
-  async getList<T extends Collection>(
+  async getList<T extends CollectionName>(
     collection: T,
     /** All query keys will be converted to snake case. */
-    query: QueryObject,
+    query: QueryObject<CollectionMap[T]>,
     /** All modifiers will be prefixed with `c:`. */
     modifiers?: Record<string, string>,
     joins?: string[],
@@ -109,14 +90,7 @@ class CensusApi {
   }
 
   async getDetailedCharacterByName(name: string) {
-    type Item = {
-      characterId: string
-      name: { first: string; firstLower: string }
-      factionId: string
-      titleId: string
-      times: { creation: string; lastLogin: string; minutesPlayed: string }
-      battleRank: { value: string }
-      prestigeLevel: string
+    type Item = Character & {
       worldId: string
       onlineStatus: string
       outfitMember?: {
@@ -161,15 +135,14 @@ class CensusApi {
               character.characterId,
           }
         : undefined,
-      kills: character.stats?.statHistory[5].allTime,
-      deaths: character.stats?.statHistory[2].allTime,
-      score: character.stats?.statHistory[8].allTime,
+      kills: character.stats?.statHistory[5].allTime ?? 0,
+      deaths: character.stats?.statHistory[2].allTime ?? 0,
+      score: character.stats?.statHistory[8].allTime ?? 0,
     }
   }
 
   async getOnlineOutfitMembers(outfitId: string) {
-    type Item = {
-      characterId: string
+    type Item = OutfitMember & {
       character: {
         name: { first: string }
         onlineStatus: string
@@ -193,18 +166,8 @@ class CensusApi {
       .sort((a, b) => Intl.Collator().compare(a, b))
   }
 
-  async getOutfitFromId(outfitId: string) {
-    const list = await this.getList('outfit', {
-      outfitId,
-    })
-    if (list.length === 0) return null
-    return list[0]
-  }
-
-  async getOutfitFromAlias(aliasLower: string) {
-    const list = await this.getList('outfit', {
-      aliasLower,
-    })
+  async getOutfit(query: QueryObject<Outfit>) {
+    const list = await this.getList('outfit', query)
     if (list.length === 0) return null
     return list[0]
   }

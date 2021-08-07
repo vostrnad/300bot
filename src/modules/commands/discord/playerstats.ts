@@ -37,10 +37,10 @@ export default new Command<discord.Message>({
           ? getEmoji(raw.channel, 'asp')?.toString() || ' ☆'
           : ' '
       }${character.battleRank}** | KDR **${divide(
-        Number(character.kills ?? 0),
-        Number(character.deaths ?? 0),
+        Number(character.kills),
+        Number(character.deaths),
       ).toFixed(3)}** | SPM **${divide(
-        Number(character.score ?? 0),
+        Number(character.score),
         Number(character.minutesPlayed),
       ).toFixed(0)}**\n\nFighting for ${character.faction || 'unknown'} on ${
         character.world || 'unknown'
