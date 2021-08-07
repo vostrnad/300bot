@@ -141,6 +141,25 @@ class CensusApi {
     }
   }
 
+  async getCharacterByName(name: string) {
+    type Item = Character & {
+      certs: {
+        earnedPoints: string
+        giftedPoints: string
+        spentPoints: string
+        availablePoints: string
+        percentToNext: string
+      }
+    }
+    const list = (await this.getList('character', {
+      name: { firstLower: name.toLowerCase() },
+    })) as Item[]
+    if (list.length === 0) return null
+    const character = list[0]
+
+    return character
+  }
+
   async getOnlineOutfitMembers(outfitId: string) {
     type Item = OutfitMember & {
       character: {
