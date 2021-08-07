@@ -30,7 +30,7 @@ export default new Command<discord.Message>({
           ]),
       )
       await sleep(10 * 1000)
-      await raw.member?.roles.remove(Deadrole)
+      await raw.member?.roles.remove(deadRole)
     } else {
       reply(
         `**${author.displayName}** ` +
