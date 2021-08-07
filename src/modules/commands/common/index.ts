@@ -4,6 +4,7 @@ import diceroll from './diceroll'
 import help from './help'
 import isbruonline from './isbruonline'
 import whoisonline from './whoisonline'
+import hello from './hello'
 
 export const commonCommands: Command[] = [
   coinflip,
@@ -11,4 +12,5 @@ export const commonCommands: Command[] = [
   help,
   isbruonline,
   whoisonline,
+  hello,
 ]
