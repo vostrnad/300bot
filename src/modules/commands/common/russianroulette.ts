@@ -28,6 +28,7 @@ export default new Command({
           ]),
       )
       sleep(10 * 1000)
+      raw.author.roles.remove(Deadrole)
     } else {
       reply(
         `**${author.displayName}** ` +
