@@ -8,6 +8,8 @@ import { DeepPartial } from '@app/utils/types'
 import { getFactionName } from './resources'
 import {
   Character,
+  CharacterResolvedOutfitMemberExtended,
+  CharacterResolvedStatHistory,
   CharactersOnlineStatus,
   Outfit,
   OutfitMember,
@@ -90,19 +92,12 @@ class CensusApi {
   }
 
   async getDetailedCharacterByName(name: string) {
-    type Item = Character & {
-      worldId: string
-      onlineStatus: string
-      outfitMember?: {
-        leaderCharacterId: string
-        name: string
-        alias: string
-        memberSince: string
+    type Item = Character &
+      CharacterResolvedOutfitMemberExtended &
+      CharacterResolvedStatHistory & {
+        worldId: string
+        onlineStatus: string
       }
-      stats?: {
-        statHistory: Array<{ allTime: string }>
-      }
-    }
     const list = (await this.getList(
       'character',
       { name: { firstLower: name.toLowerCase() } },
@@ -138,6 +133,27 @@ class CensusApi {
       kills: character.stats?.statHistory[5].allTime ?? 0,
       deaths: character.stats?.statHistory[2].allTime ?? 0,
       score: character.stats?.statHistory[8].allTime ?? 0,
+    }
+  }
+
+  async getCharactersStatsHistory(name: string) {
+    type Item = Character & CharacterResolvedStatHistory
+    const list = (await this.getList(
+      'character',
+      { name: { firstLower: name.toLowerCase() } },
+      {
+        resolve: 'stat_history',
+      },
+    )) as Item[]
+    if (list.length === 0) return null
+    const character = list[0]
+    return {
+      name: character.name.first,
+      lastLogin: character.times.lastLogin,
+      kills: character.stats?.statHistory[5] ?? null,
+      deaths: character.stats?.statHistory[2] ?? null,
+      score: character.stats?.statHistory[8] ?? null,
+      seconds: character.stats?.statHistory[9] ?? null,
     }
   }
 
