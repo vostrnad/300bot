@@ -15,6 +15,13 @@ export type Character = {
     value: string
   }
   prestigeLevel: string
+  certs: {
+    earnedPoints: string
+    giftedPoints: string
+    spentPoints: string
+    availablePoints: string
+    percentToNext: string
+  }
 }
 
 export type CharacterResolvedOutfitMemberExtended = {

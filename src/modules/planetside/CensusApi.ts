@@ -157,6 +157,14 @@ class CensusApi {
     }
   }
 
+  async getCharacter(query: QueryObject<Character>) {
+    const list = await this.getList('character', query)
+    if (list.length === 0) return null
+    const character = list[0]
+
+    return character
+  }
+
   async getOnlineOutfitMembers(outfitId: string) {
     type Item = OutfitMember & {
       character: {
