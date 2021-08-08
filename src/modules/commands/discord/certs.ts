@@ -22,7 +22,7 @@ export default new Command<discord.Message>({
       return reply('There is no PlanetSide 2 character with this name.')
     }
     reply(
-      `**${character.name.first} has ${character.certs.availablePoints}${
+      `**${character.name.first}** has ${character.certs.availablePoints} ${
         getEmoji(raw.channel, 'certification_point')?.toString() || ' certs'
       }.`,
     )
