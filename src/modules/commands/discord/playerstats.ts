@@ -33,7 +33,7 @@ export default new Command<discord.Message>({
 
     reply(
       `__**${headerData.join(' ')}**__\n\nBattle Rank**${
-        character.prestigeLevel
+        character.prestigeLevel !== '0'
           ? getEmoji(raw.channel, 'asp')?.toString() || ' ☆'
           : ' '
       }${character.battleRank}** | KDR **${divide(
