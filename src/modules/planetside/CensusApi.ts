@@ -142,16 +142,7 @@ class CensusApi {
   }
 
   async getCharacter(query: QueryObject<Character>) {
-    type Item = Character & {
-      certs: {
-        earnedPoints: string
-        giftedPoints: string
-        spentPoints: string
-        availablePoints: string
-        percentToNext: string
-      }
-    }
-    const list = (await this.getList('character', query)) as Item[]
+    const list = await this.getList('character', query)
     if (list.length === 0) return null
     const character = list[0]
 
