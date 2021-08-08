@@ -15,13 +15,15 @@ export default new Command<discord.Message>({
       return reply('Player names cannot contain any spaces.')
     }
     const characterName = args[0].toLowerCase()
-    const character = await censusApi.getCharacterByName(characterName)
+    const character = await censusApi.getCharacter({
+      name: { firstLower: characterName.toLowerCase() },
+    })
     if (character === null) {
       return reply('There is no PlanetSide 2 character with this name.')
     }
     reply(
       `**${character.name.first} has ${character.certs.availablePoints}${
-        getEmoji(raw.channel, 'certification_point')?.toString() || 'certs'
+        getEmoji(raw.channel, 'certification_point')?.toString() || ' certs'
       }.`,
     )
   },

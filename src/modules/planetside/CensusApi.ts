@@ -141,7 +141,7 @@ class CensusApi {
     }
   }
 
-  async getCharacterByName(name: string) {
+  async getCharacter(query: QueryObject<Character>) {
     type Item = Character & {
       certs: {
         earnedPoints: string
@@ -151,9 +151,7 @@ class CensusApi {
         percentToNext: string
       }
     }
-    const list = (await this.getList('character', {
-      name: { firstLower: name.toLowerCase() },
-    })) as Item[]
+    const list = (await this.getList('character', query)) as Item[]
     if (list.length === 0) return null
     const character = list[0]
 
