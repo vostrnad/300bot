@@ -10,20 +10,25 @@ type EventMap = {
   PlayerLogout: {
     characterId: string
   }
+  AchievementEarned: {
+    characterId: string
+    achievementId: string
+  }
 }
 
 type Event = keyof EventMap
 
-type EventListener<T extends EventMap[Event]> = (value: T) => void
+type EventListener<E extends Event> = (value: EventMap[E]) => void
 
 class StreamingApi {
   private _serviceId: string
   private _client: Ws | null = null
   private _initialized = false
   private _destroyed = false
-  private _listeners: { [E in Event]: Array<EventListener<EventMap[E]>> } = {
+  private _listeners: { [E in Event]: Array<EventListener<E>> } = {
     PlayerLogin: [],
     PlayerLogout: [],
+    AchievementEarned: [],
   }
 
   constructor(serviceId: string) {
@@ -42,8 +47,9 @@ class StreamingApi {
     this._client?.close()
   }
 
-  on<E extends Event>(event: E, listener: EventListener<EventMap[E]>) {
-    this._listeners[event].push(listener)
+  on<E extends Event>(event: E, listener: EventListener<E>) {
+    const listeners = this._listeners[event] as Array<EventListener<E>>
+    listeners.push(listener)
   }
 
   private connectToEventStreaming() {
@@ -67,7 +73,7 @@ class StreamingApi {
       updateSocketTimeout()
 
       this._client?.send(
-        `{"service":"event","action":"subscribe","worlds":["10"],"eventNames":["PlayerLogin","PlayerLogout"]}`,
+        `{"service":"event","action":"subscribe","worlds":["10"],"characters":["all"],"logicalAndCharactersWithWorlds":true,"eventNames":["PlayerLogin","PlayerLogout","AchievementEarned"]}`,
       )
 
       this._client?.on('message', (message) => {
@@ -86,7 +92,9 @@ class StreamingApi {
         if (typeof eventName !== 'string') return
         if (eventName in this._listeners) {
           this._listeners[eventName as Event].forEach((listener) =>
-            listener(payload as EventMap[Event]),
+            // https://github.com/microsoft/TypeScript/issues/45373
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            listener(payload as any),
           )
         }
       })

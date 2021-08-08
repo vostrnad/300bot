@@ -7,6 +7,7 @@ import whoisonline from './whoisonline'
 import hello from './hello'
 import membercount from './membercount'
 import recentstats from './recentstats'
+import whoisleading from './whoisleading'
 
 export const commonCommands: Command[] = [
   coinflip,
@@ -17,4 +18,5 @@ export const commonCommands: Command[] = [
   hello,
   membercount,
   recentstats,
+  whoisleading,
 ]
