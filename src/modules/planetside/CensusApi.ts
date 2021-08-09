@@ -8,6 +8,7 @@ import { DeepPartial } from '@app/utils/types'
 import { getFactionName } from './resources'
 import {
   Character,
+  CharacterName,
   CharacterResolvedOutfitMemberExtended,
   CharacterResolvedStatHistory,
   CharactersOnlineStatus,
@@ -19,6 +20,7 @@ import {
 
 type CollectionMap = {
   character: Character
+  character_name: CharacterName
   characters_online_status: CharactersOnlineStatus
   outfit: Outfit
   outfit_member: OutfitMember

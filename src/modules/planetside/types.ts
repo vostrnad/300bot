@@ -55,6 +55,14 @@ export type CharacterResolvedStatHistory = {
   }
 }
 
+export type CharacterName = {
+  characterId: string
+  name: {
+    first: string
+    firstLower: string
+  }
+}
+
 export type CharactersOnlineStatus = {
   characterId: string
   onlineStatus: string

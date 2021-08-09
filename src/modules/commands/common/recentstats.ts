@@ -3,6 +3,7 @@ import { validateArgumentNumber } from '@commands/validators'
 import { censusApi } from '@planetside/CensusApi'
 import { validatePlayerName } from '@planetside/validators'
 import { divide } from '@app/utils/math'
+import { PlayerNotFoundError } from '@app/errors'
 
 export default new Command({
   keyword: 'recentstats',
@@ -16,9 +17,7 @@ export default new Command({
     const characterName = args[0]
     validatePlayerName(characterName)
     const character = await censusApi.getCharactersStatsHistory(characterName)
-    if (character === null) {
-      return reply('There is no PlanetSide 2 character with this name.')
-    }
+    if (character === null) throw new PlayerNotFoundError()
     if (
       character.kills === null ||
       character.deaths === null ||

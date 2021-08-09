@@ -40,8 +40,14 @@ export class ArgumentNumberError extends ArgumentRangeError {
   }
 }
 
-export class InvalidPlayerName extends CustomError {
+export class InvalidPlayerNameError extends CustomError {
   constructor() {
     super('Player names can only contain alphanumeric characters')
+  }
+}
+
+export class PlayerNotFoundError extends CustomError {
+  constructor() {
+    super('There is no PlanetSide 2 character with this name')
   }
 }

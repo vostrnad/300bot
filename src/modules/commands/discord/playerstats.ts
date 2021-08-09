@@ -6,6 +6,7 @@ import { validatePlayerName } from '@planetside/validators'
 import { getEmoji } from '@discord/utils'
 import { divide } from '@app/utils/math'
 import { getShortDate } from '@app/utils/time'
+import { PlayerNotFoundError } from '@app/errors'
 
 export default new Command<discord.Message>({
   keyword: 'playerstats',
@@ -19,9 +20,7 @@ export default new Command<discord.Message>({
     const characterName = args[0]
     validatePlayerName(characterName)
     const character = await censusApi.getDetailedCharacterByName(characterName)
-    if (character === null) {
-      return reply('There is no PlanetSide 2 character with this name.')
-    }
+    if (character === null) throw new PlayerNotFoundError()
     if (character.battleRank === '0') {
       return reply(
         `The character **${character.name}** exists but is invalid. No stats available.`,

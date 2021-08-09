@@ -3,6 +3,7 @@ import russianroulette from './russianroulette'
 import playerstats from './playerstats'
 import certs from './certs'
 import urbandictionary from './urbandictionary'
+import alts from './alts'
 
 export const discordCommands = [
   cooldown,
@@ -10,4 +11,5 @@ export const discordCommands = [
   playerstats,
   certs,
   urbandictionary,
+  alts,
 ]

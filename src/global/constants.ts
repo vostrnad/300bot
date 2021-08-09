@@ -14,5 +14,8 @@ export const constants = {
       // #public
       brutracker: '198313979863367680',
     },
+    userIds: {
+      alfav: '259419275457069056',
+    },
   },
 }
