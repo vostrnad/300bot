@@ -1,3 +1,5 @@
+import { CustomError } from '@app/errors'
+
 export interface CommandMessage<T = unknown> {
   text: string
   author: MessageAuthor
@@ -216,8 +218,12 @@ export class CommandHandler<T = unknown> {
             raw: message.raw,
           })
         } catch (e) {
-          message.reply('An error occurred while processing the command.')
-          console.error('Command error:', e)
+          if (e instanceof CustomError) {
+            message.reply(`Error: ${e.message}.`)
+          } else {
+            message.reply('An error occurred while processing the command.')
+            console.error('Command error:', e)
+          }
         }
 
         return true

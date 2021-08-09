@@ -31,7 +31,7 @@ export default new Command({
         if (Number.isFinite(res)) {
           return reply(`= ${roundIfClose(res, 1e-12)}`)
         } else {
-          return reply('Error: the result is too big.')
+          return reply('Error: The result is too big.')
         }
       }
     } catch (e: unknown) {

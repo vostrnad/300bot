@@ -1,7 +1,9 @@
 import discord from 'discord.js'
 import { Command } from '@commands/CommandHandler'
-import { censusApi } from '@app/modules/planetside/CensusApi'
-import { getEmoji } from '@app/modules/discord/utils'
+import { validateArgumentNumber } from '@commands/validators'
+import { censusApi } from '@planetside/CensusApi'
+import { validatePlayerName } from '@planetside/validators'
+import { getEmoji } from '@discord/utils'
 import { divide } from '@app/utils/math'
 import { getShortDate } from '@app/utils/time'
 
@@ -13,10 +15,9 @@ export default new Command<discord.Message>({
     if (args.length === 0) {
       return reply(env.command.getHelp(env.handler))
     }
-    if (args.length > 1) {
-      return reply('Player names cannot contain any spaces.')
-    }
-    const characterName = args[0].toLowerCase()
+    validateArgumentNumber(args.length, 1)
+    const characterName = args[0]
+    validatePlayerName(characterName)
     const character = await censusApi.getDetailedCharacterByName(characterName)
     if (character === null) {
       return reply('There is no PlanetSide 2 character with this name.')

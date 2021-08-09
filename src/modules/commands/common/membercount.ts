@@ -1,4 +1,5 @@
 import { Command } from '@commands/CommandHandler'
+import { validateArgumentRange } from '@commands/validators'
 import { censusApi } from '@planetside/CensusApi'
 import { constants } from '@app/global/constants'
 
@@ -7,7 +8,7 @@ export default new Command({
   description: 'count the members of the outfit',
   help: 'Usage:\n`{prefix}membercount` - count the members of the outfit\n`{prefix}membercount <alias>` - count the members of any outfit by alias',
   callback: async ({ args, reply }) => {
-    if (args.length > 1) return reply('Error: too many arguments.')
+    validateArgumentRange(args.length, 0, 1)
     let outfit
     if (args.length === 0) {
       outfit = await censusApi.getOutfit({
