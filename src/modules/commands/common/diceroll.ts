@@ -1,4 +1,5 @@
 import { Command } from '@commands/CommandHandler'
+import { validateArgumentNumber } from '@commands/validators'
 import { randomBigInt } from '@app/utils/random'
 import { isDigit } from '@app/validators/string'
 
@@ -10,15 +11,13 @@ export default new Command({
     if (args.length === 0) {
       return reply(env.command.getHelp(env.handler))
     }
-    if (args.length > 1) {
-      return reply('Error: this command takes only one argument.')
-    }
+    validateArgumentNumber(args.length, 1)
     const sides = args[0]
     if (!isDigit(sides)) {
-      return reply('Error: invalid argument.')
+      return reply('Error: Invalid argument.')
     }
     if (sides === '0') {
-      return reply('Error: number of sides is too low.')
+      return reply('Error: Number of sides is too low.')
     }
     // TODO: add more granular error messages
     const rolled = randomBigInt(BigInt(sides)) + BigInt(1)

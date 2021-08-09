@@ -12,3 +12,11 @@ export const sentence = (
     words[words.length - 1]
   }`
 }
+
+export const pluralize = (
+  n: number,
+  singular: string,
+  plural = singular + 's',
+): string => {
+  return n === 1 ? singular : plural
+}

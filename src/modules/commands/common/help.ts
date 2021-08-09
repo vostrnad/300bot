@@ -1,10 +1,12 @@
 import { Command } from '@commands/CommandHandler'
+import { validateArgumentRange } from '@commands/validators'
 
 export default new Command({
   keyword: 'help',
   description: 'show command help',
   help: 'Usage: `{prefix}help` - shows all commands',
   callback: ({ args, reply, env }) => {
+    validateArgumentRange(args.length, 0, 1)
     if (args.length === 0) {
       const commands = env.handler
         .getPublicCommands()
@@ -20,8 +22,6 @@ export default new Command({
       } else {
         reply(help)
       }
-    } else {
-      reply('Error: too many arguments.')
     }
   },
 })

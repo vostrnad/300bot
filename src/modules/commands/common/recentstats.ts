@@ -1,6 +1,7 @@
 import { Command } from '@commands/CommandHandler'
+import { validateArgumentNumber } from '@commands/validators'
 import { censusApi } from '@planetside/CensusApi'
-import { isValidPlayerName } from '@app/modules/planetside/validators'
+import { validatePlayerName } from '@planetside/validators'
 import { divide } from '@app/utils/math'
 
 export default new Command({
@@ -11,13 +12,9 @@ export default new Command({
     if (args.length === 0) {
       return reply(env.command.getHelp(env.handler))
     }
-    if (args.length > 1) {
-      return reply('Player names cannot contain any spaces.')
-    }
+    validateArgumentNumber(args.length, 1)
     const characterName = args[0]
-    if (!isValidPlayerName(characterName)) {
-      return reply('Player names can only contain alphanumeric characters.')
-    }
+    validatePlayerName(characterName)
     const character = await censusApi.getCharactersStatsHistory(characterName)
     if (character === null) {
       return reply('There is no PlanetSide 2 character with this name.')
