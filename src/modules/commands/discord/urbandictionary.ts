@@ -22,6 +22,7 @@ export default new Command<discord.Message>({
   keyword: 'urbandictionary',
   description: 'get the modern definition of a word or expression',
   help: 'Usage: `{prefix}urbandictionary <expression>` - get the modern definition of a word or expression',
+  alias: ['ud'],
   options: {
     lastArgNumber: 1,
   },
@@ -52,10 +53,12 @@ export default new Command<discord.Message>({
 
     const re = /\[(\w+(\s\w+)*?)\]/g
 
-    const wordString = word.includes(' ') ? 'expression' : 'word'
+    const wordString = word.includes(' ') ? 'Expression' : 'Word'
 
     if (list.length === 0)
-      return reply(`There is no definition for the ${wordString} **${word}**.`)
+      return reply(
+        `${wordString} **${word}** does not exist in urban dictionary.`,
+      )
 
     list = list.sort((a: Definition, b: Definition) => {
       if (b.thumbsUp > a.thumbsUp) return 1
@@ -64,7 +67,9 @@ export default new Command<discord.Message>({
 
     let message = `**${wordString}:** ${list[0].word}\n\n`
     message += `**Definition:** ${list[0].definition.replace(re, '*$1*')}\n\n`
-    message += `**Example:** ${list[0].example.replace(re, '*$1*')}.\n`
+
+    if (list[0].example !== '')
+      message += `**Example:** ${list[0].example.replace(re, '*$1*')}.\n`
 
     return reply(message)
   },
