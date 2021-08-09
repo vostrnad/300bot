@@ -9,7 +9,13 @@ if (daybreakCensusServiceId === 'example') {
   console.warn('Using default Daybreak Census Service ID')
 }
 
+const altsServiceAddress = process.env.ALTS_SERVICE_ADDRESS || null
+if (altsServiceAddress === null) {
+  console.warn('Alts service not configured')
+}
+
 export const env = {
   discordBotToken: process.env.DISCORD_BOT_TOKEN,
   daybreakCensusServiceId,
+  altsServiceAddress,
 }
