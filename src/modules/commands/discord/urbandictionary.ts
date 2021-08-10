@@ -85,7 +85,7 @@ export default new Command<discord.Message>({
         },
         { name: 'Example', value: list[defN].example.replace(re, '*') },
       )
-      .addField('Written on', list[defN].writtenOn, true)
+      .addField('Written on', list[defN].writtenOn.substring(0, 11), true)
       .addField('Thumbs up', list[defN].thumbsUp, true)
       .addField('Thumbs down', list[defN].thumbsDown, true)
       .setFooter('Interactive')
