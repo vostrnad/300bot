@@ -3,6 +3,7 @@ import got from 'got'
 import { isRecord } from '@app/validators/object'
 import camelcaseKeys from 'camelcase-keys'
 import discord from 'discord.js'
+import { constants } from '@app/global/constants'
 
 type Definition = {
   definition: string
@@ -26,8 +27,10 @@ export default new Command<discord.Message>({
   options: {
     lastArgNumber: 1,
   },
-  callback: async ({ args, reply, env }) => {
+  callback: async ({ args, reply, env, raw }) => {
     if (args.length === 0) return reply(env.command.getHelp(env.handler))
+
+    const timeout = 10 * 60 * 1000
 
     const word = args[0]
 
@@ -37,7 +40,10 @@ export default new Command<discord.Message>({
       .json()
       .then((data) => {
         if (!isRecord(data)) {
-          return Promise.reject(new Error(`Unexpected query return type`))
+          return Promise.reject(
+            new Error(`Unexp    definitionEmbed.setFooter('Interaction ended').setColor('#1D2439')
+          await embedMessage.edit({ embed: definitionEmbed })ected query return type`),
+          )
         }
 
         const definitions = data.list
@@ -51,7 +57,7 @@ export default new Command<discord.Message>({
         return camelcaseKeys(definitions, { deep: true })
       })) as Definition[]
 
-    const re = /\[(\w+(\s\w+)*?)\]/g
+    const re = /\[|\]/g
 
     const wordString = word.includes(' ') ? 'Expression' : 'Word'
 
@@ -61,16 +67,114 @@ export default new Command<discord.Message>({
       )
 
     list = list.sort((a: Definition, b: Definition) => {
-      if (b.thumbsUp > a.thumbsUp) return 1
+      if (b.thumbsUp - b.thumbsDown > a.thumbsUp - a.thumbsDown) return 1
       else return -1
     })
 
-    let message = `**${wordString}:** ${list[0].word}\n\n`
-    message += `**Definition:** ${list[0].definition.replace(re, '*$1*')}\n\n`
+    let defN = 0
+    const definitionEmbed = new discord.MessageEmbed()
+      .setColor('#647CC4')
+      .setTitle(`${list[defN].word} (N°${defN + 1}/${list.length})`)
+      .setURL(list[defN].permalink)
+      .setAuthor('Urban dictionary', '', 'https://www.urbandictionary.com')
+      .setThumbnail('https://i.imgur.com/A6nvY85.png')
+      .addFields(
+        {
+          name: 'Definition',
+          value: list[defN].definition.replace(re, '*'),
+        },
+        { name: 'Example', value: list[defN].example.replace(re, '*') },
+      )
+      .addField('Written on', list[defN].writtenOn, true)
+      .addField('Thumbs up', list[defN].thumbsUp, true)
+      .addField('Thumbs down', list[defN].thumbsDown, true)
+      .setFooter('Interactive')
+      .setTimestamp()
 
-    if (list[0].example !== '')
-      message += `**Example:** ${list[0].example.replace(re, '*$1*')}.\n`
+    const embedMessage = await raw.channel.send({ embed: definitionEmbed })
 
-    return reply(message)
+    await embedMessage.react(constants.discord.emojis.arrow_left)
+    await embedMessage.react(constants.discord.emojis.arrow_right)
+
+    const collector = embedMessage.createReactionCollector(
+      (reaction: discord.MessageReaction, user: discord.User) =>
+        [
+          constants.discord.emojis.arrow_left,
+          constants.discord.emojis.arrow_right,
+        ].includes(reaction.emoji.name) && user.id === raw.author.id,
+      {
+        time: timeout,
+      },
+    )
+
+    setTimeout(() => {
+      definitionEmbed
+        .setFooter('Interaction ended')
+        .setColor('#1D2439')
+        .setTimestamp()
+      void embedMessage.edit({ embed: definitionEmbed })
+    }, timeout)
+
+    collector.on('collect', (reaction) => {
+      if (reaction.emoji.name === constants.discord.emojis.arrow_right) {
+        try {
+          void reaction.users.remove(raw.author)
+        } catch (error) {
+          console.log(error)
+        }
+        defN += 1
+        if (defN + 1 > list.length) {
+          defN = 0
+        }
+      }
+
+      if (reaction.emoji.name === constants.discord.emojis.arrow_left) {
+        try {
+          void reaction.users.remove(raw.author)
+        } catch (error) {
+          console.log(error)
+        }
+        defN += -1
+        if (defN <= 0) {
+          defN = list.length - 1
+        }
+      }
+
+      definitionEmbed.setTitle(
+        `${list[defN].word} (N°${defN + 1}/${list.length})`,
+      )
+
+      definitionEmbed.fields[0] = {
+        name: 'Definition',
+        value: list[defN].definition.replace(re, '*'),
+        inline: false,
+      }
+      definitionEmbed.fields[1] = {
+        name: 'Example',
+        value: list[defN].example.replace(re, '*'),
+        inline: false,
+      }
+
+      definitionEmbed.fields[2] = {
+        name: 'Written on',
+        value: list[defN].writtenOn,
+        inline: true,
+      }
+
+      definitionEmbed.fields[3] = {
+        name: 'Thumbs up',
+        value: list[defN].thumbsUp.toString(),
+        inline: true,
+      }
+
+      definitionEmbed.fields[4] = {
+        name: 'Thumbs down',
+        value: list[defN].thumbsDown.toString(),
+        inline: true,
+      }
+
+      definitionEmbed.setTimestamp()
+      void embedMessage.edit({ embed: definitionEmbed })
+    })
   },
 })
