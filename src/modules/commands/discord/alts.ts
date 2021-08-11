@@ -84,10 +84,11 @@ export default new Command<discord.Message>({
       return reply(textLong)
     } else {
       const sent = await raw.channel.send(textShort)
-      await sent.react('\u2705')
+      await sent.react(constants.discord.emojis.white_check_mark)
       const collector = sent.createReactionCollector(
         (reaction: discord.MessageReaction, user: discord.User) =>
-          reaction.emoji.toString() === '\u2705' &&
+          reaction.emoji.toString() ===
+            constants.discord.emojis.white_check_mark &&
           user.id === constants.discord.userIds.alfav,
         {
           max: 1,
