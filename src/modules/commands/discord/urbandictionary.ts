@@ -3,6 +3,8 @@ import got from 'got'
 import { isRecord } from '@app/validators/object'
 import camelcaseKeys from 'camelcase-keys'
 import discord from 'discord.js'
+import { constants } from '@app/global/constants'
+import { mod } from '@app/utils/math'
 
 type Definition = {
   definition: string
@@ -26,8 +28,44 @@ export default new Command<discord.Message>({
   options: {
     lastArgNumber: 1,
   },
-  callback: async ({ args, reply, env }) => {
+  callback: async ({ args, reply, env, raw }) => {
+    async function removeReaction(reaction: discord.MessageReaction) {
+      try {
+        await reaction.users.remove(raw.author)
+      } catch (error) {
+        console.log('Error removing reaction:', error)
+      }
+    }
+
+    function genDefinitionEmbed(
+      definition: Definition,
+      len: number,
+    ): discord.MessageEmbed {
+      const definitionEmbed = new discord.MessageEmbed()
+        .setColor('#647CC4')
+        .setTitle(`${definition.word} (N°${defN + 1}/${len})`)
+        .setURL(definition.permalink)
+        .setAuthor('Urban dictionary', '', 'https://www.urbandictionary.com')
+        .setThumbnail('https://i.imgur.com/A6nvY85.png')
+        .addFields(
+          {
+            name: 'Definition',
+            value: definition.definition.replace(/\[|\]/g, '*'),
+          },
+          { name: 'Example', value: definition.example.replace(/\[|\]/g, '*') },
+        )
+        .addField('Written on', definition.writtenOn.substring(0, 10), true)
+        .addField('Thumbs up', definition.thumbsUp, true)
+        .addField('Thumbs down', definition.thumbsDown, true)
+        .setFooter('Interactive')
+        .setTimestamp()
+
+      return definitionEmbed
+    }
+
     if (args.length === 0) return reply(env.command.getHelp(env.handler))
+
+    const timeout = 10 * 60 * 1000 //10 minutes
 
     const word = args[0]
 
@@ -51,7 +89,19 @@ export default new Command<discord.Message>({
         return camelcaseKeys(definitions, { deep: true })
       })) as Definition[]
 
-    const re = /\[(\w+(\s\w+)*?)\]/g
+    const DEF_TOO_LONG = '... (definition too long)'
+    const EX_TOO_LONG = '... (example too long)'
+
+    list.forEach((def) => {
+      if (def.definition.length >= 1024) {
+        def.definition =
+          def.definition.slice(0, 1023 - DEF_TOO_LONG.length) + DEF_TOO_LONG
+      }
+      if (def.example.length >= 1024) {
+        def.example =
+          def.example.slice(0, 1023 - EX_TOO_LONG.length) + EX_TOO_LONG
+      }
+    })
 
     const wordString = word.includes(' ') ? 'Expression' : 'Word'
 
@@ -61,16 +111,61 @@ export default new Command<discord.Message>({
       )
 
     list = list.sort((a: Definition, b: Definition) => {
-      if (b.thumbsUp > a.thumbsUp) return 1
+      if (b.thumbsUp - b.thumbsDown > a.thumbsUp - a.thumbsDown) return 1
       else return -1
     })
 
-    let message = `**${wordString}:** ${list[0].word}\n\n`
-    message += `**Definition:** ${list[0].definition.replace(re, '*$1*')}\n\n`
+    let defN = 0
 
-    if (list[0].example !== '')
-      message += `**Example:** ${list[0].example.replace(re, '*$1*')}.\n`
+    let definitionEmbed = genDefinitionEmbed(list[defN], list.length)
 
-    return reply(message)
+    if (list.length === 1) {
+      definitionEmbed.setFooter('Interaction ended').setColor('#1D2439')
+
+      await raw.channel.send({ embed: definitionEmbed })
+
+      return
+    }
+
+    const embedMessage = await raw.channel.send({ embed: definitionEmbed })
+
+    await embedMessage.react(constants.discord.emojis.arrow_left)
+    await embedMessage.react(constants.discord.emojis.arrow_right)
+
+    const collector = embedMessage.createReactionCollector(
+      (reaction: discord.MessageReaction, user: discord.User) =>
+        [
+          constants.discord.emojis.arrow_left,
+          constants.discord.emojis.arrow_right,
+        ].includes(reaction.emoji.name) && user.id === raw.author.id,
+      {
+        time: timeout,
+      },
+    )
+
+    collector.on('collect', (reaction: discord.MessageReaction) => {
+      if (reaction.emoji.name === constants.discord.emojis.arrow_right)
+        defN = mod(defN + 1, list.length)
+
+      if (reaction.emoji.name === constants.discord.emojis.arrow_left)
+        defN = mod(defN - 1, list.length)
+
+      void (async () => {
+        await removeReaction(reaction)
+
+        definitionEmbed = genDefinitionEmbed(list[defN], list.length)
+
+        definitionEmbed.setTimestamp()
+        await embedMessage.edit({ embed: definitionEmbed })
+      })()
+    })
+
+    collector.on('end', () => {
+      definitionEmbed
+        .setFooter('Interaction ended')
+        .setColor('#1D2439')
+        .setTimestamp()
+      void embedMessage.edit({ embed: definitionEmbed })
+    })
   },
 })
