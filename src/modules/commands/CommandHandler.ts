@@ -102,7 +102,7 @@ export class Command<T = unknown> {
   }
 }
 
-interface CommandHandlerConfig<T = unknown> {
+export interface CommandHandlerConfig<T = unknown> {
   commands: Array<Command<T>>
   prefix: string
   /**
@@ -189,7 +189,10 @@ export class CommandHandler<T = unknown> {
                 filteredArgs.push(arg)
               }
             } else {
-              filteredArgs.push(rawArgs.slice(i).join(' ').trim())
+              const lastArg = rawArgs.slice(i).join(' ').trim()
+              if (lastArg.length > 0) {
+                filteredArgs.push(lastArg)
+              }
               break
             }
           }
