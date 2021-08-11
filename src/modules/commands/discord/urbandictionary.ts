@@ -4,7 +4,7 @@ import { isRecord } from '@app/validators/object'
 import camelcaseKeys from 'camelcase-keys'
 import discord from 'discord.js'
 import { constants } from '@app/global/constants'
-import { mod } from 'mathjs'
+import { mod } from '@app/utils/math'
 
 type Definition = {
   definition: string
@@ -152,12 +152,10 @@ export default new Command<discord.Message>({
 
       void (async () => {
         await removeReaction(reaction)
-      })()
 
-      definitionEmbed = genDefinitionEmbed(list[defN], list.length)
+        definitionEmbed = genDefinitionEmbed(list[defN], list.length)
 
-      definitionEmbed.setTimestamp()
-      void (async () => {
+        definitionEmbed.setTimestamp()
         await embedMessage.edit({ embed: definitionEmbed })
       })()
     })
@@ -167,9 +165,7 @@ export default new Command<discord.Message>({
         .setFooter('Interaction ended')
         .setColor('#1D2439')
         .setTimestamp()
-      void (async () => {
-        await embedMessage.edit({ embed: definitionEmbed })
-      })()
+      void embedMessage.edit({ embed: definitionEmbed })
     })
   },
 })
