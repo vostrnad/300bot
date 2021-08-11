@@ -26,3 +26,7 @@ export const roundIfClose = (n: number, eps = 1e-12): number => {
     return n
   }
 }
+
+export const mod = (n: number, m: number): number => {
+  return ((n % m) + m) % m
+}

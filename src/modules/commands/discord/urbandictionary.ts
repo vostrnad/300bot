@@ -4,6 +4,7 @@ import { isRecord } from '@app/validators/object'
 import camelcaseKeys from 'camelcase-keys'
 import discord from 'discord.js'
 import { constants } from '@app/global/constants'
+import { mod } from 'mathjs'
 
 type Definition = {
   definition: string
@@ -62,10 +63,6 @@ export default new Command<discord.Message>({
       return definitionEmbed
     }
 
-    function mod(n: number, m: number): number {
-      return ((n % m) + m) % m
-    }
-
     if (args.length === 0) return reply(env.command.getHelp(env.handler))
 
     const timeout = 10 * 60 * 1000 //10 minutes
@@ -122,18 +119,15 @@ export default new Command<discord.Message>({
 
     let definitionEmbed = genDefinitionEmbed(list[defN], list.length)
 
-    const embedMessage = await raw.channel.send({ embed: definitionEmbed })
-
     if (list.length === 1) {
-      definitionEmbed
-        .setFooter('Interaction ended')
-        .setColor('#1D2439')
-        .setTimestamp()
+      definitionEmbed.setFooter('Interaction ended').setColor('#1D2439')
 
-      await embedMessage.edit({ embed: definitionEmbed })
+      await raw.channel.send({ embed: definitionEmbed })
 
       return
     }
+
+    const embedMessage = await raw.channel.send({ embed: definitionEmbed })
 
     await embedMessage.react(constants.discord.emojis.arrow_left)
     await embedMessage.react(constants.discord.emojis.arrow_right)
