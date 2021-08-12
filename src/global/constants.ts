@@ -8,6 +8,9 @@ export const constants = {
       // TR Consolidation
       spartans: '37581022577821398',
     },
+    worldIds: {
+      miller: 10,
+    },
   },
   discord: {
     channelIds: {
