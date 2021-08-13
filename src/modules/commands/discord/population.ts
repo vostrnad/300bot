@@ -6,7 +6,6 @@ import { constants } from '@app/global/constants'
 import got from 'got'
 import { getEmoji } from '@discord/utils'
 import { divide } from '@app/utils/math'
-import { round } from 'mathjs'
 
 type Response = {
   worldId: number
@@ -59,13 +58,13 @@ export default new Command<discord.Message>({
       population.tr + population.nc + population.vs + population.ns
 
     let message = `**Overall Miller population:** ${totalPop}\n`
-    message += `${round(divide(population.tr, totalPop) * 100)}%${
+    message += `${Math.round(divide(population.tr, totalPop) * 100)}%${
       getEmoji(raw.channel, 'faction_logo_tr')?.toString() || ' TR'
-    }\t${round(divide(population.nc, totalPop) * 100)}%${
+    }\t${Math.round(divide(population.nc, totalPop) * 100)}%${
       getEmoji(raw.channel, 'faction_logo_nc')?.toString() || ' NC'
-    }\t${round(divide(population.vs, totalPop) * 100)}%${
+    }\t${Math.round(divide(population.vs, totalPop) * 100)}%${
       getEmoji(raw.channel, 'faction_logo_vs')?.toString() || ' VS'
-    }\t${round(divide(population.ns, totalPop) * 100)}%${
+    }\t${Math.round(divide(population.ns, totalPop) * 100)}%${
       getEmoji(raw.channel, 'faction_logo_ns')?.toString() || ' NS'
     }`
 
