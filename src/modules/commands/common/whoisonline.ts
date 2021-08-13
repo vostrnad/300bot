@@ -22,7 +22,7 @@ export default new Command({
       reply(
         `These ${names.length} outfit members are online: ${sentence(
           names.map((name) => `**${name}**`),
-        )}`,
+        )}.`,
       )
     }
   },

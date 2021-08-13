@@ -5,7 +5,7 @@ import { sleep } from '@app/utils/async'
 export default new Command<discord.Message>({
   keyword: 'cooldown',
   description: 'close a channel temporarily',
-  help: 'Usage: `{prefix}cooldown` - temporarily disable sending messages in the channel',
+  help: 'Usage: `{prefix}cooldown` - temporarily disables sending messages in the channel',
   callback: async ({ author, reply, raw }) => {
     if (!author.admin) {
       return reply('You are not an admin or a bot operator in this server.')

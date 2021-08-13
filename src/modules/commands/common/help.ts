@@ -4,7 +4,7 @@ import { validateArgumentRange } from '@commands/validators'
 export default new Command({
   keyword: 'help',
   description: 'show command help',
-  help: 'Usage: `{prefix}help` - shows all commands',
+  help: 'Usage:\n`{prefix}help` - shows all commands\n`{prefix}help <command>` - shows command help',
   callback: ({ args, reply, env }) => {
     validateArgumentRange(args.length, 0, 1)
     if (args.length === 0) {

@@ -9,8 +9,8 @@ export const staticCommands: StaticCommand[] = [
   }),
   new StaticCommand({
     keyword: 'hi',
-    description: 'says Hi!',
-    help: 'Usage: `{prefix}hi` - says Hi!',
+    description: 'say hi',
+    help: 'Usage: `{prefix}hi` - says hi',
     response: 'Hi!',
   }),
 ]

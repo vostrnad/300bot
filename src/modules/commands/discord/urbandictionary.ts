@@ -23,7 +23,7 @@ type Definition = {
 export default new Command<discord.Message>({
   keyword: 'urbandictionary',
   description: 'get the modern definition of a word or expression',
-  help: 'Usage: `{prefix}urbandictionary <expression>` - get the modern definition of a word or expression',
+  help: 'Usage: `{prefix}urbandictionary [expression]` - get the modern definition of a word or expression',
   alias: ['ud'],
   options: {
     lastArgNumber: 1,

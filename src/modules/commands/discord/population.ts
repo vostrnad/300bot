@@ -6,9 +6,8 @@ import { constants } from '@app/global/constants'
 import got from 'got'
 import { getEmoji } from '@discord/utils'
 import { divide } from '@app/utils/math'
-import { round } from 'mathjs'
 
-type Response = {
+type Result = {
   worldId: number
   timestamp: number
   vs: number
@@ -20,54 +19,50 @@ type Response = {
 
 export default new Command<discord.Message>({
   keyword: 'population',
-  description: 'display the current population of Miller',
-  help: 'Usage: `{prefix}pop` - display the current population of Miller',
+  description: 'display the current population',
+  help: 'Usage: `{prefix}population` - displays the current population',
   alias: ['pop'],
-  options: {
-    lastArgNumber: 1,
-  },
   callback: async ({ args, reply, raw }) => {
-    async function getPop(serverId: number) {
-      const url = `https://ps2.fisu.pw/api/population/?world=${serverId}`
-
-      const list = (await got(url)
-        .json()
-        .then((data) => {
-          if (!isRecord(data)) {
-            return Promise.reject(new Error(`Unexpected query return type`))
-          }
-
-          const result = data.result
-          if (!result) {
-            return Promise.reject(new Error(`List not in result`))
-          }
-          if (!Array.isArray(result)) {
-            return Promise.reject(new Error(`List is not an array`))
-          }
-          // eslint-disable-next-line @typescript-eslint/no-unsafe-return
-          return camelcaseKeys(result, { deep: true })
-        })) as Response[]
-
-      return list[0]
-    }
-
     if (args.length > 0) return
 
-    const population = await getPop(constants.planetside.worldIds.miller)
+    const url = `https://ps2.fisu.pw/api/population/?world=${constants.planetside.worldIds.miller}`
+
+    const population = (await got(url)
+      .json()
+      .then((data) => {
+        if (!isRecord(data)) {
+          return Promise.reject(new Error(`Unexpected query return type`))
+        }
+
+        const result = data.result
+        if (!result) {
+          return Promise.reject(new Error(`List not in result`))
+        }
+        if (!Array.isArray(result)) {
+          return Promise.reject(new Error(`List is not an array`))
+        }
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-return
+        return camelcaseKeys(result[0], { deep: true })
+      })) as Result
 
     const totalPop =
       population.tr + population.nc + population.vs + population.ns
 
-    let message = `**Overall Miller population:** ${totalPop}\n`
-    message += `${round(divide(population.tr, totalPop) * 100)}%${
-      getEmoji(raw.channel, 'faction_logo_tr')?.toString() || ' TR'
-    }\t${round(divide(population.nc, totalPop) * 100)}%${
-      getEmoji(raw.channel, 'faction_logo_nc')?.toString() || ' NC'
-    }\t${round(divide(population.vs, totalPop) * 100)}%${
-      getEmoji(raw.channel, 'faction_logo_vs')?.toString() || ' VS'
-    }\t${round(divide(population.ns, totalPop) * 100)}%${
-      getEmoji(raw.channel, 'faction_logo_ns')?.toString() || ' NS'
-    }`
+    let message = `**Miller population:** ${totalPop}\n`
+    message += [
+      `${
+        getEmoji(raw.channel, 'faction_logo_tr')?.toString() || ' TR'
+      } ${Math.round(divide(population.tr, totalPop) * 100)}%`,
+      `${
+        getEmoji(raw.channel, 'faction_logo_nc')?.toString() || ' NC'
+      } ${Math.round(divide(population.nc, totalPop) * 100)}%`,
+      `${
+        getEmoji(raw.channel, 'faction_logo_vs')?.toString() || ' VS'
+      } ${Math.round(divide(population.vs, totalPop) * 100)}%`,
+      `${
+        getEmoji(raw.channel, 'faction_logo_ns')?.toString() || ' NS'
+      } ${Math.round(divide(population.ns, totalPop) * 100)}%`,
+    ].join('    ')
 
     reply(message)
   },
