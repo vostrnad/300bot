@@ -25,9 +25,9 @@ const buildExpectedIndex = (tree: SeparationTree) => {
 describe('SeparationTree', () => {
   it('should add keys to the first level', () => {
     const tree = new SeparationTree('root')
-    tree.add('root', 'node1', 1)
-    tree.add('node2', 'root', 2)
-    tree.add('node3', 'root', 3)
+    tree.add('root', 'node1', undefined, 1)
+    tree.add('node2', 'root', undefined, 2)
+    tree.add('node3', 'root', undefined, 3)
     // eslint-disable-next-line @typescript-eslint/dot-notation
     expect(tree['_tree']).toEqual({
       node1: {
@@ -53,9 +53,9 @@ describe('SeparationTree', () => {
 
   it('should add keys to nested levels', () => {
     const tree = new SeparationTree('root')
-    tree.add('node1', 'root', 1)
-    tree.add('node1', 'node2', 2)
-    tree.add('node3', 'node2', 3)
+    tree.add('node1', 'root', undefined, 1)
+    tree.add('node1', 'node2', undefined, 2)
+    tree.add('node3', 'node2', undefined, 3)
     // eslint-disable-next-line @typescript-eslint/dot-notation
     expect(tree['_tree']).toEqual({
       node1: {
@@ -83,11 +83,11 @@ describe('SeparationTree', () => {
 
   it('should move node when a better distance is found', () => {
     const tree = new SeparationTree('root')
-    tree.add('root', 'node1', 1)
-    tree.add('node1', 'node2', 2)
-    tree.add('node2', 'node3', 3)
-    tree.add('node3', 'node4', 4)
-    tree.add('node3', 'node1', 5)
+    tree.add('root', 'node1', undefined, 1)
+    tree.add('node1', 'node2', undefined, 2)
+    tree.add('node2', 'node3', undefined, 3)
+    tree.add('node3', 'node4', undefined, 4)
+    tree.add('node3', 'node1', undefined, 5)
     // eslint-disable-next-line @typescript-eslint/dot-notation
     expect(tree['_tree']).toEqual({
       node1: {
@@ -120,14 +120,14 @@ describe('SeparationTree', () => {
 
   it('should handle very complex cases', () => {
     const tree = new SeparationTree('root')
-    tree.add('root', 'node1', 1)
-    tree.add('node1', 'node2', 2)
-    tree.add('node2', 'node3', 3)
-    tree.add('node2', 'node4', 4)
-    tree.add('root', 'node5', 5)
-    tree.add('node5', 'node6', 6)
-    tree.add('root', 'node1', 7)
-    tree.add('node5', 'node1', 8)
+    tree.add('root', 'node1', undefined, 1)
+    tree.add('node1', 'node2', undefined, 2)
+    tree.add('node2', 'node3', undefined, 3)
+    tree.add('node2', 'node4', undefined, 4)
+    tree.add('root', 'node5', undefined, 5)
+    tree.add('node5', 'node6', undefined, 6)
+    tree.add('root', 'node1', undefined, 7)
+    tree.add('node5', 'node1', undefined, 8)
     // eslint-disable-next-line @typescript-eslint/dot-notation
     expect(tree['_tree']).toEqual({
       node1: {

@@ -1,8 +1,20 @@
 import { forEachKey } from './object'
 
+type NodeInteraction = {
+  name: string
+  initiator: boolean
+}
+
 export type TreeNode = {
   timestamp: number
+  interaction?: NodeInteraction
   children: Record<string, TreeNode>
+}
+
+export type ChainNode = {
+  key: string
+  timestamp: number
+  interaction?: NodeInteraction
 }
 
 export class SeparationTree {
@@ -14,25 +26,34 @@ export class SeparationTree {
     this._rootKey = rootKey
   }
 
-  add(key1: string, key2: string, timestamp = Date.now()): void {
-    if (key1 === key2) {
+  add(
+    initiator: string,
+    other: string,
+    interaction?: string,
+    timestamp = Date.now(),
+  ): void {
+    if (initiator === other) {
       console.error('Two same keys passed to SeparationTree')
       return
     }
-    if (this.isNodeInTree(key1) && this.isNodeInTree(key2)) {
-      const comparison = this.compareNodeDistances(key1, key2)
+    if (this.isNodeInTree(initiator) && this.isNodeInTree(other)) {
+      const comparison = this.compareNodeDistances(initiator, other)
       if (comparison < 0) {
-        this.addKeyAndUpdateIndex(key2, key1, timestamp)
+        const keyNode = this.addKeyAndUpdateIndex(other, initiator, timestamp)
+        this.updateInteraction(keyNode, interaction, false)
       } else if (comparison > 0) {
-        this.addKeyAndUpdateIndex(key1, key2, timestamp)
+        const keyNode = this.addKeyAndUpdateIndex(initiator, other, timestamp)
+        this.updateInteraction(keyNode, interaction, true)
       } else {
         // nodes have the same distance
         return
       }
-    } else if (this.isNodeInTree(key1)) {
-      this.addNewKeyToParent(key2, key1, timestamp)
-    } else if (this.isNodeInTree(key2)) {
-      this.addNewKeyToParent(key1, key2, timestamp)
+    } else if (this.isNodeInTree(initiator)) {
+      const keyNode = this.addNewKeyToParent(other, initiator, timestamp)
+      this.updateInteraction(keyNode, interaction, false)
+    } else if (this.isNodeInTree(other)) {
+      const keyNode = this.addNewKeyToParent(initiator, other, timestamp)
+      this.updateInteraction(keyNode, interaction, true)
     } else {
       return
     }
@@ -43,47 +64,51 @@ export class SeparationTree {
     this._index = {}
   }
 
-  getLatest(timeout: number): string[] {
-    const keys: string[] = []
-    let baseTimestamp = 0
-    forEachKey(this._tree, (node) => {
-      if (node.timestamp > baseTimestamp) {
-        baseTimestamp = node.timestamp
-      }
-    })
-    const getWithinTimeoutRecursively = (node: TreeNode, key: string) => {
-      if (baseTimestamp - node.timestamp < timeout) {
-        keys.push(key)
-        forEachKey(node.children, (nextNode, nextKey) => {
-          getWithinTimeoutRecursively(nextNode, nextKey)
-        })
-      }
+  getShortestChain(key: string): ChainNode[] {
+    const index = key in this._index ? this._index[key] : []
+    const interactions: ChainNode[] = []
+    let node = this.getRootNodeObject()
+    for (const step of index) {
+      node = node.children[step]
+      interactions.push({
+        key: step,
+        timestamp: node.timestamp,
+        interaction: node.interaction
+          ? {
+              name: node.interaction.name,
+              initiator: node.interaction.initiator,
+            }
+          : undefined,
+      })
     }
-    forEachKey(this._tree, (node, key) => {
-      getWithinTimeoutRecursively(node, key)
-    })
-    return keys
+    return interactions
   }
 
   private addNewKeyToParent(
     key: string,
     parent: string,
     timestamp: number,
-  ): void {
+  ): TreeNode | null {
     if (parent === this._rootKey) {
-      this._tree[key] = {
+      const keyNode = {
         timestamp,
         children: {},
       }
+      this._tree[key] = keyNode
       this._index[key] = [key]
+      return keyNode
     } else {
       const parentNode = this.resolveNode(parent)
       if (parentNode) {
-        parentNode.children[key] = {
+        const keyNode = {
           timestamp,
           children: {},
         }
+        parentNode.children[key] = keyNode
         this._index[key] = [...this._index[parent], key]
+        return keyNode
+      } else {
+        return null
       }
     }
   }
@@ -92,7 +117,7 @@ export class SeparationTree {
     key: string,
     parent: string,
     timestamp: number,
-  ): void {
+  ): TreeNode | null {
     const oldParentNode = this.resolveParentNode(key)
     const newParentNode = this.resolveNode(parent)
     if (oldParentNode && newParentNode) {
@@ -101,8 +126,10 @@ export class SeparationTree {
       newParentNode.children[key] = keyNode
       keyNode.timestamp = timestamp
       this.updateIndexRecursively(keyNode, key, this.getIndex(parent))
+      return keyNode
     } else {
       console.error('oldParentNode or newParentNode not resolved')
+      return null
     }
   }
 
@@ -116,6 +143,19 @@ export class SeparationTree {
     forEachKey(node.children, (nextNode, nextKey) => {
       this.updateIndexRecursively(nextNode, nextKey, thisIndex)
     })
+  }
+
+  private updateInteraction(
+    node: TreeNode | null,
+    interaction: string | undefined,
+    initiator: boolean,
+  ) {
+    if (node && interaction) {
+      node.interaction = {
+        name: interaction,
+        initiator,
+      }
+    }
   }
 
   private isNodeInTree(key: string): boolean {

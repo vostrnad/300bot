@@ -38,3 +38,13 @@ export const getShortDate = (date: Date): string => {
   const monthName = months[month.toString()] || 'unknown'
   return `${dayName} ${monthName} ${year}`
 }
+
+export const getShortAgo = (prev: Date, now: Date): string => {
+  const delta = now.getTime() - prev.getTime()
+  const seconds = Math.ceil(delta / 1000)
+  if (seconds < 60) return `${seconds}s ago`
+  const minutes = Math.ceil(seconds / 60)
+  if (minutes < 60) return `${minutes}m ago`
+  const hours = Math.ceil(minutes / 60)
+  return `${hours}h ago`
+}
