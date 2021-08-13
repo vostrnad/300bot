@@ -5,8 +5,8 @@ import { constants } from '@app/global/constants'
 
 export default new Command({
   keyword: 'membercount',
-  description: 'count the members of the outfit',
-  help: 'Usage:\n`{prefix}membercount` - count the members of the outfit\n`{prefix}membercount <alias>` - count the members of any outfit by alias',
+  description: 'count outfit members',
+  help: 'Usage:\n`{prefix}membercount` - counts outfit members\n`{prefix}membercount <alias>` - counts members of the specified outfit',
   callback: async ({ args, reply }) => {
     validateArgumentRange(args.length, 0, 1)
     let outfit

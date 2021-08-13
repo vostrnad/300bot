@@ -8,8 +8,8 @@ import { PlayerNotFoundError } from '@app/errors'
 
 export default new Command<discord.Message>({
   keyword: 'certs',
-  description: 'shows available certs of any player',
-  help: 'Usage: `{prefix}certs <player name>` - shows available certs of any player',
+  description: "show player's available certs",
+  help: "Usage: `{prefix}certs <player name>` - shows player's available certs",
   callback: async ({ args, reply, env, raw }) => {
     if (args.length === 0) {
       return reply(env.command.getHelp(env.handler))

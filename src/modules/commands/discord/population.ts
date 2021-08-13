@@ -19,8 +19,8 @@ type Response = {
 
 export default new Command<discord.Message>({
   keyword: 'population',
-  description: 'display the current population of Miller',
-  help: 'Usage: `{prefix}pop` - display the current population of Miller',
+  description: 'display the current population',
+  help: 'Usage: `{prefix}population` - displays the current population',
   alias: ['pop'],
   options: {
     lastArgNumber: 1,
