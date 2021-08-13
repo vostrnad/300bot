@@ -14,6 +14,11 @@ type EventMap = {
     characterId: string
     achievementId: string
   }
+  GainExperience: {
+    characterId: string
+    otherId: string
+    experienceId: string
+  }
 }
 
 type Event = keyof EventMap
@@ -29,6 +34,7 @@ class StreamingApi {
     PlayerLogin: [],
     PlayerLogout: [],
     AchievementEarned: [],
+    GainExperience: [],
   }
 
   constructor(serviceId: string) {
@@ -73,7 +79,7 @@ class StreamingApi {
       updateSocketTimeout()
 
       this._client?.send(
-        `{"service":"event","action":"subscribe","worlds":["10"],"characters":["all"],"logicalAndCharactersWithWorlds":true,"eventNames":["PlayerLogin","PlayerLogout","AchievementEarned"]}`,
+        `{"service":"event","action":"subscribe","worlds":["10"],"characters":["all"],"logicalAndCharactersWithWorlds":true,"eventNames":["PlayerLogin","PlayerLogout","AchievementEarned","GainExperience"]}`,
       )
 
       this._client?.on('message', (message) => {

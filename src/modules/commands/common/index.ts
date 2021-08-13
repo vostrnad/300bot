@@ -9,6 +9,7 @@ import membercount from './membercount'
 import recentstats from './recentstats'
 import whoisleading from './whoisleading'
 import math from './math'
+import brudistance from './brudistance'
 
 export const commonCommands: Command[] = [
   coinflip,
@@ -21,4 +22,5 @@ export const commonCommands: Command[] = [
   recentstats,
   whoisleading,
   math,
+  brudistance,
 ]

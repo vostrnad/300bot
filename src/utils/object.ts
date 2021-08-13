@@ -18,3 +18,15 @@ export const flatten = (
   }
   return result
 }
+
+export const forEachKey = <
+  T extends Record<string, unknown>,
+  K extends keyof T & string,
+>(
+  object: T,
+  callback: (value: T[K], key: K) => void,
+): void => {
+  Object.keys(object).forEach((key) => {
+    callback(object[key as K], key as K)
+  })
+}

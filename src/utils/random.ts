@@ -7,3 +7,10 @@ export const randomBigInt = (max: bigint): bigint => {
   const maxBig = BigInt(Number.MAX_SAFE_INTEGER)
   return (max * randBig) / maxBig
 }
+
+/**
+ * Returns a random integer from `0` (included) to `max` (excluded).
+ */
+export const randomInteger = (max: number): number => {
+  return Math.floor(Math.random() * max)
+}

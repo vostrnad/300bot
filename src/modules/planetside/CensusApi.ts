@@ -167,6 +167,21 @@ class CensusApi {
     return character
   }
 
+  async getCharacterName(query: QueryObject<CharacterName>) {
+    const list = await this.getList('character_name', query)
+    if (list.length === 0) return null
+    return list[0]
+  }
+
+  async getCharacterNameAndOnlineStatus(query: QueryObject<Character>) {
+    const list = (await this.getList('character', query, {
+      resolve: 'online_status',
+      show: 'character_id,name,online_status',
+    })) as Array<Character & CharactersOnlineStatus>
+    if (list.length === 0) return null
+    return list[0]
+  }
+
   async getOnlineOutfitMembers(outfitId: string) {
     type Item = OutfitMember & {
       character: {
@@ -190,6 +205,20 @@ class CensusApi {
       .filter((item) => item.character.onlineStatus !== '0')
       .map((item) => item.character.name.first)
       .sort((a, b) => Intl.Collator().compare(a, b))
+  }
+
+  async getPlayerNames(ids: string[]) {
+    const list = await this.getList(
+      'character_name',
+      {
+        characterId: ids.join(','),
+      },
+      { limit: '100' },
+    )
+    return list.reduce((prev, curr) => {
+      prev[curr.characterId] = curr
+      return prev
+    }, {} as Record<string, CharacterName>)
   }
 
   async getOutfit(query: QueryObject<Outfit>) {
