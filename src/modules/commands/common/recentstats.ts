@@ -75,7 +75,7 @@ export default new Command({
         2 * runningTotal.seconds > allTime.seconds
       ) {
         return reply(
-          `The character ${character.name} has not played enough recently to have any recent stats`,
+          `The character ${character.name} has not played enough recently to have any recent stats.`,
         )
       }
 
@@ -119,5 +119,9 @@ export default new Command({
         return reply(message)
       }
     }
+
+    return reply(
+      `The character ${character.name} has not played enough recently to have any recent stats.`,
+    )
   },
 })

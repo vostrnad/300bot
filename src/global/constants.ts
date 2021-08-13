@@ -8,6 +8,9 @@ export const constants = {
       // TR Consolidation
       spartans: '37581022577821398',
     },
+    worldIds: {
+      miller: 10,
+    },
   },
   discord: {
     channelIds: {
@@ -16,6 +19,11 @@ export const constants = {
     },
     userIds: {
       alfav: '259419275457069056',
+    },
+    emojis: {
+      arrow_left: '\u2b05\ufe0f',
+      arrow_right: '\u27a1\ufe0f',
+      white_check_mark: '\u2705',
     },
   },
 }
