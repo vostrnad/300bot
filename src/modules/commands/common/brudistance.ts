@@ -136,7 +136,7 @@ streamingApi.on('PlayerLogout', ({ characterId }) => {
 export default new Command({
   keyword: 'brudistance',
   description: "find player's interaction chain with Bru",
-  help: "Usage: `{prefix}brudistance` - finds player's interaction chain with Bru",
+  help: "Usage: `{prefix}brudistance <player name>` - finds player's interaction chain with Bru",
   callback: async ({ args, reply, env }) => {
     if (args.length === 0) {
       return reply(env.command.getHelp(env.handler))
