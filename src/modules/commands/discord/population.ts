@@ -6,6 +6,7 @@ import { constants } from '@app/global/constants'
 import got from 'got'
 import { getEmoji } from '@discord/utils'
 import { divide } from '@app/utils/math'
+import { validateArgumentRange } from '@commands/validators'
 
 type Result = {
   worldId: number
@@ -20,10 +21,12 @@ type Result = {
 export default new Command<discord.Message>({
   keyword: 'population',
   description: 'display the current population',
-  help: 'Usage: `{prefix}population` - displays the current population',
+  help: 'Usage:\n `{prefix}population` - displays the current population\n`{prefix}population numbers` - Diplays the current population with numbers',
   alias: ['pop'],
   callback: async ({ args, reply, raw }) => {
-    if (args.length > 0) return
+    validateArgumentRange(args.length, 0, 1)
+
+    const numbersBool = args.length === 1 && args[0] === 'numbers'
 
     const url = `https://ps2.fisu.pw/api/population/?world=${constants.planetside.worldIds.miller}`
 
@@ -50,19 +53,27 @@ export default new Command<discord.Message>({
 
     let message = `**Miller population:** ${totalPop}\n`
     message += [
-      `${
-        getEmoji(raw.channel, 'faction_logo_tr')?.toString() || ' TR'
-      } ${Math.round(divide(population.tr, totalPop) * 100)}%`,
-      `${
-        getEmoji(raw.channel, 'faction_logo_nc')?.toString() || ' NC'
-      } ${Math.round(divide(population.nc, totalPop) * 100)}%`,
-      `${
-        getEmoji(raw.channel, 'faction_logo_vs')?.toString() || ' VS'
-      } ${Math.round(divide(population.vs, totalPop) * 100)}%`,
-      `${
-        getEmoji(raw.channel, 'faction_logo_ns')?.toString() || ' NS'
-      } ${Math.round(divide(population.ns, totalPop) * 100)}%`,
-    ].join('    ')
+      `${getEmoji(raw.channel, 'faction_logo_tr')?.toString() || ' TR'} ${
+        numbersBool
+          ? population.tr
+          : Math.round(divide(population.tr, totalPop) * 100).toString() + '%'
+      }`,
+      `${getEmoji(raw.channel, 'faction_logo_nc')?.toString() || ' NC'} ${
+        numbersBool
+          ? population.nc
+          : Math.round(divide(population.nc, totalPop) * 100).toString() + '%'
+      }`,
+      `${getEmoji(raw.channel, 'faction_logo_vs')?.toString() || ' VS'} ${
+        numbersBool
+          ? population.vs
+          : Math.round(divide(population.vs, totalPop) * 100).toString() + '%'
+      }`,
+      `${getEmoji(raw.channel, 'faction_logo_ns')?.toString() || ' NS'} ${
+        numbersBool
+          ? population.ns
+          : Math.round(divide(population.ns, totalPop) * 100).toString() + '%'
+      }`,
+    ].join('      ')
 
     reply(message)
   },
