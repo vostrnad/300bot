@@ -21,10 +21,14 @@ type Result = {
 export default new Command<discord.Message>({
   keyword: 'population',
   description: 'display the current population',
-  help: 'Usage:\n `{prefix}population` - displays the current population\n`{prefix}population numbers` - Diplays the current population with numbers',
+  help: 'Usage:\n`{prefix}population` - displays the current population\n`{prefix}population numbers` - diplays the current population with numbers',
   alias: ['pop'],
-  callback: async ({ args, reply, raw }) => {
+  callback: async ({ args, reply, raw, env }) => {
     validateArgumentRange(args.length, 0, 1)
+
+    if (args.length === 1 && args[0] !== 'numbers') {
+      return reply(env.command.getHelp(env.handler))
+    }
 
     const numbersBool = args.length === 1 && args[0] === 'numbers'
 
@@ -73,7 +77,7 @@ export default new Command<discord.Message>({
           ? population.ns
           : Math.round(divide(population.ns, totalPop) * 100).toString() + '%'
       }`,
-    ].join('      ')
+    ].join('    ')
 
     reply(message)
   },
