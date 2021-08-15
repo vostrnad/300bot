@@ -16,7 +16,7 @@ export default new Command<discord.Message>({
   keyword: 'hangman',
   description: 'play a hangman game',
   help: 'Usage: `{prefix}hangman` - play a hangman game',
-  callback: async ({ reply, args, raw, env }) => {
+  callback: async ({ args, raw, env }) => {
     validateArgumentNumber(args.length, 0)
 
     const hangmanPics = [
@@ -116,7 +116,7 @@ export default new Command<discord.Message>({
       })) as Word
 
     //Display embed
-    reply(word.word)
+    //reply(word.word)
 
     let guesses = ''
     let tries = 0
