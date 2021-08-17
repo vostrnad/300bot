@@ -9,12 +9,13 @@ import { randomInteger } from '@app/utils/random'
 //   definition: string
 //   pronunciation: string
 // }
+const activeChannels = new Set()
 
 export default new Command<discord.Message>({
   keyword: 'hangman',
   description: 'play a hangman game',
   help: 'Usage: `{prefix}hangman` - play a hangman game',
-  callback: async ({ args, raw, env }) => {
+  callback: async ({ args, raw, reply }) => {
     validateArgumentNumber(args.length, 0)
 
     const hangmanPics = [
@@ -116,6 +117,11 @@ export default new Command<discord.Message>({
     //Display embed
     //reply(word)
 
+    if (activeChannels.has(raw.channel.id))
+      return reply('A game of hangman is already running in this channel')
+
+    activeChannels.add(raw.channel.id)
+
     const word = hangmanWordsList[randomInteger(hangmanWordsList.length)]
 
     //reply(word)
@@ -139,14 +145,9 @@ export default new Command<discord.Message>({
 
     const messageCollector = raw.channel.createMessageCollector(filter)
 
-    const otherGameStart = raw.channel.createMessageCollector(
-      (m: discord.Message) =>
-        m.content === `${env.handler.prefix}${env.command.keyword}`,
-    )
-
     messageCollector.on('collect', (m: discord.Message) => {
-      let correctGuess = false
-      console.log(`Collected ${m.content}`)
+      let addAttempt = true
+      let deleteMsg = true
       if (!guesses.includes(m.content.toUpperCase()) && m.content.length === 1)
         guesses += m.content.toUpperCase()
 
@@ -154,7 +155,7 @@ export default new Command<discord.Message>({
         m.content.length === 1 &&
         word.toLowerCase().includes(m.content.toLowerCase())
       ) {
-        correctGuess = true
+        addAttempt = false
         for (let k = 0; k < word.length; k++) {
           if (word.charAt(k).toLowerCase() === m.content.toLowerCase()) {
             lettersDiscovered += 1
@@ -162,31 +163,45 @@ export default new Command<discord.Message>({
           }
         }
       }
-
       if (
         lettersDiscovered === word.length ||
         m.content.toUpperCase() === word.toUpperCase()
       ) {
-        correctGuess = true
+        addAttempt = false
         won = true
         wordDisplay = word
+      } else {
+        if (word.length === m.content.length) {
+          for (let k = 0; k < word.length; k++) {
+            if (
+              guesses.includes(word.charAt(k).toUpperCase()) &&
+              m.content.charAt(k).toLowerCase() !== word.charAt(k).toLowerCase()
+            ) {
+              addAttempt = false
+              deleteMsg = false
+            }
+          }
+        }
       }
 
-      if (!correctGuess) tries += 1
+      if (addAttempt) tries += 1
 
       hangmanEmbed = genHangmanEmbed(wordDisplay, guesses, tries)
       void embedMessage.edit({ embed: hangmanEmbed })
 
       if (tries >= hangmanPics.length - 1) {
         hangmanEmbed = genHangmanEmbed(word, guesses, tries)
-        hangmanEmbed.setFooter(`Game lost`).setColor('#1D2439').setTimestamp()
+        hangmanEmbed
+          .setFooter(`Game lost by ${m.author.username}`)
+          .setColor('#1D2439')
+          .setTimestamp()
         void embedMessage.edit({ embed: hangmanEmbed })
         messageCollector.stop()
-        otherGameStart.stop()
+        activeChannels.delete(raw.channel.id)
       }
 
       void (async () => {
-        await m.delete()
+        if (deleteMsg) await m.delete()
       })()
 
       if (won) {
@@ -196,18 +211,17 @@ export default new Command<discord.Message>({
           .setTimestamp()
         void embedMessage.edit({ embed: hangmanEmbed })
         messageCollector.stop()
-        otherGameStart.stop()
       }
     })
 
-    otherGameStart.on('collect', () => {
-      hangmanEmbed
-        .setFooter('Game aborted due to new game starting in this channel')
-        .setColor('#1D2439')
-        .setTimestamp()
-      void embedMessage.edit({ embed: hangmanEmbed })
-      messageCollector.stop()
-      otherGameStart.stop()
-    })
+    // otherGameStart.on('collect', () => {
+    //   hangmanEmbed
+    //     .setFooter('Game aborted due to new game starting in this channel')
+    //     .setColor('#1D2439')
+    //     .setTimestamp()
+    //   void embedMessage.edit({ embed: hangmanEmbed })
+    //   messageCollector.stop()
+    //   otherGameStart.stop()
+    // })
   },
 })
