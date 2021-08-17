@@ -27,11 +27,13 @@
     "got": "^11.8.2",
     "mathjs": "^9.4.4",
     "snakecase-keys": "^4.0.2",
+    "workerpool": "^6.1.5",
     "ws": "^8.0.0"
   },
   "devDependencies": {
     "@types/jest": "^26.0.24",
     "@types/node": "^16.4.12",
+    "@types/workerpool": "^6.1.0",
     "@types/ws": "^7.4.7",
     "@typescript-eslint/eslint-plugin": "^4.29.0",
     "@typescript-eslint/parser": "^4.29.0",

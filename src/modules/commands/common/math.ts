@@ -1,8 +1,6 @@
-import { evaluate } from 'mathjs'
+import { Promise as WorkerPoolPromise } from 'workerpool'
 import { Command } from '@commands/CommandHandler'
-import { roundIfClose } from '@app/utils/math'
-
-type MathJsResult = number | { re: number; im: number }
+import { math } from '@app/workers'
 
 export default new Command({
   keyword: 'math',
@@ -11,7 +9,7 @@ export default new Command({
   options: {
     lastArgNumber: 1,
   },
-  callback: ({ args, reply, env }) => {
+  callback: async ({ args, reply, env }) => {
     if (args.length === 0) {
       return reply(env.command.getHelp(env.handler))
     }
@@ -19,23 +17,14 @@ export default new Command({
     const expression = args[0]
 
     try {
-      const res = evaluate(expression) as MathJsResult
-
-      if (typeof res === 'object') {
-        if (typeof res.re === 'number' && typeof res.im === 'number') {
-          res.re = roundIfClose(res.re, 1e-12)
-          res.im = roundIfClose(res.im, 1e-12)
-        }
-        return reply(`= ${res.toString()}`)
-      } else {
-        if (Number.isFinite(res)) {
-          return reply(`= ${roundIfClose(res, 1e-12)}`)
-        } else {
-          return reply('Error: The result is too big.')
-        }
-      }
+      const res = (await math
+        .exec('evaluate', [expression])
+        .timeout(1000)) as string
+      return reply(`= ${res}`)
     } catch (e: unknown) {
-      if (e instanceof Error) {
+      if (e instanceof WorkerPoolPromise.TimeoutError) {
+        return reply(`Error: The expression took too long to evaluate.`)
+      } else if (e instanceof Error) {
         return reply(`Error: ${e.message}.`)
       } else {
         console.error(e)
