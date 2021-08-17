@@ -1,16 +1,14 @@
-/* eslint-disable @typescript-eslint/no-unsafe-call */
 import { Command } from '@commands/CommandHandler'
 import discord from 'discord.js'
 import { validateArgumentNumber } from '../validators'
-import got from 'got'
-import camelcaseKeys from 'camelcase-keys'
-import { isRecord } from '@app/validators/object'
+import { hangmanWordsList } from '@app/global/english_words'
+import { randomInteger } from '@app/utils/random'
 
-type Word = {
-  word: string
-  definition: string
-  pronunciation: string
-}
+// type Word = {
+//   word: string
+//   definition: string
+//   pronunciation: string
+// }
 
 export default new Command<discord.Message>({
   keyword: 'hangman',
@@ -100,29 +98,35 @@ export default new Command<discord.Message>({
 
     //Find a random word
 
-    const url = `https://random-words-api.vercel.app/word`
+    // const url = `https://random-words-api.vercel.app/word`
 
-    const word = (await got(url)
-      .json()
-      .then((data) => {
-        if (!isRecord(data)) {
-          return Promise.reject(new Error(`Unexpected query return type`))
-        }
-        if (!Array.isArray(data)) {
-          return Promise.reject(new Error(`List is not an array`))
-        }
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-return
-        return camelcaseKeys(data[0], { deep: true })
-      })) as Word
+    // const word = (await got(url)
+    //   .json()
+    //   .then((data) => {
+    //     if (!isRecord(data)) {
+    //       return Promise.reject(new Error(`Unexpected query return type`))
+    //     }
+    //     if (!Array.isArray(data)) {
+    //       return Promise.reject(new Error(`List is not an array`))
+    //     }
+    //     // eslint-disable-next-line @typescript-eslint/no-unsafe-return
+    //     return camelcaseKeys(data[0], { deep: true })
+    //   })) as Word
 
     //Display embed
-    //reply(word.word)
+    //reply(word)
+
+    const word = hangmanWordsList[randomInteger(hangmanWordsList.length)]
+
+    //reply(word)
 
     let guesses = ''
     let tries = 0
     let lettersDiscovered = 0
 
-    let wordDisplay = '🔵'.repeat(word.word.length)
+    let won = false
+
+    let wordDisplay = '🔵'.repeat(word.length)
 
     let hangmanEmbed = genHangmanEmbed(wordDisplay, guesses, tries)
     const embedMessage = await raw.channel.send({
@@ -131,8 +135,7 @@ export default new Command<discord.Message>({
 
     //Listen for inputs
     const filter = (m: discord.Message) =>
-      m.content.length === 1 ||
-      m.content.toUpperCase() === word.word.toUpperCase()
+      m.content.length === 1 || m.content.length === word.length
 
     const messageCollector = raw.channel.createMessageCollector(filter)
 
@@ -142,39 +145,40 @@ export default new Command<discord.Message>({
     )
 
     messageCollector.on('collect', (m: discord.Message) => {
+      let correctGuess = false
       console.log(`Collected ${m.content}`)
-      if (!guesses.includes(m.content.toUpperCase()))
+      if (!guesses.includes(m.content.toUpperCase()) && m.content.length === 1)
         guesses += m.content.toUpperCase()
 
-      if (word.word.toLowerCase().includes(m.content.toLowerCase())) {
-        for (let k = 0; k < word.word.length; k++) {
-          if (word.word.charAt(k).toLowerCase() === m.content.toLowerCase()) {
+      if (
+        m.content.length === 1 &&
+        word.toLowerCase().includes(m.content.toLowerCase())
+      ) {
+        correctGuess = true
+        for (let k = 0; k < word.length; k++) {
+          if (word.charAt(k).toLowerCase() === m.content.toLowerCase()) {
             lettersDiscovered += 1
             wordDisplay = setCharAt(wordDisplay, k * 2, m.content.toUpperCase())
           }
         }
       }
 
+      if (
+        lettersDiscovered === word.length ||
+        m.content.toUpperCase() === word.toUpperCase()
+      ) {
+        correctGuess = true
+        won = true
+        wordDisplay = word
+      }
+
+      if (!correctGuess) tries += 1
+
       hangmanEmbed = genHangmanEmbed(wordDisplay, guesses, tries)
       void embedMessage.edit({ embed: hangmanEmbed })
 
-      if (
-        lettersDiscovered === word.word.length ||
-        m.content.toUpperCase() === word.word.toUpperCase()
-      ) {
-        hangmanEmbed
-          .setFooter(`Game won by ${m.author.username}`)
-          .setColor('#1D2439')
-          .setTimestamp()
-        void embedMessage.edit({ embed: hangmanEmbed })
-        messageCollector.stop()
-        otherGameStart.stop()
-      } else {
-        tries += 1
-      }
-
-      if (tries >= hangmanPics.length) {
-        hangmanEmbed = genHangmanEmbed(word.word, guesses, tries)
+      if (tries >= hangmanPics.length - 1) {
+        hangmanEmbed = genHangmanEmbed(word, guesses, tries)
         hangmanEmbed.setFooter(`Game lost`).setColor('#1D2439').setTimestamp()
         void embedMessage.edit({ embed: hangmanEmbed })
         messageCollector.stop()
@@ -184,6 +188,16 @@ export default new Command<discord.Message>({
       void (async () => {
         await m.delete()
       })()
+
+      if (won) {
+        hangmanEmbed
+          .setFooter(`Game won by ${m.author.username}`)
+          .setColor('#1D2439')
+          .setTimestamp()
+        void embedMessage.edit({ embed: hangmanEmbed })
+        messageCollector.stop()
+        otherGameStart.stop()
+      }
     })
 
     otherGameStart.on('collect', () => {
