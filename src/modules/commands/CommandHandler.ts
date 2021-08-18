@@ -1,4 +1,5 @@
 import { CustomError } from '@app/errors'
+import { log } from '@app/utils/log'
 
 export interface CommandMessage<T = unknown> {
   text: string
@@ -225,7 +226,7 @@ export class CommandHandler<T = unknown> {
             message.reply(`Error: ${e.message}.`)
           } else {
             message.reply('An error occurred while processing the command.')
-            console.error('Command error:', e)
+            log.error('Command error:', e)
           }
         }
 

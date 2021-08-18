@@ -27,6 +27,7 @@ export default new Command({
       } else if (e instanceof Error) {
         return reply(`Error: ${e.message}.`)
       } else {
+        // eslint-disable-next-line no-console
         console.error(e)
         return reply('There was an error calculating the expression.')
       }

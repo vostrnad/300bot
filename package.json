@@ -27,6 +27,7 @@
     "got": "^11.8.2",
     "mathjs": "^9.4.4",
     "snakecase-keys": "^4.0.2",
+    "winston": "^3.3.3",
     "workerpool": "^6.1.5",
     "ws": "^8.0.0"
   },

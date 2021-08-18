@@ -1,3 +1,4 @@
+import { log } from '@app/utils/log'
 import { forEachKey } from './object'
 
 type NodeInteraction = {
@@ -33,7 +34,7 @@ export class SeparationTree {
     timestamp = Date.now(),
   ): void {
     if (initiator === other) {
-      console.error('Two same keys passed to SeparationTree')
+      log.error('Two same keys passed to SeparationTree')
       return
     }
     if (this.isNodeInTree(initiator) && this.isNodeInTree(other)) {
@@ -128,7 +129,7 @@ export class SeparationTree {
       this.updateIndexRecursively(keyNode, key, this.getIndex(parent))
       return keyNode
     } else {
-      console.error('oldParentNode or newParentNode not resolved')
+      log.error('oldParentNode or newParentNode not resolved')
       return null
     }
   }
@@ -212,7 +213,7 @@ export class SeparationTree {
 
   private resolveParentNode(key: string): TreeNode | null {
     if (key === this._rootKey) {
-      console.error('Attempting to resolve parent of root')
+      log.error('Attempting to resolve parent of root')
       return null
     } else if (key in this._index) {
       const index = this._index[key]
@@ -225,7 +226,7 @@ export class SeparationTree {
       }
       return node
     } else {
-      console.error('SeparationTree parent node not resolved')
+      log.error('SeparationTree parent node not resolved')
       return null
     }
   }
@@ -241,7 +242,7 @@ export class SeparationTree {
       }
       return node
     } else {
-      console.error('SeparationTree node not resolved')
+      log.error('SeparationTree node not resolved')
       return null
     }
   }

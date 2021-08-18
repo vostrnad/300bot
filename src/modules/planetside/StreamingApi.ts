@@ -2,6 +2,7 @@ import Ws from 'ws'
 import camelcaseKeys from 'camelcase-keys'
 import { env } from '@app/env'
 import { isRecord } from '@app/validators/object'
+import { log } from '@app/utils/log'
 
 type EventMap = {
   PlayerLogin: {
@@ -64,14 +65,14 @@ class StreamingApi {
     )
 
     this._client.on('open', () => {
-      console.log('Streaming API client connected')
+      log.info('Streaming API client connected')
 
       let socketTimeout: NodeJS.Timeout
 
       const updateSocketTimeout = () => {
         clearTimeout(socketTimeout)
         socketTimeout = setTimeout(() => {
-          console.warn('Restarting Streaming API')
+          log.warn('Restarting Streaming API')
           this._client?.close()
         }, 5 * 60 * 1000)
       }
@@ -88,7 +89,7 @@ class StreamingApi {
           // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
           data = camelcaseKeys(JSON.parse(message.toString()), { deep: true })
         } catch (e) {
-          console.error('Error reading Streaming API message:', e)
+          log.error('Error reading Streaming API message:', e)
           return
         }
         if (!isRecord(data) || !isRecord(data.payload)) return
@@ -106,7 +107,7 @@ class StreamingApi {
       })
 
       this._client?.on('close', () => {
-        console.error('Streaming API client closed')
+        log.info('Streaming API client closed')
         clearTimeout(socketTimeout)
         if (!this._destroyed) {
           setTimeout(() => {
@@ -116,7 +117,7 @@ class StreamingApi {
       })
 
       this._client?.on('error', (e) => {
-        console.error('Streaming API client error:', e)
+        log.error('Streaming API client error:', e)
         this._client?.close()
       })
     })
