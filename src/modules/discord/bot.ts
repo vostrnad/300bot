@@ -5,6 +5,7 @@ import { streamingApi } from '@planetside/StreamingApi'
 import { getTextChannel } from '@discord/utils'
 import { constants } from '@app/global/constants'
 import { getUTCShort } from '@app/utils/time'
+import { log } from '@app/utils/log'
 import { env } from '@app/env'
 
 const client = new discord.Client()
@@ -19,7 +20,7 @@ const sendAnnouncement = (
 ) => {
   const channel = getTextChannel(client, channelId)
   if (!channel) {
-    console.warn(`Could not find text channel ${channelId}`)
+    log.warn(`Could not find text channel ${channelId}`)
     return
   }
   const emoji = emojiName
@@ -31,7 +32,7 @@ const sendAnnouncement = (
 }
 
 client.on('ready', () => {
-  console.log('Discord bot ready')
+  log.info('Discord bot ready')
 
   streamingApi.init()
 
@@ -56,10 +57,20 @@ client.on('ready', () => {
 })
 
 client.on('error', (e) => {
-  console.error('Discord bot error:', e)
+  log.error('Discord bot error:', e)
 })
 
 client.on('message', (message: discord.Message) => {
+  if (message.channel instanceof discord.DMChannel) {
+    const recipient = message.channel.recipient
+    const recipientTag = `${recipient.username}#${recipient.discriminator}`
+    if (message.author === client.user) {
+      log.verbose(`DM to ${recipientTag}: ${message.content}`)
+    } else {
+      log.verbose(`DM from ${recipientTag}: ${message.content}`)
+    }
+  }
+
   if (message.author === client.user) {
     return
   }
@@ -100,6 +111,6 @@ export const init = async (): Promise<void> => {
 }
 
 export const close = (): void => {
-  console.log('Exiting Discord bot')
+  log.info('Exiting Discord bot')
   client.destroy()
 }

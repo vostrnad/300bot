@@ -5,6 +5,7 @@ import camelcaseKeys from 'camelcase-keys'
 import discord from 'discord.js'
 import { constants } from '@app/global/constants'
 import { mod } from '@app/utils/math'
+import { log } from '@app/utils/log'
 
 type Definition = {
   definition: string
@@ -33,7 +34,7 @@ export default new Command<discord.Message>({
       try {
         await reaction.users.remove(raw.author)
       } catch (error) {
-        console.log('Error removing reaction:', error)
+        log.error('Error removing reaction:', error)
       }
     }
 
