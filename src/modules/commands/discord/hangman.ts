@@ -145,16 +145,21 @@ export default new Command<discord.Message>({
 
     //Listen for inputs
     const filter = (m: discord.Message) =>
-      m.content.length === 1 || m.content.length === word.length
+      (m.content.length === 1 &&
+        m.content.search(/[a-zA-Z0-9]*(_[a-zA-Z0-9]+)*/g) !== -1) ||
+      m.content.length === word.length
 
     const messageCollector = raw.channel.createMessageCollector(filter)
 
     messageCollector.on('collect', (m: discord.Message) => {
       let addAttempt = true
       let deleteMsg = true
+
+      //If letter hasn't been guessed yet, add it to the guessed list
       if (!guesses.includes(m.content.toUpperCase()) && m.content.length === 1)
         guesses += m.content.toUpperCase()
 
+      //If it's a right guess, refresh the word display
       if (
         m.content.length === 1 &&
         word.toLowerCase().includes(m.content.toLowerCase())
@@ -167,6 +172,7 @@ export default new Command<discord.Message>({
           }
         }
       }
+
       if (
         lettersDiscovered === word.length ||
         m.content.toUpperCase() === word.toUpperCase()
