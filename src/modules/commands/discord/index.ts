@@ -5,6 +5,7 @@ import certs from './certs'
 import urbandictionary from './urbandictionary'
 import alts from './alts'
 import population from './population'
+import hangman from './hangman'
 
 export const discordCommands = [
   cooldown,
@@ -14,4 +15,5 @@ export const discordCommands = [
   urbandictionary,
   alts,
   population,
+  hangman,
 ]

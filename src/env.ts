@@ -15,8 +15,14 @@ if (altsServiceAddress === null) {
   log.warn('Alts service not configured')
 }
 
+const wordsServiceQuery = process.env.WORDS_SERVICE_QUERY || null
+if (wordsServiceQuery === null) {
+  log.warn('Words service not configured')
+}
+
 export const env = {
   discordBotToken: process.env.DISCORD_BOT_TOKEN,
   daybreakCensusServiceId,
   altsServiceAddress,
+  wordsServiceQuery,
 }
