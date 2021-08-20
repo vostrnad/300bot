@@ -1,22 +1,22 @@
 import { Command } from '@commands/CommandHandler'
 import discord from 'discord.js'
-import { validateArgumentNumber } from '../validators'
-import { hangmanWordsList } from '@app/global/english_words'
+import { validateArgumentRange } from '../validators'
 import { randomInteger } from '@app/utils/random'
+import hangmanp2WordsList from '@app/global/wordlists/hangmanp2WordsList.json'
+import hangmanWordsList from '@app/global/wordlists/hangmanWordsList.json'
+import hangmanNsfwWordsList from '@app/global/wordlists/hangmanNsfwWordsList.json'
 
-// type Word = {
-//   word: string
-//   definition: string
-//   pronunciation: string
-// }
 const activeChannels = new Set()
 
 export default new Command<discord.Message>({
   keyword: 'hangman',
   description: 'play a hangman game',
-  help: 'Usage: `{prefix}hangman` - play a hangman game',
+  help: 'Usage:\n`{prefix}hangman` - play a normal hangman game\n`{prefix}hangman nsfw` - play a nsfw hangman game\n`{prefix}hangman ps2` - play a hangman game with planetide words',
+  options: {
+    lastArgNumber: 1,
+  },
   callback: async ({ args, raw, reply }) => {
-    validateArgumentNumber(args.length, 0)
+    validateArgumentRange(args.length, 0, 1)
 
     const hangmanPics = [
       `  +---+
@@ -97,34 +97,30 @@ export default new Command<discord.Message>({
       return str.substring(0, index) + chr + str.substring(index + 1)
     }
 
-    //Find a random word
+    let word = hangmanWordsList[randomInteger(hangmanWordsList.length)]
 
-    // const url = `https://random-words-api.vercel.app/word`
-
-    // const word = (await got(url)
-    //   .json()
-    //   .then((data) => {
-    //     if (!isRecord(data)) {
-    //       return Promise.reject(new Error(`Unexpected query return type`))
-    //     }
-    //     if (!Array.isArray(data)) {
-    //       return Promise.reject(new Error(`List is not an array`))
-    //     }
-    //     // eslint-disable-next-line @typescript-eslint/no-unsafe-return
-    //     return camelcaseKeys(data[0], { deep: true })
-    //   })) as Word
-
-    //Display embed
-    //reply(word)
+    if (args.length === 1) {
+      switch (args[0]) {
+        case 'nsfw': {
+          word =
+            hangmanNsfwWordsList[randomInteger(hangmanNsfwWordsList.length)]
+          break
+        }
+        case 'ps2': {
+          word = hangmanp2WordsList[randomInteger(hangmanp2WordsList.length)]
+          break
+        }
+        default: {
+          return reply('Unknown words list.')
+          break
+        }
+      }
+    }
 
     if (activeChannels.has(raw.channel.id))
-      return reply('A game of hangman is already running in this channel')
+      return reply('A game of hangman is already running in this channel.')
 
     activeChannels.add(raw.channel.id)
-
-    const word = hangmanWordsList[randomInteger(hangmanWordsList.length)]
-
-    //reply(word)
 
     let guesses = ''
     let tries = 0
@@ -133,6 +129,14 @@ export default new Command<discord.Message>({
     let won = false
 
     let wordDisplay = '🔵'.repeat(word.length)
+    if (word.includes('_')) {
+      for (let k = 0; k < word.length; k++) {
+        if (word.charAt(k) === '_') {
+          wordDisplay = setCharAt(wordDisplay, k * 2, '_')
+          lettersDiscovered += 1
+        }
+      }
+    }
 
     let hangmanEmbed = genHangmanEmbed(wordDisplay, guesses, tries)
     const embedMessage = await raw.channel.send({
@@ -211,17 +215,8 @@ export default new Command<discord.Message>({
           .setTimestamp()
         void embedMessage.edit({ embed: hangmanEmbed })
         messageCollector.stop()
+        activeChannels.delete(raw.channel.id)
       }
     })
-
-    // otherGameStart.on('collect', () => {
-    //   hangmanEmbed
-    //     .setFooter('Game aborted due to new game starting in this channel')
-    //     .setColor('#1D2439')
-    //     .setTimestamp()
-    //   void embedMessage.edit({ embed: hangmanEmbed })
-    //   messageCollector.stop()
-    //   otherGameStart.stop()
-    // })
   },
 })
