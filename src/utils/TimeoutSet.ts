@@ -1,3 +1,5 @@
+import { globalIntervals } from '@app/global/timeouts'
+
 export class TimeoutSet {
   private readonly _timeoutMs: number
   private readonly _lastUpdated: Record<string, number> = {}
@@ -5,7 +7,7 @@ export class TimeoutSet {
   constructor(timeoutMs: number) {
     this._timeoutMs = timeoutMs
 
-    setInterval(() => {
+    const interval = setInterval(() => {
       const now = Date.now()
       Object.entries(this._lastUpdated).forEach(([key, lastUpdated]) => {
         if (now - lastUpdated >= this._timeoutMs) {
@@ -13,6 +15,8 @@ export class TimeoutSet {
         }
       })
     }, 30 * 1000)
+
+    globalIntervals.add(interval)
   }
 
   add(key: string): void {
