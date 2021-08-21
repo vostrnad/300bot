@@ -3,13 +3,14 @@ module.exports = {
     'eslint:recommended',
     'plugin:@typescript-eslint/recommended',
     'plugin:@typescript-eslint/recommended-requiring-type-checking',
+    'plugin:import/typescript',
     'prettier',
   ],
   parser: '@typescript-eslint/parser',
   parserOptions: {
     project: './tsconfig.json',
   },
-  plugins: ['@typescript-eslint', 'prefer-arrow'],
+  plugins: ['@typescript-eslint', 'import', 'prefer-arrow'],
   env: {
     node: true,
   },
@@ -56,6 +57,38 @@ module.exports = {
     'no-useless-concat': 1,
     radix: 2,
     yoda: 1,
+
+    // import
+    'import/no-absolute-path': 2,
+    'import/no-deprecated': 1,
+    'import/no-mutable-exports': 2,
+    'import/first': 1,
+    'import/order': [
+      1,
+      {
+        groups: [
+          'builtin',
+          'external',
+          'internal',
+          'parent',
+          'sibling',
+          'index',
+          'object',
+        ],
+        pathGroups: [
+          {
+            pattern: '@*/**',
+            group: 'internal',
+          },
+        ],
+        pathGroupsExcludedImportTypes: ['builtin'],
+        alphabetize: {
+          order: 'asc',
+        },
+        'newlines-between': 'never',
+      },
+    ],
+    'import/newline-after-import': 1,
 
     // prefer-arrow
     'prefer-arrow/prefer-arrow-functions': 2,

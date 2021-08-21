@@ -1,12 +1,12 @@
 import discord from 'discord.js'
-import { commands } from '@commands/index'
-import { CommandHandler, CommandMessage } from '@commands/CommandHandler'
-import { streamingApi } from '@planetside/StreamingApi'
-import { getTextChannel } from '@discord/utils'
-import { constants } from '@app/global/constants'
-import { getUTCShort } from '@app/utils/time'
-import { log } from '@app/utils/log'
 import { env } from '@app/env'
+import { constants } from '@app/global/constants'
+import { log } from '@app/utils/log'
+import { getUTCShort } from '@app/utils/time'
+import { CommandHandler, CommandMessage } from '@commands/CommandHandler'
+import { commands } from '@commands/index'
+import { getTextChannel } from '@discord/utils'
+import { streamingApi } from '@planetside/StreamingApi'
 
 const client = new discord.Client()
 

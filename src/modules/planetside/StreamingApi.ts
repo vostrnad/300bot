@@ -1,8 +1,8 @@
-import Ws from 'ws'
 import camelcaseKeys from 'camelcase-keys'
+import Ws from 'ws'
 import { env } from '@app/env'
-import { isRecord } from '@app/validators/object'
 import { log } from '@app/utils/log'
+import { isRecord } from '@app/validators/object'
 
 type EventMap = {
   PlayerLogin: {

@@ -1,26 +1,26 @@
 import { Command } from '@commands/CommandHandler'
+import brudistance from './brudistance'
 import coinflip from './coinflip'
 import diceroll from './diceroll'
+import hello from './hello'
 import help from './help'
 import isbruonline from './isbruonline'
-import whoisonline from './whoisonline'
-import hello from './hello'
+import math from './math'
 import membercount from './membercount'
 import recentstats from './recentstats'
 import whoisleading from './whoisleading'
-import math from './math'
-import brudistance from './brudistance'
+import whoisonline from './whoisonline'
 
 export const commonCommands: Command[] = [
+  brudistance,
   coinflip,
   diceroll,
+  hello,
   help,
   isbruonline,
-  whoisonline,
-  hello,
+  math,
   membercount,
   recentstats,
   whoisleading,
-  math,
-  brudistance,
+  whoisonline,
 ]

@@ -1,7 +1,7 @@
-import { Command } from '@commands/CommandHandler'
-import { validateArgumentNumber } from '@commands/validators'
 import { randomBigInt } from '@app/utils/random'
 import { isDigit } from '@app/validators/string'
+import { Command } from '@commands/CommandHandler'
+import { validateArgumentNumber } from '@commands/validators'
 
 export default new Command({
   keyword: 'diceroll',

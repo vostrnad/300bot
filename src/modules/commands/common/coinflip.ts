@@ -1,5 +1,5 @@
-import { Command } from '@commands/CommandHandler'
 import { randomChoice } from '@app/utils/random'
+import { Command } from '@commands/CommandHandler'
 
 export default new Command({
   keyword: 'coinflip',

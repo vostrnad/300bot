@@ -1,8 +1,8 @@
+import { TimeoutSet } from '@app/utils/TimeoutSet'
+import { sentence } from '@app/utils/language'
 import { Command } from '@commands/CommandHandler'
 import { censusApi } from '@planetside/CensusApi'
 import { streamingApi } from '@planetside/StreamingApi'
-import { TimeoutSet } from '@app/utils/TimeoutSet'
-import { sentence } from '@app/utils/language'
 
 const squadLeaders = new TimeoutSet(1800 * 1000)
 const platoonLeaders = new TimeoutSet(1800 * 1000)

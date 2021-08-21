@@ -1,11 +1,11 @@
-import { Command } from '@commands/CommandHandler'
-import got from 'got'
-import { isRecord } from '@app/validators/object'
 import camelcaseKeys from 'camelcase-keys'
 import discord from 'discord.js'
+import got from 'got'
 import { constants } from '@app/global/constants'
-import { mod } from '@app/utils/math'
 import { log } from '@app/utils/log'
+import { mod } from '@app/utils/math'
+import { isRecord } from '@app/validators/object'
+import { Command } from '@commands/CommandHandler'
 
 type Definition = {
   definition: string

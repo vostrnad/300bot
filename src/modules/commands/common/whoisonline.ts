@@ -1,7 +1,7 @@
-import { Command } from '@commands/CommandHandler'
-import { censusApi } from '@planetside/CensusApi'
 import { constants } from '@app/global/constants'
 import { sentence } from '@app/utils/language'
+import { Command } from '@commands/CommandHandler'
+import { censusApi } from '@planetside/CensusApi'
 
 export default new Command({
   keyword: 'whoisonline',

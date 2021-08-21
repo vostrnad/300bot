@@ -1,15 +1,15 @@
 import path from 'path'
-import got from 'got'
-import discord from 'discord.js'
 import camelcaseKeys from 'camelcase-keys'
+import discord from 'discord.js'
+import got from 'got'
+import { env as appEnv } from '@app/env'
+import { PlayerNotFoundError } from '@app/errors'
+import { constants } from '@app/global/constants'
+import { pluralize, sentence } from '@app/utils/language'
 import { Command } from '@commands/CommandHandler'
 import { validateArgumentNumber } from '@commands/validators'
 import { censusApi } from '@planetside/CensusApi'
 import { validatePlayerName } from '@planetside/validators'
-import { pluralize, sentence } from '@app/utils/language'
-import { PlayerNotFoundError } from '@app/errors'
-import { constants } from '@app/global/constants'
-import { env as appEnv } from '@app/env'
 
 type AltsServiceSuccess = {
   names: string[]

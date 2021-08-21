@@ -1,6 +1,6 @@
+import { constants } from '@app/global/constants'
 import { Command } from '@commands/CommandHandler'
 import { censusApi } from '@planetside/CensusApi'
-import { constants } from '@app/global/constants'
 
 export default new Command({
   keyword: 'isbruonline',

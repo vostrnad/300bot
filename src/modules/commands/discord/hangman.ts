@@ -1,7 +1,7 @@
-import got from 'got'
 import discord from 'discord.js'
-import { Command } from '@commands/CommandHandler'
+import got from 'got'
 import { env } from '@app/env'
+import { Command } from '@commands/CommandHandler'
 
 const activeChannels = new Set()
 

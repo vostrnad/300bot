@@ -1,12 +1,12 @@
+import { PlayerNotFoundError } from '@app/errors'
+import { constants } from '@app/global/constants'
+import { SeparationTree } from '@app/utils/SeparationTree'
+import { getShortAgo } from '@app/utils/time'
 import { Command } from '@commands/CommandHandler'
 import { validateArgumentNumber } from '@commands/validators'
 import { censusApi } from '@planetside/CensusApi'
 import { streamingApi } from '@planetside/StreamingApi'
 import { validatePlayerName } from '@planetside/validators'
-import { SeparationTree } from '@app/utils/SeparationTree'
-import { constants } from '@app/global/constants'
-import { PlayerNotFoundError } from '@app/errors'
-import { getShortAgo } from '@app/utils/time'
 
 const events: Record<string, [string, string]> = {
   '1': ['killed', 'was killed by'],

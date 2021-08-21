@@ -1,19 +1,19 @@
-import cooldown from './cooldown'
-import russianroulette from './russianroulette'
-import playerstats from './playerstats'
-import certs from './certs'
-import urbandictionary from './urbandictionary'
 import alts from './alts'
-import population from './population'
+import certs from './certs'
+import cooldown from './cooldown'
 import hangman from './hangman'
+import playerstats from './playerstats'
+import population from './population'
+import russianroulette from './russianroulette'
+import urbandictionary from './urbandictionary'
 
 export const discordCommands = [
-  cooldown,
-  russianroulette,
-  playerstats,
-  certs,
-  urbandictionary,
   alts,
-  population,
+  certs,
+  cooldown,
   hangman,
+  playerstats,
+  population,
+  russianroulette,
+  urbandictionary,
 ]
