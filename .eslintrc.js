@@ -57,6 +57,7 @@ module.exports = {
     'no-sequences': 1,
     'no-useless-concat': 1,
     radix: 2,
+    'spaced-comment': 1,
     yoda: 1,
 
     // import

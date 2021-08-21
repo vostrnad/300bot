@@ -75,7 +75,7 @@ export default new Command<discord.Message>({
 
     if (args.length === 0) return reply(env.command.getHelp(env.handler))
 
-    const timeout = 10 * 60 * 1000 //10 minutes
+    const timeout = 10 * 60 * 1000 // 10 minutes
 
     const word = args[0]
 

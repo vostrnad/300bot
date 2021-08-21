@@ -115,7 +115,7 @@ export default new Command<discord.Message>({
       embed: hangmanEmbed,
     })
 
-    //Listen for inputs
+    // Listen for inputs
     const filter = (m: discord.Message) =>
       /^[a-z]+$/i.test(m.content) &&
       (m.content.length === 1 || m.content.length === word.length)
@@ -127,7 +127,7 @@ export default new Command<discord.Message>({
         let addAttempt = true
         let deleteMsg = true
 
-        //If letter hasn't been guessed yet, add it to the guessed list
+        // If letter hasn't been guessed yet, add it to the guessed list
         if (
           !guesses.includes(m.content.toUpperCase()) &&
           m.content.length === 1
@@ -135,7 +135,7 @@ export default new Command<discord.Message>({
           guesses += m.content.toUpperCase()
         }
 
-        //If it's a right guess, refresh the word display
+        // If it's a right guess, refresh the word display
         if (
           m.content.length === 1 &&
           word.toLowerCase().includes(m.content.toLowerCase())
