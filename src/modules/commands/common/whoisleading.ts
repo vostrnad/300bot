@@ -1,14 +1,14 @@
+import { TimeoutSet } from '@app/utils/TimeoutSet'
+import { sentence } from '@app/utils/language'
 import { Command } from '@commands/CommandHandler'
 import { censusApi } from '@planetside/CensusApi'
 import { streamingApi } from '@planetside/StreamingApi'
-import { TimeoutSet } from '@app/utils/TimeoutSet'
-import { sentence } from '@app/utils/language'
 
 const squadLeaders = new TimeoutSet(1800 * 1000)
 const platoonLeaders = new TimeoutSet(1800 * 1000)
 
 streamingApi.init()
-streamingApi.on('AchievementEarned', ({ characterId, achievementId }) => {
+streamingApi.on('achievementEarned', ({ characterId, achievementId }) => {
   if (achievementId === '90039' || achievementId === '90040') {
     squadLeaders.add(characterId)
   }
@@ -16,7 +16,7 @@ streamingApi.on('AchievementEarned', ({ characterId, achievementId }) => {
     platoonLeaders.add(characterId)
   }
 })
-streamingApi.on('PlayerLogout', ({ characterId }) => {
+streamingApi.on('playerLogout', ({ characterId }) => {
   squadLeaders.remove(characterId)
   platoonLeaders.remove(characterId)
 })

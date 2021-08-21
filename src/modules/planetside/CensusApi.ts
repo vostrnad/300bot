@@ -1,10 +1,11 @@
-import got from 'got'
 import camelcaseKeys from 'camelcase-keys'
+import got from 'got'
+import { snakeCase } from 'snake-case'
 import snakecaseKeys from 'snakecase-keys'
-import { isRecord } from '@app/validators/object'
 import { env } from '@app/env'
 import { flatten } from '@app/utils/object'
 import { DeepPartial } from '@app/utils/types'
+import { isRecord } from '@app/validators/object'
 import { getFactionName } from './resources'
 import {
   Character,
@@ -20,10 +21,10 @@ import {
 
 type CollectionMap = {
   character: Character
-  character_name: CharacterName
-  characters_online_status: CharactersOnlineStatus
+  characterName: CharacterName
+  charactersOnlineStatus: CharactersOnlineStatus
   outfit: Outfit
-  outfit_member: OutfitMember
+  outfitMember: OutfitMember
   title: Title
   world: World
 }
@@ -33,13 +34,14 @@ type CollectionName = keyof CollectionMap
 type QueryObject<T extends CollectionMap[keyof CollectionMap]> = DeepPartial<T>
 
 class CensusApi {
-  private _serviceId: string
+  private readonly _baseUrl: string
 
   constructor(serviceId: string) {
-    this._serviceId = serviceId
+    this._baseUrl = `http://census.daybreakgames.com/s:${serviceId}/get/ps2:v2/`
   }
 
   async getList<T extends CollectionName>(
+    /** Collection name will be converted to snake case. */
     collection: T,
     /** All query keys will be converted to snake case. */
     query: QueryObject<CollectionMap[T]>,
@@ -53,7 +55,7 @@ class CensusApi {
     })
     joins?.forEach((join) => params.append('c:join', join))
     const queryString = params.toString()
-    const url = `http://census.daybreakgames.com/s:${this._serviceId}/get/ps2:v2/${collection}?${queryString}`
+    const url = `${this._baseUrl}${snakeCase(collection)}?${queryString}`
     return got(url)
       .json()
       .then((data) => {
@@ -86,7 +88,7 @@ class CensusApi {
   }
 
   async getCharactersOnlineStatus(characterId: string) {
-    const list = await this.getList('characters_online_status', {
+    const list = await this.getList('charactersOnlineStatus', {
       characterId,
     })
     if (list.length === 0) return null
@@ -168,7 +170,7 @@ class CensusApi {
   }
 
   async getCharacterName(query: QueryObject<CharacterName>) {
-    const list = await this.getList('character_name', query)
+    const list = await this.getList('characterName', query)
     if (list.length === 0) return null
     return list[0]
   }
@@ -190,7 +192,7 @@ class CensusApi {
       }
     }
     const list = (await this.getList(
-      'outfit_member',
+      'outfitMember',
       { outfitId },
       {
         show: 'character_id',
@@ -209,7 +211,7 @@ class CensusApi {
 
   async getPlayerNames(ids: string[]) {
     const list = await this.getList(
-      'character_name',
+      'characterName',
       {
         characterId: ids.join(','),
       },

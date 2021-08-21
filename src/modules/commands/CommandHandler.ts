@@ -70,7 +70,7 @@ export interface CommandConfig<T = unknown> {
 }
 
 export class Command<T = unknown> {
-  private static DEFAULT_OPTIONS: CommandOptions = {
+  private static readonly DEFAULT_OPTIONS: CommandOptions = {
     lastArgNumber: undefined,
     requirePrefix: true,
     firstArgSpace: true,

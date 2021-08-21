@@ -1,9 +1,9 @@
+import { PlayerNotFoundError } from '@app/errors'
+import { divide } from '@app/utils/math'
 import { Command } from '@commands/CommandHandler'
 import { validateArgumentNumber } from '@commands/validators'
 import { censusApi } from '@planetside/CensusApi'
 import { validatePlayerName } from '@planetside/validators'
-import { divide } from '@app/utils/math'
-import { PlayerNotFoundError } from '@app/errors'
 
 export default new Command({
   keyword: 'recentstats',

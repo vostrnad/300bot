@@ -1,12 +1,12 @@
 import discord from 'discord.js'
-import { Command } from '@commands/CommandHandler'
-import { validateArgumentNumber } from '@commands/validators'
-import { censusApi } from '@planetside/CensusApi'
-import { validatePlayerName } from '@planetside/validators'
-import { getEmoji } from '@discord/utils'
+import { PlayerNotFoundError } from '@app/errors'
 import { divide } from '@app/utils/math'
 import { getShortDate } from '@app/utils/time'
-import { PlayerNotFoundError } from '@app/errors'
+import { Command } from '@commands/CommandHandler'
+import { validateArgumentNumber } from '@commands/validators'
+import { getEmoji } from '@discord/utils'
+import { censusApi } from '@planetside/CensusApi'
+import { validatePlayerName } from '@planetside/validators'
 
 export default new Command<discord.Message>({
   keyword: 'playerstats',

@@ -1,7 +1,7 @@
 import discord from 'discord.js'
-import { Command } from '@commands/CommandHandler'
-import { randomBigInt, randomChoice } from '@app/utils/random'
 import { sleep } from '@app/utils/async'
+import { randomBigInt, randomChoice } from '@app/utils/random'
+import { Command } from '@commands/CommandHandler'
 
 export default new Command<discord.Message>({
   keyword: 'russianroulette',

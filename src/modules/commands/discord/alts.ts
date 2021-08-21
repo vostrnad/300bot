@@ -1,15 +1,15 @@
 import path from 'path'
-import got from 'got'
-import discord from 'discord.js'
 import camelcaseKeys from 'camelcase-keys'
+import discord from 'discord.js'
+import got from 'got'
+import { env as appEnv } from '@app/env'
+import { PlayerNotFoundError } from '@app/errors'
+import { constants } from '@app/global/constants'
+import { pluralize, sentence } from '@app/utils/language'
 import { Command } from '@commands/CommandHandler'
 import { validateArgumentNumber } from '@commands/validators'
 import { censusApi } from '@planetside/CensusApi'
 import { validatePlayerName } from '@planetside/validators'
-import { pluralize, sentence } from '@app/utils/language'
-import { PlayerNotFoundError } from '@app/errors'
-import { constants } from '@app/global/constants'
-import { env as appEnv } from '@app/env'
 
 type AltsServiceSuccess = {
   names: string[]
@@ -37,7 +37,7 @@ export default new Command<discord.Message>({
       return reply('The alts service is not configured.')
     }
 
-    const list = await censusApi.getList('character_name', {
+    const list = await censusApi.getList('characterName', {
       name: { firstLower: characterName.toLowerCase() },
     })
     if (list.length === 0) throw new PlayerNotFoundError()
@@ -84,11 +84,10 @@ export default new Command<discord.Message>({
       return reply(textLong)
     } else {
       const sent = await raw.channel.send(textShort)
-      await sent.react(constants.discord.emojis.white_check_mark)
+      await sent.react(constants.discord.emojis.checkMark)
       const collector = sent.createReactionCollector(
         (reaction: discord.MessageReaction, user: discord.User) =>
-          reaction.emoji.toString() ===
-            constants.discord.emojis.white_check_mark &&
+          reaction.emoji.toString() === constants.discord.emojis.checkMark &&
           user.id === constants.discord.userIds.alfav,
         {
           max: 1,

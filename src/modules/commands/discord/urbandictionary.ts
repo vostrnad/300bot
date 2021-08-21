@@ -1,11 +1,11 @@
-import { Command } from '@commands/CommandHandler'
-import got from 'got'
-import { isRecord } from '@app/validators/object'
 import camelcaseKeys from 'camelcase-keys'
 import discord from 'discord.js'
+import got from 'got'
 import { constants } from '@app/global/constants'
-import { mod } from '@app/utils/math'
 import { log } from '@app/utils/log'
+import { mod } from '@app/utils/math'
+import { isRecord } from '@app/validators/object'
+import { Command } from '@commands/CommandHandler'
 
 type Definition = {
   definition: string
@@ -30,7 +30,7 @@ export default new Command<discord.Message>({
     lastArgNumber: 1,
   },
   callback: async ({ args, reply, env, raw }) => {
-    async function removeReaction(reaction: discord.MessageReaction) {
+    const removeReaction = async (reaction: discord.MessageReaction) => {
       try {
         await reaction.users.remove(raw.author)
       } catch (error) {
@@ -38,10 +38,10 @@ export default new Command<discord.Message>({
       }
     }
 
-    function genDefinitionEmbed(
+    const genDefinitionEmbed = (
       definition: Definition,
       len: number,
-    ): discord.MessageEmbed {
+    ): discord.MessageEmbed => {
       const definitionEmbed = new discord.MessageEmbed()
         .setColor('#647CC4')
         .setTitle(`${definition.word} (N°${defN + 1}/${len})`)
@@ -75,7 +75,7 @@ export default new Command<discord.Message>({
 
     if (args.length === 0) return reply(env.command.getHelp(env.handler))
 
-    const timeout = 10 * 60 * 1000 //10 minutes
+    const timeout = 10 * 60 * 1000 // 10 minutes
 
     const word = args[0]
 
@@ -115,10 +115,11 @@ export default new Command<discord.Message>({
 
     const wordString = word.includes(' ') ? 'Expression' : 'Word'
 
-    if (list.length === 0)
+    if (list.length === 0) {
       return reply(
         `${wordString} **${word}** does not exist in urban dictionary.`,
       )
+    }
 
     list = list.sort((a: Definition, b: Definition) => {
       if (b.thumbsUp - b.thumbsDown > a.thumbsUp - a.thumbsDown) return 1
@@ -139,14 +140,14 @@ export default new Command<discord.Message>({
 
     const embedMessage = await raw.channel.send({ embed: definitionEmbed })
 
-    await embedMessage.react(constants.discord.emojis.arrow_left)
-    await embedMessage.react(constants.discord.emojis.arrow_right)
+    await embedMessage.react(constants.discord.emojis.arrowLeft)
+    await embedMessage.react(constants.discord.emojis.arrowRight)
 
     const collector = embedMessage.createReactionCollector(
       (reaction: discord.MessageReaction, user: discord.User) =>
         [
-          constants.discord.emojis.arrow_left,
-          constants.discord.emojis.arrow_right,
+          constants.discord.emojis.arrowLeft,
+          constants.discord.emojis.arrowRight,
         ].includes(reaction.emoji.name) && user.id === raw.author.id,
       {
         time: timeout,
@@ -154,11 +155,13 @@ export default new Command<discord.Message>({
     )
 
     collector.on('collect', (reaction: discord.MessageReaction) => {
-      if (reaction.emoji.name === constants.discord.emojis.arrow_right)
+      if (reaction.emoji.name === constants.discord.emojis.arrowRight) {
         defN = mod(defN + 1, list.length)
+      }
 
-      if (reaction.emoji.name === constants.discord.emojis.arrow_left)
+      if (reaction.emoji.name === constants.discord.emojis.arrowLeft) {
         defN = mod(defN - 1, list.length)
+      }
 
       void (async () => {
         await removeReaction(reaction)

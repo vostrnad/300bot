@@ -1,6 +1,5 @@
 import { Command } from '@commands/CommandHandler'
 
-//Hello command responding with the name of the person
 export default new Command({
   keyword: 'hello',
   description: 'say hello',

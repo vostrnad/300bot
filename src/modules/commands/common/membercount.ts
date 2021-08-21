@@ -1,7 +1,7 @@
+import { constants } from '@app/global/constants'
 import { Command } from '@commands/CommandHandler'
 import { validateArgumentRange } from '@commands/validators'
 import { censusApi } from '@planetside/CensusApi'
-import { constants } from '@app/global/constants'
 
 export default new Command({
   keyword: 'membercount',

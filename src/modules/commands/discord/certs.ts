@@ -1,10 +1,10 @@
 import discord from 'discord.js'
+import { PlayerNotFoundError } from '@app/errors'
 import { Command } from '@commands/CommandHandler'
 import { validateArgumentNumber } from '@commands/validators'
+import { getEmoji } from '@discord/utils'
 import { censusApi } from '@planetside/CensusApi'
 import { validatePlayerName } from '@planetside/validators'
-import { getEmoji } from '@discord/utils'
-import { PlayerNotFoundError } from '@app/errors'
 
 export default new Command<discord.Message>({
   keyword: 'certs',

@@ -1,6 +1,6 @@
 import { Promise as WorkerPoolPromise } from 'workerpool'
-import { Command } from '@commands/CommandHandler'
 import { math } from '@app/workers'
+import { Command } from '@commands/CommandHandler'
 
 export default new Command({
   keyword: 'math',

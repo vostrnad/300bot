@@ -1,12 +1,12 @@
+import { PlayerNotFoundError } from '@app/errors'
+import { constants } from '@app/global/constants'
+import { SeparationTree } from '@app/utils/SeparationTree'
+import { getShortAgo } from '@app/utils/time'
 import { Command } from '@commands/CommandHandler'
 import { validateArgumentNumber } from '@commands/validators'
 import { censusApi } from '@planetside/CensusApi'
 import { streamingApi } from '@planetside/StreamingApi'
 import { validatePlayerName } from '@planetside/validators'
-import { SeparationTree } from '@app/utils/SeparationTree'
-import { constants } from '@app/global/constants'
-import { PlayerNotFoundError } from '@app/errors'
-import { getShortAgo } from '@app/utils/time'
 
 const events: Record<string, [string, string]> = {
   '1': ['killed', 'was killed by'],
@@ -120,14 +120,14 @@ const events: Record<string, [string, string]> = {
 const separationTree = new SeparationTree(constants.planetside.characterIds.bru)
 
 streamingApi.init()
-streamingApi.on('GainExperience', ({ characterId, otherId, experienceId }) => {
+streamingApi.on('gainExperience', ({ characterId, otherId, experienceId }) => {
   if (!(experienceId in events)) return
   if (characterId.length !== otherId.length) return
   if (characterId === otherId) return
 
   separationTree.add(characterId, otherId, experienceId)
 })
-streamingApi.on('PlayerLogout', ({ characterId }) => {
+streamingApi.on('playerLogout', ({ characterId }) => {
   if (characterId === constants.planetside.characterIds.bru) {
     separationTree.clear()
   }
