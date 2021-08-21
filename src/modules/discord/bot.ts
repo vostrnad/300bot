@@ -36,7 +36,7 @@ client.on('ready', () => {
 
   streamingApi.init()
 
-  streamingApi.on('PlayerLogin', ({ characterId }) => {
+  streamingApi.on('playerLogin', ({ characterId }) => {
     if (characterId === constants.planetside.characterIds.bru) {
       sendAnnouncement(
         constants.discord.channelIds.brutracker,
@@ -45,7 +45,7 @@ client.on('ready', () => {
       )
     }
   })
-  streamingApi.on('PlayerLogout', ({ characterId }) => {
+  streamingApi.on('playerLogout', ({ characterId }) => {
     if (characterId === constants.planetside.characterIds.bru) {
       sendAnnouncement(
         constants.discord.channelIds.brutracker,

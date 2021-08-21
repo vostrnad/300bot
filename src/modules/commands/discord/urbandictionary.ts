@@ -140,14 +140,14 @@ export default new Command<discord.Message>({
 
     const embedMessage = await raw.channel.send({ embed: definitionEmbed })
 
-    await embedMessage.react(constants.discord.emojis.arrow_left)
-    await embedMessage.react(constants.discord.emojis.arrow_right)
+    await embedMessage.react(constants.discord.emojis.arrowLeft)
+    await embedMessage.react(constants.discord.emojis.arrowRight)
 
     const collector = embedMessage.createReactionCollector(
       (reaction: discord.MessageReaction, user: discord.User) =>
         [
-          constants.discord.emojis.arrow_left,
-          constants.discord.emojis.arrow_right,
+          constants.discord.emojis.arrowLeft,
+          constants.discord.emojis.arrowRight,
         ].includes(reaction.emoji.name) && user.id === raw.author.id,
       {
         time: timeout,
@@ -155,11 +155,11 @@ export default new Command<discord.Message>({
     )
 
     collector.on('collect', (reaction: discord.MessageReaction) => {
-      if (reaction.emoji.name === constants.discord.emojis.arrow_right) {
+      if (reaction.emoji.name === constants.discord.emojis.arrowRight) {
         defN = mod(defN + 1, list.length)
       }
 
-      if (reaction.emoji.name === constants.discord.emojis.arrow_left) {
+      if (reaction.emoji.name === constants.discord.emojis.arrowLeft) {
         defN = mod(defN - 1, list.length)
       }
 

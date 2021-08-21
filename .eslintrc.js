@@ -20,6 +20,43 @@ module.exports = {
 
     // typescript-eslint
     '@typescript-eslint/array-type': [1, { default: 'array-simple' }],
+    '@typescript-eslint/naming-convention': [
+      1,
+      {
+        selector: 'default',
+        format: ['camelCase'],
+      },
+      {
+        selector: 'variable',
+        modifiers: ['const'],
+        format: ['camelCase', 'UPPER_CASE'],
+      },
+      {
+        selector: 'classProperty',
+        modifiers: ['private'],
+        format: ['camelCase'],
+        leadingUnderscore: 'allow',
+      },
+      {
+        selector: 'classProperty',
+        modifiers: ['readonly'],
+        format: ['camelCase', 'UPPER_CASE'],
+      },
+      {
+        selector: 'classProperty',
+        modifiers: ['private', 'readonly'],
+        format: ['camelCase', 'UPPER_CASE'],
+        leadingUnderscore: 'allow',
+      },
+      {
+        selector: 'objectLiteralProperty',
+        format: ['camelCase', 'UPPER_CASE'],
+      },
+      {
+        selector: 'typeLike',
+        format: ['PascalCase'],
+      },
+    ],
     '@typescript-eslint/no-confusing-non-null-assertion': 1,
     '@typescript-eslint/no-unnecessary-condition': 2,
     '@typescript-eslint/prefer-for-of': 1,

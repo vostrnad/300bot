@@ -1,21 +1,23 @@
+import { camelCase } from 'camel-case'
 import camelcaseKeys from 'camelcase-keys'
+import { pascalCase } from 'pascal-case'
 import Ws from 'ws'
 import { env } from '@app/env'
 import { log } from '@app/utils/log'
 import { isRecord } from '@app/validators/object'
 
 type EventMap = {
-  PlayerLogin: {
+  playerLogin: {
     characterId: string
   }
-  PlayerLogout: {
+  playerLogout: {
     characterId: string
   }
-  AchievementEarned: {
+  achievementEarned: {
     characterId: string
     achievementId: string
   }
-  GainExperience: {
+  gainExperience: {
     characterId: string
     otherId: string
     experienceId: string
@@ -32,10 +34,10 @@ class StreamingApi {
   private _initialized = false
   private _destroyed = false
   private _listeners: { [E in Event]: Array<EventListener<E>> } = {
-    PlayerLogin: [],
-    PlayerLogout: [],
-    AchievementEarned: [],
-    GainExperience: [],
+    playerLogin: [],
+    playerLogout: [],
+    achievementEarned: [],
+    gainExperience: [],
   }
 
   constructor(serviceId: string) {
@@ -79,9 +81,16 @@ class StreamingApi {
 
       updateSocketTimeout()
 
-      this._client?.send(
-        `{"service":"event","action":"subscribe","worlds":["10"],"characters":["all"],"logicalAndCharactersWithWorlds":true,"eventNames":["PlayerLogin","PlayerLogout","AchievementEarned","GainExperience"]}`,
-      )
+      const initialCommand = {
+        service: 'event',
+        action: 'subscribe',
+        worlds: ['10'],
+        characters: ['all'],
+        logicalAndCharactersWithWorlds: true,
+        eventNames: Object.keys(this._listeners).map((e) => pascalCase(e)),
+      }
+
+      this._client?.send(JSON.stringify(initialCommand))
 
       this._client?.on('message', (message) => {
         let data
@@ -95,8 +104,8 @@ class StreamingApi {
         if (!isRecord(data) || !isRecord(data.payload)) return
         updateSocketTimeout()
         const payload = data.payload
-        const eventName = payload.eventName
-        if (typeof eventName !== 'string') return
+        if (typeof payload.eventName !== 'string') return
+        const eventName = camelCase(payload.eventName)
         if (eventName in this._listeners) {
           this._listeners[eventName as Event].forEach((listener) =>
             // https://github.com/microsoft/TypeScript/issues/45373
