@@ -12,9 +12,9 @@ export const flatten = (
   const result: Record<string, string> = {}
   for (const key in query) {
     const item = query[key]
-    if (typeof item === 'object')
+    if (typeof item === 'object') {
       Object.assign(result, flatten(item, c + '.' + key))
-    else result[(c + '.' + key).replace(/^\./, '')] = item
+    } else result[(c + '.' + key).replace(/^\./, '')] = item
   }
   return result
 }

@@ -115,10 +115,11 @@ export default new Command<discord.Message>({
 
     const wordString = word.includes(' ') ? 'Expression' : 'Word'
 
-    if (list.length === 0)
+    if (list.length === 0) {
       return reply(
         `${wordString} **${word}** does not exist in urban dictionary.`,
       )
+    }
 
     list = list.sort((a: Definition, b: Definition) => {
       if (b.thumbsUp - b.thumbsDown > a.thumbsUp - a.thumbsDown) return 1
@@ -154,11 +155,13 @@ export default new Command<discord.Message>({
     )
 
     collector.on('collect', (reaction: discord.MessageReaction) => {
-      if (reaction.emoji.name === constants.discord.emojis.arrow_right)
+      if (reaction.emoji.name === constants.discord.emojis.arrow_right) {
         defN = mod(defN + 1, list.length)
+      }
 
-      if (reaction.emoji.name === constants.discord.emojis.arrow_left)
+      if (reaction.emoji.name === constants.discord.emojis.arrow_left) {
         defN = mod(defN - 1, list.length)
+      }
 
       void (async () => {
         await removeReaction(reaction)

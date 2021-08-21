@@ -131,8 +131,9 @@ export default new Command<discord.Message>({
         if (
           !guesses.includes(m.content.toUpperCase()) &&
           m.content.length === 1
-        )
+        ) {
           guesses += m.content.toUpperCase()
+        }
 
         //If it's a right guess, refresh the word display
         if (

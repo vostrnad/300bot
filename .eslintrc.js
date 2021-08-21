@@ -49,6 +49,7 @@ module.exports = {
     '@typescript-eslint/no-unused-expressions': 2,
 
     // eslint
+    curly: [1, 'multi-line'],
     'no-console': 1,
     eqeqeq: 2,
     'no-extend-native': 2,
