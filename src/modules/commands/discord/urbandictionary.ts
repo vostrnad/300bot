@@ -30,7 +30,7 @@ export default new Command<discord.Message>({
     lastArgNumber: 1,
   },
   callback: async ({ args, reply, env, raw }) => {
-    async function removeReaction(reaction: discord.MessageReaction) {
+    const removeReaction = async (reaction: discord.MessageReaction) => {
       try {
         await reaction.users.remove(raw.author)
       } catch (error) {
@@ -38,10 +38,10 @@ export default new Command<discord.Message>({
       }
     }
 
-    function genDefinitionEmbed(
+    const genDefinitionEmbed = (
       definition: Definition,
       len: number,
-    ): discord.MessageEmbed {
+    ): discord.MessageEmbed => {
       const definitionEmbed = new discord.MessageEmbed()
         .setColor('#647CC4')
         .setTitle(`${definition.word} (N°${defN + 1}/${len})`)

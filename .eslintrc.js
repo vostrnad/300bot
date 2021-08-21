@@ -9,7 +9,7 @@ module.exports = {
   parserOptions: {
     project: './tsconfig.json',
   },
-  plugins: ['@typescript-eslint'],
+  plugins: ['@typescript-eslint', 'prefer-arrow'],
   env: {
     node: true,
   },
@@ -56,5 +56,8 @@ module.exports = {
     'no-useless-concat': 1,
     radix: 2,
     yoda: 1,
+
+    // prefer-arrow
+    'prefer-arrow/prefer-arrow-functions': 2,
   },
 }
