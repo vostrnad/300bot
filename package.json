@@ -30,6 +30,7 @@
     "pascal-case": "^3.1.2",
     "snake-case": "^3.0.4",
     "snakecase-keys": "^4.0.2",
+    "source-map-support": "^0.5.19",
     "winston": "^3.3.3",
     "workerpool": "^6.1.5",
     "ws": "^8.0.0"
@@ -37,6 +38,7 @@
   "devDependencies": {
     "@types/jest": "^26.0.24",
     "@types/node": "^16.4.12",
+    "@types/source-map-support": "^0.5.4",
     "@types/workerpool": "^6.1.0",
     "@types/ws": "^7.4.7",
     "@typescript-eslint/eslint-plugin": "^4.29.0",
