@@ -49,13 +49,14 @@ class CensusApi {
     modifiers?: Record<string, string>,
     joins?: string[],
   ): Promise<Array<CollectionMap[T]>> {
+    const collectionSnakeCase = snakeCase(collection)
     const params = new URLSearchParams(flatten(snakecaseKeys(query)))
     Object.entries(modifiers ?? {}).forEach(([modifier, value]) => {
       params.append(`c:${modifier}`, value)
     })
     joins?.forEach((join) => params.append('c:join', join))
     const queryString = params.toString()
-    const url = `${this._baseUrl}${snakeCase(collection)}?${queryString}`
+    const url = `${this._baseUrl}${collectionSnakeCase}?${queryString}`
     return got(url)
       .json()
       .then((data) => {
@@ -70,7 +71,7 @@ class CensusApi {
           // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
           return Promise.reject(new Error(`Query error: ${data.errorCode}`))
         }
-        const collectionListName = `${collection}_list`
+        const collectionListName = `${collectionSnakeCase}_list`
         const list = data[collectionListName]
         if (!list) {
           return Promise.reject(
