@@ -63,6 +63,7 @@ module.exports = {
     '@typescript-eslint/prefer-includes': 1,
     '@typescript-eslint/prefer-literal-enum-member': 2,
     '@typescript-eslint/prefer-optional-chain': 1,
+    '@typescript-eslint/prefer-readonly': 2,
     '@typescript-eslint/prefer-string-starts-ends-with': 1,
     '@typescript-eslint/promise-function-async': 1,
     '@typescript-eslint/switch-exhaustiveness-check': 2,

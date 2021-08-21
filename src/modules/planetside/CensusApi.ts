@@ -34,7 +34,7 @@ type CollectionName = keyof CollectionMap
 type QueryObject<T extends CollectionMap[keyof CollectionMap]> = DeepPartial<T>
 
 class CensusApi {
-  private _baseUrl: string
+  private readonly _baseUrl: string
 
   constructor(serviceId: string) {
     this._baseUrl = `http://census.daybreakgames.com/s:${serviceId}/get/ps2:v2/`

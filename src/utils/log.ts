@@ -22,7 +22,7 @@ const consoleLogFormat = winston.format.combine(
 )
 
 class Logger {
-  private _logger: winston.Logger
+  private readonly _logger: winston.Logger
 
   constructor(level: string) {
     this._logger = winston.createLogger({

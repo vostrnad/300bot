@@ -29,11 +29,11 @@ type Event = keyof EventMap
 type EventListener<E extends Event> = (value: EventMap[E]) => void
 
 class StreamingApi {
-  private _serviceId: string
+  private readonly _serviceId: string
   private _client: Ws | null = null
   private _initialized = false
   private _destroyed = false
-  private _listeners: { [E in Event]: Array<EventListener<E>> } = {
+  private readonly _listeners: { [E in Event]: Array<EventListener<E>> } = {
     playerLogin: [],
     playerLogout: [],
     achievementEarned: [],
