@@ -11,11 +11,14 @@
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
     "resolveJsonModule": true,
+    "typeRoots": ["node_modules/@types", "types"],
     "paths": {
       "@app/*": ["src/*"],
       "@commands/*": ["src/modules/commands/*"],
       "@discord/*": ["src/modules/discord/*"],
-      "@planetside/*": ["src/modules/planetside/*"]
+      "@planetside/*": ["src/modules/planetside/*"],
+
+      "@test/*": ["test/*"]
     }
   }
 }

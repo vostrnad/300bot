@@ -133,4 +133,12 @@ module.exports = {
     // prefer-arrow
     'prefer-arrow/prefer-arrow-functions': 2,
   },
+  overrides: [
+    {
+      files: ['**/*.test.ts'],
+      rules: {
+        '@typescript-eslint/naming-convention': 0,
+      },
+    },
+  ],
 }

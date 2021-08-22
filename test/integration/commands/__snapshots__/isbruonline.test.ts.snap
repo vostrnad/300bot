@@ -1,0 +1,19 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`isbruonline should say Bru is offline 1`] = `
+Object {
+  "pathname": "/s:test/get/ps2:v2/characters_online_status",
+  "searchParams": Object {
+    "character_id": "5429155161363015665",
+  },
+}
+`;
+
+exports[`isbruonline should say Bru is online 1`] = `
+Object {
+  "pathname": "/s:test/get/ps2:v2/characters_online_status",
+  "searchParams": Object {
+    "character_id": "5429155161363015665",
+  },
+}
+`;
