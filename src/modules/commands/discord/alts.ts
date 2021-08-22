@@ -6,10 +6,15 @@ import { env as appEnv } from '@app/env'
 import { PlayerNotFoundError } from '@app/errors'
 import { constants } from '@app/global/constants'
 import { pluralize, sentence } from '@app/utils/language'
+import { log } from '@app/utils/log'
 import { Command } from '@commands/CommandHandler'
 import { validateArgumentNumber } from '@commands/validators'
 import { censusApi } from '@planetside/CensusApi'
 import { validatePlayerName } from '@planetside/validators'
+
+if (appEnv.altsServiceAddress === null) {
+  log.warn('Alts service not configured')
+}
 
 type AltsServiceSuccess = {
   names: string[]
@@ -91,7 +96,7 @@ export default new Command<discord.Message>({
           user.id === constants.discord.userIds.alfav,
         {
           max: 1,
-          time: 86400 * 1000,
+          time: 86_400 * 1000,
         },
       )
       collector.on('collect', () => {

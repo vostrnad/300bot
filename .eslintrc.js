@@ -4,15 +4,31 @@ module.exports = {
     'plugin:@typescript-eslint/recommended',
     'plugin:@typescript-eslint/recommended-requiring-type-checking',
     'plugin:import/typescript',
+    'plugin:jest/recommended',
+    'plugin:node/recommended-module',
     'prettier',
   ],
   parser: '@typescript-eslint/parser',
   parserOptions: {
     project: './tsconfig.json',
   },
-  plugins: ['@typescript-eslint', 'import', 'prefer-arrow'],
+  plugins: [
+    '@typescript-eslint',
+    'import',
+    'jest',
+    'node',
+    'prefer-arrow',
+    'unicorn',
+  ],
   env: {
     node: true,
+  },
+  globals: {
+    __dirname: 'readonly',
+    __filename: 'readonly',
+    exports: 'writable',
+    module: 'readonly',
+    require: 'readonly',
   },
   rules: {
     // increasing error level from recommended preset
@@ -130,8 +146,48 @@ module.exports = {
     ],
     'import/newline-after-import': 1,
 
+    // node
+    'node/no-unpublished-import': 0,
+    'node/no-missing-import': 0,
+    'node/no-path-concat': 2,
+    'node/no-process-exit': 2,
+    'node/exports-style': 2,
+    'node/no-process-env': 1,
+    'node/no-sync': [2, { allowAtRootLevel: true }],
+    'node/prefer-promises/fs': 2,
+
     // prefer-arrow
     'prefer-arrow/prefer-arrow-functions': 2,
+
+    // unicorn
+    'unicorn/consistent-destructuring': 1,
+    'unicorn/escape-case': 1,
+    'unicorn/explicit-length-check': 2,
+    'unicorn/no-abusive-eslint-disable': 2,
+    'unicorn/no-console-spaces': 1,
+    'unicorn/no-hex-escape': 2,
+    'unicorn/no-instanceof-array': 2,
+    'unicorn/no-new-array': 2,
+    'unicorn/no-unreadable-array-destructuring': 1,
+    'unicorn/no-unsafe-regex': 2,
+    'unicorn/no-useless-spread': 1,
+    'unicorn/no-zero-fractions': 1,
+    'unicorn/number-literal-case': 2,
+    'unicorn/numeric-separators-style': 2,
+    'unicorn/prefer-array-find': 2,
+    'unicorn/prefer-array-index-of': 2,
+    'unicorn/prefer-array-some': 2,
+    'unicorn/prefer-date-now': 2,
+    'unicorn/prefer-default-parameters': 2,
+    'unicorn/prefer-includes': 2,
+    'unicorn/prefer-negative-index': 2,
+    'unicorn/prefer-number-properties': [2, { checkInfinity: false }],
+    'unicorn/prefer-optional-catch-binding': 2,
+    'unicorn/prefer-regexp-test': 2,
+    'unicorn/prefer-string-slice': 2,
+    'unicorn/require-array-join-separator': 2,
+    'unicorn/require-number-to-fixed-digits-argument': 2,
+    'unicorn/throw-new-error': 2,
   },
   overrides: [
     {

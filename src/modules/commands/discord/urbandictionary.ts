@@ -52,19 +52,19 @@ export default new Command<discord.Message>({
           {
             name: 'Definition',
             value:
-              definition.definition.length !== 0
+              definition.definition.length > 0
                 ? definition.definition.replace(/\[|\]/g, '*')
                 : '**No definition**',
           },
           {
             name: 'Example',
             value:
-              definition.example.length !== 0
+              definition.example.length > 0
                 ? definition.example.replace(/\[|\]/g, '*')
                 : '**No example**',
           },
         )
-        .addField('Written on', definition.writtenOn.substring(0, 10), true)
+        .addField('Written on', definition.writtenOn.slice(0, 10), true)
         .addField('Thumbs up', definition.thumbsUp, true)
         .addField('Thumbs down', definition.thumbsDown, true)
         .setFooter('Interactive')

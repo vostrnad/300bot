@@ -1,4 +1,5 @@
 import winston from 'winston'
+import { env } from '@app/env'
 
 const levels = {
   error: 0,
@@ -66,4 +67,4 @@ class Logger {
   }
 }
 
-export const log = new Logger(process.env.LOG_LEVEL || 'verbose')
+export const log = new Logger(env.logLevel || 'verbose')
