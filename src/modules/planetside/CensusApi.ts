@@ -3,6 +3,7 @@ import got from 'got'
 import { snakeCase } from 'snake-case'
 import snakecaseKeys from 'snakecase-keys'
 import { env } from '@app/env'
+import { log } from '@app/utils/log'
 import { flatten } from '@app/utils/object'
 import { QueryObjectDeep } from '@app/utils/types'
 import { isRecord } from '@app/validators/object'
@@ -243,6 +244,10 @@ class CensusApi {
     if (list.length === 0) return null
     return list[0]
   }
+}
+
+if (env.daybreakCensusServiceId === 'example') {
+  log.warn('Using default Daybreak API service ID')
 }
 
 export const censusApi = new CensusApi(env.daybreakCensusServiceId)

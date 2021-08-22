@@ -21,8 +21,8 @@ export const constants = {
       alfav: '259419275457069056',
     },
     emojis: {
-      arrowLeft: '\u2b05\ufe0f',
-      arrowRight: '\u27a1\ufe0f',
+      arrowLeft: '\u2B05\uFE0F',
+      arrowRight: '\u27A1\uFE0F',
       checkMark: '\u2705',
     },
   },

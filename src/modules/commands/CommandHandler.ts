@@ -203,7 +203,7 @@ export class CommandHandler<T = unknown> {
           // remove < and > from arguments
           filteredArgs = filteredArgs.map((arg: string) => {
             if (arg.length > 2 && arg.startsWith('<') && arg.endsWith('>')) {
-              return arg.slice(1, arg.length - 1)
+              return arg.slice(1, -1)
             } else {
               return arg
             }

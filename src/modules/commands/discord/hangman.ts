@@ -1,7 +1,12 @@
 import discord from 'discord.js'
 import got from 'got'
 import { env } from '@app/env'
+import { log } from '@app/utils/log'
 import { Command } from '@commands/CommandHandler'
+
+if (env.wordsServiceQuery === null) {
+  log.warn('Words service not configured')
+}
 
 const activeChannels = new Set()
 
@@ -87,7 +92,7 @@ export default new Command<discord.Message>({
 
     const setCharAt = (str: string, index: number, chr: string) => {
       if (index > str.length - 1) return str
-      return str.substring(0, index) + chr + str.substring(index + 1)
+      return str.slice(0, index) + chr + str.slice(index + 1)
     }
 
     if (env.wordsServiceQuery === null) {

@@ -30,8 +30,8 @@ export default new Command({
     }
 
     const KD_MIN = 200
-    const SECONDS_MIN = 72000 // 20 hours
-    const SCORE_MIN = 120000
+    const SECONDS_MIN = 72_000 // 20 hours
+    const SCORE_MIN = 120_000
 
     const months = [
       'm01',
