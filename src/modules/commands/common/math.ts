@@ -1,5 +1,5 @@
 import { Promise as WorkerPoolPromise } from 'workerpool'
-import { math } from '@app/workers'
+import { withMath } from '@app/workers'
 import { Command } from '@commands/CommandHandler'
 
 export default new Command({
@@ -16,21 +16,23 @@ export default new Command({
 
     const expression = args[0]
 
-    try {
-      const res = (await math
-        .exec('evaluate', [expression])
-        .timeout(1000)) as string
-      return reply(`= ${res}`)
-    } catch (e: unknown) {
-      if (e instanceof WorkerPoolPromise.TimeoutError) {
-        return reply(`Error: The expression took too long to evaluate.`)
-      } else if (e instanceof Error) {
-        return reply(`Error: ${e.message}.`)
-      } else {
-        // eslint-disable-next-line no-console
-        console.error(e)
-        return reply('There was an error calculating the expression.')
+    return withMath(async (pool) => {
+      try {
+        const res = (await pool
+          .exec('evaluate', [expression])
+          .timeout(3000)) as string
+        return reply(`= ${res}`)
+      } catch (e: unknown) {
+        if (e instanceof WorkerPoolPromise.TimeoutError) {
+          return reply(`Error: The expression took too long to evaluate.`)
+        } else if (e instanceof Error) {
+          return reply(`Error: ${e.message}.`)
+        } else {
+          // eslint-disable-next-line no-console
+          console.error(e)
+          return reply('There was an error calculating the expression.')
+        }
       }
-    }
+    })
   },
 })

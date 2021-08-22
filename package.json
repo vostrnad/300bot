@@ -4,10 +4,11 @@
   "description": "A rewrite of the original 300bot using discord.js.",
   "main": "dist/index.js",
   "scripts": {
-    "build": "tsc",
-    "lint": "prettier --check . && eslint src",
+    "build": "tsc --build tsconfig.build.json",
+    "lint": "prettier --check . && eslint .",
     "start": "yarn build && node .",
-    "test": "jest src"
+    "test:unit": "jest --verbose ./src",
+    "test:integration": "jest --verbose ./test/integration"
   },
   "repository": {
     "type": "git",
@@ -49,8 +50,10 @@
     "eslint-plugin-prefer-arrow": "^1.2.3",
     "husky": "^4.3.8",
     "jest": "^27.0.6",
+    "jest-extended": "^0.11.5",
     "lint-staged": "^11.1.1",
     "module-alias": "^2.2.2",
+    "nock": "^13.1.2",
     "prettier": "^2.3.2",
     "ts-jest": "^27.0.4",
     "typescript": "^4.3.5"
