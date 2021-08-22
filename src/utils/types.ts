@@ -1,3 +1,5 @@
-export type DeepPartial<T> = {
-  [P in keyof T]?: DeepPartial<T[P]>
+export type QueryObjectDeep<T> = {
+  [P in keyof T]?: T[P] extends string
+    ? string | string[]
+    : QueryObjectDeep<T[P]>
 }
