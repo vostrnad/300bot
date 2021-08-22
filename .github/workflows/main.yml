@@ -19,7 +19,7 @@ jobs:
           node-version: '12'
           cache: 'yarn'
 
-      - run: yarn
+      - run: yarn --frozen-lockfile
       - run: yarn lint
       - run: yarn build
       - run: yarn test:unit
