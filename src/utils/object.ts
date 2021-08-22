@@ -37,3 +37,6 @@ export const forEachKey = <
     callback(object[key as K], key as K)
   })
 }
+
+export const objectToArray = <T>(object: T | T[]): T[] =>
+  Array.isArray(object) ? object : [object]

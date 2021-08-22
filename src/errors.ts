@@ -51,3 +51,9 @@ export class PlayerNotFoundError extends CustomError {
     super('There is no PlanetSide 2 character with this name')
   }
 }
+
+export class CensusApiUnavailableError extends CustomError {
+  constructor() {
+    super('Daybreak API is currently unavailable')
+  }
+}
