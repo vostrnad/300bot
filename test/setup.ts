@@ -1,1 +1,4 @@
-process.env.DAYBREAK_CENSUS_SERVICE_ID = 'test'
+import { resolve } from 'path'
+import dotenv from 'dotenv'
+
+dotenv.config({ path: resolve(__dirname, './.env.test') })
