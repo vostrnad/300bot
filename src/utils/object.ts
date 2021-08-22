@@ -1,20 +1,27 @@
-type StringObject = { [key: string]: string | StringObject }
+type StringObject = { [key: string]: string | string[] | StringObject }
 
 /**
- * Flattens the object into a collection of paths written in dot notation.
+ * Flattens the object into an array of key-value pairs with paths that are
+ * written in dot notation.
  *
- * e.g. `{ foo: { bar: 'test' }}` becomes `{ 'foo.bar': 'test' }`
+ * e.g. `{ foo: { bar: 'test' }}` becomes `[['foo.bar', 'test']]`
  */
 export const flatten = (
   query: StringObject,
   c = '',
-): Record<string, string> => {
-  const result: Record<string, string> = {}
+): Array<[string, string]> => {
+  const result: Array<[string, string]> = []
   for (const key in query) {
     const item = query[key]
-    if (typeof item === 'object') {
-      Object.assign(result, flatten(item, c + '.' + key))
-    } else result[(c + '.' + key).replace(/^\./, '')] = item
+    if (Array.isArray(item)) {
+      item.forEach((subitem) => {
+        result.push([(c + '.' + key).replace(/^\./, ''), subitem])
+      })
+    } else if (typeof item === 'string') {
+      result.push([(c + '.' + key).replace(/^\./, ''), item])
+    } else {
+      result.push(...flatten(item, c + '.' + key))
+    }
   }
   return result
 }

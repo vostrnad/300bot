@@ -4,7 +4,7 @@ import { snakeCase } from 'snake-case'
 import snakecaseKeys from 'snakecase-keys'
 import { env } from '@app/env'
 import { flatten } from '@app/utils/object'
-import { DeepPartial } from '@app/utils/types'
+import { QueryObjectDeep } from '@app/utils/types'
 import { isRecord } from '@app/validators/object'
 import { getFactionName } from './resources'
 import {
@@ -30,8 +30,9 @@ type CollectionMap = {
 }
 
 type CollectionName = keyof CollectionMap
+type CollectionType = CollectionMap[keyof CollectionMap]
 
-type QueryObject<T extends CollectionMap[keyof CollectionMap]> = DeepPartial<T>
+type QueryObject<T extends CollectionType> = QueryObjectDeep<T>
 
 class CensusApi {
   private readonly _baseUrl: string

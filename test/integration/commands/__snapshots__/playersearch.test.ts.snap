@@ -1,0 +1,24 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`playersearch should work with multiple keywords 1`] = `
+Object {
+  "pathname": "/s:test/get/ps2:v2/character_name",
+  "searchParams": Object {
+    "c:limit": "25",
+    "name.first_lower": Array [
+      "*bar",
+      "*foo",
+    ],
+  },
+}
+`;
+
+exports[`playersearch should work with one keyword 1`] = `
+Object {
+  "pathname": "/s:test/get/ps2:v2/character_name",
+  "searchParams": Object {
+    "c:limit": "25",
+    "name.first_lower": "*test",
+  },
+}
+`;

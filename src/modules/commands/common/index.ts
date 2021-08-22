@@ -7,6 +7,7 @@ import help from './help'
 import isbruonline from './isbruonline'
 import math from './math'
 import membercount from './membercount'
+import playersearch from './playersearch'
 import recentstats from './recentstats'
 import whoisleading from './whoisleading'
 import whoisonline from './whoisonline'
@@ -20,6 +21,7 @@ export const commonCommands: Command[] = [
   isbruonline,
   math,
   membercount,
+  playersearch,
   recentstats,
   whoisleading,
   whoisonline,
