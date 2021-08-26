@@ -1,3 +1,6 @@
+import { pluralize, sentence } from './language'
+import { divmod } from './math'
+
 const padTime = (input: string | number) => {
   input = input.toString()
   while (input.length < 2) {
@@ -47,4 +50,36 @@ export const getShortAgo = (prev: Date, now: Date): string => {
   if (minutes < 60) return `${minutes}m ago`
   const hours = Math.ceil(minutes / 60)
   return `${hours}h ago`
+}
+
+export const getLongTimeDelta = (prev: Date, now: Date): string => {
+  const delta = Math.floor((now.getTime() - prev.getTime()) / 1000)
+
+  let [s, m, h, d] = [0, 0, 0, 0]
+
+  ;[m, s] = divmod(delta, 60)
+  ;[h, m] = divmod(m, 60)
+  ;[d, h] = divmod(h, 24)
+
+  const sw = pluralize(s, 'second')
+  const mw = pluralize(m, 'minute')
+  const hw = pluralize(h, 'hour')
+  const dw = pluralize(d, 'day')
+
+  let start = false
+  const result: string[] = []
+
+  const numbers = [d, h, m, s]
+  const numberWords = [dw, hw, mw, sw]
+
+  numbers.forEach((n: number, index: number) => {
+    if (n > 0 || index === numberWords.length - 1) {
+      start = true
+    }
+    if (start) {
+      result.push(`${n} ${numberWords[index]}`)
+    }
+  })
+
+  return sentence(result)
 }

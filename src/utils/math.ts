@@ -30,3 +30,12 @@ export const roundIfClose = (n: number, eps = 1e-12): number => {
 export const mod = (n: number, m: number): number => {
   return ((n % m) + m) % m
 }
+
+/**
+ * Returns both the result and remainder of a division of two whole numbers.
+ */
+export const divmod = (a: number, b: number): [number, number] => {
+  const remainder = a % b
+  const result = (a - remainder) / b
+  return [result, remainder]
+}
