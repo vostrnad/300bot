@@ -9,6 +9,7 @@ import math from './math'
 import membercount from './membercount'
 import playersearch from './playersearch'
 import recentstats from './recentstats'
+import uptime from './uptime'
 import whoisleading from './whoisleading'
 import whoisonline from './whoisonline'
 
@@ -23,6 +24,7 @@ export const commonCommands: Command[] = [
   membercount,
   playersearch,
   recentstats,
+  uptime,
   whoisleading,
   whoisonline,
 ]
