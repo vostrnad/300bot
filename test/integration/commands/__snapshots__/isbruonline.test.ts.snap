@@ -4,7 +4,7 @@ exports[`isbruonline should say Bru is offline 1`] = `
 Object {
   "pathname": "/s:test/get/ps2:v2/characters_online_status",
   "searchParams": Object {
-    "character_id": "5429155161363015665",
+    "character_id": "8258984096545401457",
   },
 }
 `;
@@ -13,7 +13,7 @@ exports[`isbruonline should say Bru is online 1`] = `
 Object {
   "pathname": "/s:test/get/ps2:v2/characters_online_status",
   "searchParams": Object {
-    "character_id": "5429155161363015665",
+    "character_id": "8258984096545401457",
   },
 }
 `;
