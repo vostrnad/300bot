@@ -1,8 +1,8 @@
 export const constants = {
   planetside: {
     characterIds: {
-      // KommanderShepherd
-      bru: '5429155161363015665',
+      // JohnKonnor1
+      bru: '8258984096545401457',
     },
     outfitIds: {
       // TR Consolidation
