@@ -22,7 +22,7 @@
   },
   "homepage": "https://github.com/vostrnad/300bot#readme",
   "engines": {
-    "node": ">=10.4"
+    "node": ">=12"
   },
   "dependencies": {
     "camel-case": "^4.1.2",
@@ -40,6 +40,7 @@
     "ws": "^8.0.0"
   },
   "devDependencies": {
+    "@types/glob": "^7.1.4",
     "@types/jest": "^26.0.24",
     "@types/node": "^16.4.12",
     "@types/source-map-support": "^0.5.4",
@@ -54,6 +55,7 @@
     "eslint-plugin-node": "^11.1.0",
     "eslint-plugin-prefer-arrow": "^1.2.3",
     "eslint-plugin-unicorn": "^35.0.0",
+    "glob": "^7.1.7",
     "husky": "^4.3.8",
     "jest": "^27.0.6",
     "jest-extended": "^0.11.5",
@@ -67,6 +69,7 @@
   "_moduleAliases": {
     "@app": "dist",
     "@commands": "dist/modules/commands",
+    "@database": "dist/modules/database",
     "@discord": "dist/modules/discord",
     "@planetside": "dist/modules/planetside"
   }

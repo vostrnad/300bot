@@ -38,9 +38,14 @@ class Logger {
     this.info(`Logger started with level ${level}`)
   }
 
-  public error(message: string, error?: Error): void {
+  public error(message: string, error?: unknown): void {
     if (error) {
-      this.log('error', `${message}\n${error.stack ?? error.message}`)
+      if (error instanceof Error) {
+        this.log('error', `${message}\n${error.stack ?? error.message}`)
+      } else {
+        // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
+        this.log('error', `${message}\nNon-standard error: ${error}`)
+      }
     } else {
       this.log('error', message)
     }

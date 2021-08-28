@@ -4,6 +4,7 @@ import cooldown from './cooldown'
 import hangman from './hangman'
 import playerstats from './playerstats'
 import population from './population'
+import prefix from './prefix'
 import russianroulette from './russianroulette'
 import urbandictionary from './urbandictionary'
 
@@ -14,6 +15,7 @@ export const discordCommands = [
   hangman,
   playerstats,
   population,
+  prefix,
   russianroulette,
   urbandictionary,
 ]

@@ -5,6 +5,7 @@ import { log } from '@app/utils/log'
 import { getUTCShort } from '@app/utils/time'
 import { CommandHandler, CommandMessage } from '@commands/CommandHandler'
 import { commands } from '@commands/index'
+import { guildDatabase } from '@database/guilds'
 import { getTextChannel } from '@discord/utils'
 import { streamingApi } from '@planetside/StreamingApi'
 
@@ -75,11 +76,6 @@ client.on('message', (message: discord.Message) => {
     return
   }
 
-  const commandHandler = new CommandHandler<discord.Message>({
-    prefix: '+',
-    commands,
-  })
-
   const reply = (text: string) => {
     if (text.length >= 2000) {
       const TOO_LONG = '... (message too long)'
@@ -87,6 +83,21 @@ client.on('message', (message: discord.Message) => {
     }
     void message.channel.send(text)
   }
+
+  const guild = message.guild
+  const prefix = guild ? guildDatabase.get(`${guild.id}.prefix`) || '+' : '+'
+
+  // eslint-disable-next-line unicorn/prefer-includes
+  if (message.mentions.users.some((user) => user === client.user)) {
+    return reply(
+      `Need my help? Type \`${prefix}help\` to see the list of my commands!`,
+    )
+  }
+
+  const commandHandler = new CommandHandler<discord.Message>({
+    prefix,
+    commands,
+  })
 
   const commandMessage: CommandMessage<discord.Message> = {
     text: message.content,
