@@ -19,6 +19,7 @@ import {
   OutfitMember,
   Title,
   World,
+  OutfitMemberStats,
 } from './types'
 
 type CollectionMap = {
@@ -259,6 +260,22 @@ class CensusApi {
 
   async getWorldById(worldId: string) {
     const list = await this.getList('world', { worldId })
+    if (list.length === 0) return null
+    return list[0]
+  }
+
+  async getOutfitMembersStats(aliasLower: string) {
+    const list = (await this.getList(
+      'outfit',
+      { aliasLower },
+      {
+        limit: '65535',
+        join: [
+          "outfit_member^on:outfit_id^list:1^inject_at:outfit_member^show:character_id(character^on:character_id^inject_at:character^show:name.first'stats'times.last_login'times.minutes_played'prestige_level(characters_stat_history^on:character_id^list:1^inject_at:stats^show:stat_name'all_time))",
+        ],
+      },
+    )) as Array<Outfit & OutfitMemberStats>
+
     if (list.length === 0) return null
     return list[0]
   }

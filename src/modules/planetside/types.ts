@@ -96,3 +96,23 @@ export type World = {
   worldId: string
   name: { en: string }
 }
+
+export type OutfitMemberStats = {
+  outfitMember: Array<{
+    characterId: string
+    character: {
+      prestigeLevel: string
+      name: {
+        first: string
+      }
+      times: {
+        lastLogin: string
+        minutesPlayed: string
+      }
+      stats: Array<{
+        statName: string
+        allTime: string
+      }>
+    }
+  }>
+}

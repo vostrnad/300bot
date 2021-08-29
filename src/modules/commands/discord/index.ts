@@ -2,6 +2,7 @@ import alts from './alts'
 import certs from './certs'
 import cooldown from './cooldown'
 import hangman from './hangman'
+import outfitstats from './outfitstats'
 import playerstats from './playerstats'
 import population from './population'
 import prefix from './prefix'
@@ -20,4 +21,5 @@ export const discordCommands = [
   russianroulette,
   track,
   urbandictionary,
+  outfitstats,
 ]
