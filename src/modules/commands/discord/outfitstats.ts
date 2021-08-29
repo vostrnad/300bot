@@ -4,14 +4,14 @@ import { divide } from '@app/utils/math'
 import { Command } from '@commands/CommandHandler'
 import { getEmoji } from '@discord/utils'
 import { censusApi } from '@planetside/CensusApi'
-import { validateArgumentNumber } from '../validators'
+import { validateArgumentRange } from '../validators'
 
 export default new Command<discord.Message>({
   keyword: 'outfitstats',
   description: 'show PS2 outfit stats',
-  help: "Usage: `{prefix}outfitstats <alias>` - shows outfit's active players average stats",
+  help: "Usage: `{prefix}outfitstats <alias>` - shows an outfit's players average stats\n{prefix}outfitstats <alias> active` - shows an outfit's active players average stats",
   callback: async ({ args, reply, raw }) => {
-    validateArgumentNumber(args.length, 1)
+    validateArgumentRange(args.length, 1, 2)
 
     const outfitAlias = args[0].toLowerCase()
 
@@ -30,6 +30,37 @@ export default new Command<discord.Message>({
         return typeof outfitMember.character !== 'undefined'
       },
     )
+
+    let subtitle =
+      '*Stats for **' +
+      memberStats.outfitMember.length.toString() +
+      '** members*'
+
+    if (args.length > 1) {
+      switch (args[1]) {
+        case 'active':
+          memberStats.outfitMember = memberStats.outfitMember.filter(
+            (outfitMember) => {
+              return (
+                Number(outfitMember.character.times.lastLogin) >
+                Math.floor(Date.now() / 1000) - 2_592_000
+              )
+            },
+          )
+          subtitle =
+            '*Stats for **' +
+            memberStats.outfitMember.length.toString() +
+            '** active members*'
+          break
+
+        default:
+          subtitle =
+            '*Stats for **' +
+            memberStats.outfitMember.length.toString() +
+            '** members*'
+          break
+      }
+    }
 
     memberStats.outfitMember.forEach((outfitMember) => {
       avgBr +=
@@ -98,7 +129,7 @@ export default new Command<discord.Message>({
     reply(
       `__**[${memberStats.alias}] ${
         memberStats.name
-      }** - Average Stats__\n\nBattle Rank **${
+      }** - Average Stats__\n${subtitle}\nBattle Rank **${
         avgBr > 100
           ? (getEmoji(raw.channel, 'asp')?.toString() || ' ☆') +
             (avgBr - 100).toFixed(0).toString()
