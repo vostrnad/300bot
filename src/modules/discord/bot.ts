@@ -9,7 +9,7 @@ import { guildDatabase } from '@database/guilds'
 import { getTextChannel } from '@discord/utils'
 import { streamingApi } from '@planetside/StreamingApi'
 
-const client = new discord.Client()
+export const client = new discord.Client()
 
 /**
  * Sends a message with UTC timestamp and optionally an emoji.

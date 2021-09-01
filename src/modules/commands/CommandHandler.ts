@@ -22,6 +22,7 @@ interface MessageAuthor {
 }
 
 export interface CommandCallbackData<T = unknown> {
+  alias: string
   args: string[]
   reply: ReplyToMessage
   author: MessageAuthor
@@ -212,6 +213,7 @@ export class CommandHandler<T = unknown> {
 
         try {
           await command.callback({
+            alias,
             args: filteredArgs,
             reply: message.reply,
             author: message.author,
