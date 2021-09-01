@@ -52,6 +52,10 @@ class StreamingApi {
     this.connectToEventStreaming()
   }
 
+  restart() {
+    this._client?.close()
+  }
+
   destroy() {
     if (!this._initialized || this._destroyed) return
     this._destroyed = true
@@ -104,10 +108,12 @@ class StreamingApi {
           return
         }
         if (!isRecord(data) || !isRecord(data.payload)) return
-        updateSocketTimeout()
         const payload = data.payload
         if (typeof payload.eventName !== 'string') return
         const eventName = camelCase(payload.eventName)
+        if (eventName === 'gainExperience') {
+          updateSocketTimeout()
+        }
         if (eventName in this._listeners) {
           this._listeners[eventName as Event].forEach((listener) => {
             void (async () => {
