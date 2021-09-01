@@ -6,6 +6,7 @@ import playerstats from './playerstats'
 import population from './population'
 import prefix from './prefix'
 import russianroulette from './russianroulette'
+import track from './track'
 import urbandictionary from './urbandictionary'
 
 export const discordCommands = [
@@ -17,5 +18,6 @@ export const discordCommands = [
   population,
   prefix,
   russianroulette,
+  track,
   urbandictionary,
 ]

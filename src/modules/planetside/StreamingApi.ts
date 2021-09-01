@@ -26,7 +26,9 @@ type EventMap = {
 
 type Event = keyof EventMap
 
-type EventListener<E extends Event> = (value: EventMap[E]) => void
+type EventListener<E extends Event> = (
+  value: EventMap[E],
+) => void | Promise<void>
 
 class StreamingApi {
   private readonly _serviceId: string
@@ -107,11 +109,17 @@ class StreamingApi {
         if (typeof payload.eventName !== 'string') return
         const eventName = camelCase(payload.eventName)
         if (eventName in this._listeners) {
-          this._listeners[eventName as Event].forEach((listener) =>
-            // https://github.com/microsoft/TypeScript/issues/45373
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            listener(payload as any),
-          )
+          this._listeners[eventName as Event].forEach((listener) => {
+            void (async () => {
+              try {
+                // https://github.com/microsoft/TypeScript/issues/45373
+                // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                await listener(payload as any)
+              } catch (e) {
+                log.error('Error in StreamingApi listener:', e)
+              }
+            })()
+          })
         }
       })
 
