@@ -1,6 +1,7 @@
 import alts from './alts'
 import certs from './certs'
 import cooldown from './cooldown'
+import directive from './directive'
 import hangman from './hangman'
 import outfitstats from './outfitstats'
 import playerstats from './playerstats'
@@ -22,4 +23,5 @@ export const discordCommands = [
   track,
   urbandictionary,
   outfitstats,
+  directive,
 ]
