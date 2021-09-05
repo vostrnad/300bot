@@ -31,8 +31,8 @@ export default new Command<discord.Message>({
     memberStats.outfitMember = memberStats.outfitMember.filter(
       (outfitMember) => {
         return (
-          typeof outfitMember.character.stats[8] !== 'undefined' &&
-          typeof outfitMember.character !== 'undefined'
+          typeof outfitMember.character !== 'undefined' &&
+          typeof outfitMember.character.stats[8] !== 'undefined'
         )
       },
     )
