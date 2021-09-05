@@ -1,5 +1,14 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`isbruonline should reverse the reply when isbruoffline alias is used 1`] = `
+Object {
+  "pathname": "/s:test/get/ps2:v2/characters_online_status",
+  "searchParams": Object {
+    "character_id": "8258984096545401457",
+  },
+}
+`;
+
 exports[`isbruonline should say Bru is offline 1`] = `
 Object {
   "pathname": "/s:test/get/ps2:v2/characters_online_status",
