@@ -54,7 +54,7 @@ export class PlayerNotFoundError extends CustomError {
 
 export class OutfitAliasNotFoundError extends CustomError {
   constructor() {
-    super('There is no PlanetSide 2 outfit with this alias')
+    super('There is no PlanetSide 2 outfit with this tag')
   }
 }
 

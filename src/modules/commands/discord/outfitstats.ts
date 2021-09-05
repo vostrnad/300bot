@@ -9,8 +9,11 @@ import { validateArgumentRange } from '../validators'
 export default new Command<discord.Message>({
   keyword: 'outfitstats',
   description: 'show PS2 outfit stats',
-  help: "Usage: `{prefix}outfitstats <alias>` - shows an outfit's players average stats\n{prefix}outfitstats <alias> active` - shows an outfit's active players average stats",
-  callback: async ({ args, reply, raw }) => {
+  help: "Usage:\n`{prefix}outfitstats <alias>` - shows an outfit's players average stats\n`{prefix}outfitstats <alias> active` - shows an outfit's active players average stats",
+  callback: async ({ args, reply, raw, env }) => {
+    if (args.length === 0) {
+      return reply(env.command.getHelp(env.handler))
+    }
     validateArgumentRange(args.length, 1, 2)
 
     const outfitAlias = args[0].toLowerCase()
@@ -141,8 +144,8 @@ export default new Command<discord.Message>({
       )}** hours\n\n__**Biggest Sweaties**__\n**${
         sweaties[0].character.name.first
       }** has a KDR of **${divide(
-        Number(sweaties[1].character.stats[5].allTime),
-        Number(sweaties[1].character.stats[2].allTime),
+        Number(sweaties[0].character.stats[5].allTime),
+        Number(sweaties[0].character.stats[2].allTime),
       ).toFixed(3)}**\n**${
         sweaties[1].character.name.first
       }** has a KDR of **${divide(
@@ -153,7 +156,7 @@ export default new Command<discord.Message>({
       }** has a KDR of **${divide(
         Number(sweaties[2].character.stats[5].allTime),
         Number(sweaties[2].character.stats[2].allTime),
-      ).toFixed(0)}**\n\n__**Best SPM**__\n**${
+      ).toFixed(3)}**\n\n__**Best SPM**__\n**${
         goodPlayers[0].character.name.first
       }** has a SPM of **${divide(
         Number(goodPlayers[1].character.stats[8].allTime),
@@ -168,7 +171,7 @@ export default new Command<discord.Message>({
       }** has a SPM of **${divide(
         Number(goodPlayers[2].character.stats[8].allTime),
         Number(goodPlayers[2].character.times.minutesPlayed),
-      ).toFixed(3)}**\n\n__**Biggest Nerds**__\n**${
+      ).toFixed(0)}**\n\n__**Biggest Nerds**__\n**${
         biggestNerds[0].character.name.first
       }** played for **${divide(
         Number(biggestNerds[0].character.times.minutesPlayed),
