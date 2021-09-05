@@ -22,4 +22,13 @@ describe('isbruonline', () => {
     expect(requestData).toMatchSnapshot()
     expect(reply).toEqual('No, Bru is offline.')
   })
+
+  it('should reverse the reply when isbruoffline alias is used', async () => {
+    const requestData = mockCensusApi({
+      characters_online_status_list: [{ online_status: '10' }],
+    })
+    const reply = await runCommand('+isbruoffline')
+    expect(requestData).toMatchSnapshot()
+    expect(reply).toEqual('No, Bru is online.')
+  })
 })
