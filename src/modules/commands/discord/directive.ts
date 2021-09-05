@@ -56,7 +56,6 @@ export default new Command<discord.Message>({
       })
     })
 
-    // const emojis = ['⬛', '🟫', '⬜', '🟨', '🟪']
     const emojis = ['⚫', '🟤', '⚪', '🟡', '🟣']
 
     let message = ''
@@ -64,8 +63,10 @@ export default new Command<discord.Message>({
       if (cat.directiveTree.length > 0) {
         message += `**${cat.name.en}** directive for **${character.name.first}**\n`
 
-        cat.directiveTree.forEach((tree) => {
-          message += `*${tree.name.en}* ${emojis[tree.directiveTier.length]} | `
+        cat.directiveTree.forEach((tree, idx, array) => {
+          message += `*${tree.name.en}* ${emojis[tree.directiveTier.length]} ${
+            idx !== array.length - 1 ? '|' : ''
+          } `
         })
 
         message += '\n'
