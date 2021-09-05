@@ -30,7 +30,10 @@ export default new Command<discord.Message>({
 
     memberStats.outfitMember = memberStats.outfitMember.filter(
       (outfitMember) => {
-        return typeof outfitMember.character !== 'undefined'
+        return (
+          typeof outfitMember.character.stats[8] !== 'undefined' &&
+          typeof outfitMember.character !== 'undefined'
+        )
       },
     )
 
@@ -63,6 +66,12 @@ export default new Command<discord.Message>({
             '** members*'
           break
       }
+    }
+
+    if (memberStats.outfitMember.length < 3) {
+      return reply(
+        `The outfit **${memberStats.name}** does not have enough members to display proper stats.`,
+      )
     }
 
     memberStats.outfitMember.forEach((outfitMember) => {
@@ -103,8 +112,8 @@ export default new Command<discord.Message>({
       })
       .slice()
 
-    const goodPlayers = memberStats.outfitMember.sort(
-      (goodPlayer1, goodPlayer2) => {
+    const goodPlayers = memberStats.outfitMember
+      .sort((goodPlayer1, goodPlayer2) => {
         if (
           divide(
             Number(goodPlayer1.character.stats[8].allTime),
@@ -117,8 +126,8 @@ export default new Command<discord.Message>({
         ) {
           return 1
         } else return -1
-      },
-    )
+      })
+      .slice()
 
     const avgPlayTime = divide(
       divide(playTime, Number(memberStats.outfitMember.length)),
@@ -147,10 +156,10 @@ export default new Command<discord.Message>({
         Number(sweaties[0].character.stats[5].allTime),
         Number(sweaties[0].character.stats[2].allTime),
       ).toFixed(3)}**\n**${
-        sweaties[1].character.name.first
+        sweaties[1]?.character.name.first
       }** has a KDR of **${divide(
-        Number(sweaties[1].character.stats[5].allTime),
-        Number(sweaties[1].character.stats[2].allTime),
+        Number(sweaties[1]?.character.stats[5].allTime),
+        Number(sweaties[1]?.character.stats[2].allTime),
       ).toFixed(3)}**\n**${
         sweaties[2].character.name.first
       }** has a KDR of **${divide(
@@ -159,8 +168,8 @@ export default new Command<discord.Message>({
       ).toFixed(3)}**\n\n__**Best SPM**__\n**${
         goodPlayers[0].character.name.first
       }** has a SPM of **${divide(
-        Number(goodPlayers[1].character.stats[8].allTime),
-        Number(goodPlayers[1].character.times.minutesPlayed),
+        Number(goodPlayers[0].character.stats[8].allTime),
+        Number(goodPlayers[0].character.times.minutesPlayed),
       ).toFixed(0)}**\n**${
         goodPlayers[1].character.name.first
       }** has a SPM of **${divide(
