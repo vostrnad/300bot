@@ -116,3 +116,26 @@ export type OutfitMemberStats = {
     }
   }>
 }
+
+export type DirectiveTreeCategory = {
+  name: {
+    en: string
+  }
+}
+
+export type PlayerDirective = {
+  directiveTreeCategoryId: string
+  name: {
+    en: string
+  }
+  directiveTree: Array<{
+    directiveTreeId: string
+    name: {
+      en: string
+    }
+    directiveTier: Array<{
+      directiveTierId: string
+      completionTime: string
+    }>
+  }>
+}

@@ -58,6 +58,12 @@ export class OutfitAliasNotFoundError extends CustomError {
   }
 }
 
+export class DirectiveTreeCategoryNotFoundError extends CustomError {
+  constructor() {
+    super('There is no directive category with this name')
+  }
+}
+
 export class CensusApiUnavailableError extends CustomError {
   constructor() {
     super('Daybreak API is currently unavailable')

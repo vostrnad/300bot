@@ -20,6 +20,8 @@ import {
   Title,
   World,
   OutfitMemberStats,
+  DirectiveTreeCategory,
+  PlayerDirective,
 } from './types'
 
 type CollectionMap = {
@@ -30,6 +32,7 @@ type CollectionMap = {
   outfitMember: OutfitMember
   title: Title
   world: World
+  directiveTreeCategory: DirectiveTreeCategory
 }
 
 type CollectionName = keyof CollectionMap
@@ -278,6 +281,29 @@ class CensusApi {
 
     if (list.length === 0) return null
     return list[0]
+  }
+
+  async getPlayerDirective(characterID: string, category: string) {
+    const list = (await this.getList(
+      'directiveTreeCategory',
+      category !== ''
+        ? {
+            name: {
+              en: category,
+            },
+          }
+        : {},
+      {
+        join: [
+          `directive_tree^on:directive_tree_category_id^inject_at:directive_tree^list:1^show:name.en'directive_tree_id(characters_directive_tier^on:directive_tree_id^terms:character_id=${characterID}^list:1^inject_at:directive_tier^show:completion_time'directive_tier_id)`,
+        ],
+        show: 'name.en,directive_tree_category_id',
+        limit: '65535',
+      },
+    )) as PlayerDirective[]
+
+    if (list.length === 0) return null
+    return list
   }
 }
 
