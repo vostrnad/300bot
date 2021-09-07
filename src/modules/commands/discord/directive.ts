@@ -21,7 +21,7 @@ export default new Command<discord.Message>({
     validateArgumentNumber(args.length, 2)
 
     const character = await censusApi.getCharacter({
-      name: { firstLower: args[0] },
+      name: { firstLower: args[0].toLowerCase() },
     })
 
     if (character === null) throw new PlayerNotFoundError()
