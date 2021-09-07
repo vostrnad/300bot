@@ -14,7 +14,10 @@ export default new Command<discord.Message>({
   options: {
     lastArgNumber: 2,
   },
-  callback: async ({ args, reply }) => {
+  callback: async ({ args, reply, env }) => {
+    if (args.length === 0) {
+      return reply(env.command.getHelp(env.handler))
+    }
     validateArgumentNumber(args.length, 2)
 
     const character = await censusApi.getCharacter({
@@ -30,6 +33,12 @@ export default new Command<discord.Message>({
     } else {
       category = args[1]
     }
+
+    category = category
+      .replace(/\s+/g, ' ')
+      .split(' ')
+      .map((s) => s.charAt(0).toUpperCase() + s.slice(1).toLowerCase())
+      .join(' ')
 
     let playerDirective = await censusApi.getPlayerDirective(
       character.characterId,
