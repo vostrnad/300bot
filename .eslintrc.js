@@ -80,6 +80,7 @@ module.exports = {
       },
     ],
     '@typescript-eslint/no-confusing-non-null-assertion': 1,
+    '@typescript-eslint/no-meaningless-void-operator': 2,
     '@typescript-eslint/no-unnecessary-condition': 2,
     '@typescript-eslint/prefer-for-of': 1,
     '@typescript-eslint/prefer-includes': 1,
