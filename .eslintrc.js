@@ -48,6 +48,12 @@ module.exports = {
         format: ['camelCase', 'UPPER_CASE'],
       },
       {
+        selector: 'parameter',
+        modifiers: ['unused'],
+        format: ['camelCase'],
+        leadingUnderscore: 'require',
+      },
+      {
         selector: 'classProperty',
         modifiers: ['private'],
         format: ['camelCase'],

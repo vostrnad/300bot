@@ -1,3 +1,4 @@
+import alerttracker from './alerttracker'
 import alts from './alts'
 import certs from './certs'
 import cooldown from './cooldown'
@@ -11,6 +12,7 @@ import track from './track'
 import urbandictionary from './urbandictionary'
 
 export const discordCommands = [
+  alerttracker,
   alts,
   certs,
   cooldown,
