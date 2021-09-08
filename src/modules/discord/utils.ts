@@ -31,3 +31,40 @@ export const getEmoji = (
     channel.guild.emojis.cache.find(({ name }) => name === emojiName) || null
   )
 }
+
+export const formatWithEmojis = (
+  channel: discord.Channel,
+  message: string,
+): string => {
+  // eslint-disable-next-line unicorn/no-unsafe-regex
+  const emojiExpressionRegex = /{emoji:([^|]*)(?:\|([^}]*))?}/g
+
+  if (channel instanceof discord.TextChannel) {
+    return message.replace(
+      emojiExpressionRegex,
+      (_match, emojiName, fallbackText) => {
+        const emoji = channel.guild.emojis.cache.find(
+          ({ name }) => name === emojiName,
+        )
+        if (emoji) {
+          return emoji.toString()
+        } else if (typeof fallbackText === 'string') {
+          return fallbackText
+        } else {
+          return ''
+        }
+      },
+    )
+  } else {
+    return message.replace(
+      emojiExpressionRegex,
+      (_match, _emojiName, fallbackText) => {
+        if (typeof fallbackText === 'string') {
+          return fallbackText
+        } else {
+          return ''
+        }
+      },
+    )
+  }
+}

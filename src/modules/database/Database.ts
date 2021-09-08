@@ -2,7 +2,7 @@ import fs from 'fs'
 import { resolve } from 'path'
 import { Debounce } from '@app/utils/Debounce'
 import { log } from '@app/utils/log'
-import { Path, PathValue, PartialDeep } from '@app/utils/types'
+import { Path, PathValue, PartialDeep, ReadonlyDeep } from '@app/utils/types'
 
 type DatabaseRecord = { [key in string]: DatabaseRecord | string | number }
 
@@ -41,6 +41,10 @@ export class Database<T extends DatabaseRecord> {
     this._saveDb = new Debounce(200, async () => {
       await fs.promises.writeFile(filePath, JSON.stringify(this._data))
     })
+  }
+
+  get root(): ReadonlyDeep<T> {
+    return this._data
   }
 
   get<P extends Path<T>>(path: P): PartialDeep<PathValue<T, P>> | undefined {

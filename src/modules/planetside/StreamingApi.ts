@@ -22,6 +22,20 @@ type EventMap = {
     otherId: string
     experienceId: string
   }
+  continentLock: {
+    zoneId: string
+  }
+  continentUnlock: {
+    zoneId: string
+  }
+  metagameEvent: {
+    zoneId: string
+    metagameEventId: string
+    metagameEventState: string
+    factionTr: string
+    factionNc: string
+    factionVs: string
+  }
 }
 
 type Event = keyof EventMap
@@ -40,6 +54,9 @@ class StreamingApi {
     playerLogout: [],
     achievementEarned: [],
     gainExperience: [],
+    continentLock: [],
+    continentUnlock: [],
+    metagameEvent: [],
   }
 
   constructor(serviceId: string) {

@@ -5,7 +5,11 @@ export type QueryObjectDeep<T> = {
 }
 
 export type PartialDeep<T> = {
-  [P in keyof T]?: PartialDeep<T>
+  [P in keyof T]?: PartialDeep<T[P]>
+}
+
+export type ReadonlyDeep<T> = {
+  readonly [P in keyof T]: ReadonlyDeep<T[P]>
 }
 
 type PathImpl<T, K extends keyof T> = K extends string
