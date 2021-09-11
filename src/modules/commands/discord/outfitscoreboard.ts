@@ -63,11 +63,15 @@ export default new Command<discord.Message>({
 
     const timeout = 10 * 60 * 1000 // 10 minutes
 
-    const stat = args[1]
-      .replace(/\s+/g, ' ')
-      .split(' ')
-      .map((s) => s.charAt(0).toUpperCase() + s.slice(1).toLowerCase())
-      .join(' ')
+    const acronyms = ['kdr', 'spm'] // Stats that will have a diplay name in full upper case
+
+    const stat = acronyms.includes(args[1].toLowerCase())
+      ? args[1].toUpperCase()
+      : args[1]
+          .replace(/\s+/g, ' ')
+          .split(' ')
+          .map((s) => s.charAt(0).toUpperCase() + s.slice(1).toLowerCase())
+          .join(' ')
 
     const memberStats = await censusApi.getOutfitMembersStats(outfitAlias)
     if (memberStats === null) throw new OutfitAliasNotFoundError()
@@ -85,16 +89,9 @@ export default new Command<discord.Message>({
 
     const displayScoreboard: string[] = []
 
-    let shame = -1
+    let shame = 0
 
-    const supportedStats = [
-      'shame',
-      'playtime',
-      'spm',
-      'kdr',
-      'kills',
-      'deaths',
-    ]
+    const supportedStats = ['playtime', 'spm', 'kdr', 'kills', 'deaths']
 
     if (args.length > 2) {
       switch (args[2]) {
@@ -103,7 +100,7 @@ export default new Command<discord.Message>({
           break
 
         default:
-          reply(env.command.getHelp(env.handler))
+          return reply(env.command.getHelp(env.handler))
           break
       }
     }
@@ -143,8 +140,8 @@ export default new Command<discord.Message>({
                 Number(goodPlayer2.character.times.minutesPlayed),
               )
             ) {
-              return -shame
-            } else return shame
+              return -1
+            } else return 1
           },
         )
 
@@ -171,8 +168,8 @@ export default new Command<discord.Message>({
               Number(sweaty2.character.stats[2].allTime),
             )
           ) {
-            return -shame
-          } else return shame
+            return -1
+          } else return 1
         })
 
         scoreboard.forEach((outfitMember, idx) => {
@@ -191,8 +188,8 @@ export default new Command<discord.Message>({
             Number(p1.character.stats[5].allTime) <
             Number(p2.character.stats[5].allTime)
           ) {
-            return -shame
-          } else return shame
+            return -1
+          } else return 1
         })
 
         scoreboard.forEach((outfitMember, idx) => {
@@ -211,8 +208,8 @@ export default new Command<discord.Message>({
             Number(p1.character.stats[2].allTime) <
             Number(p2.character.stats[2].allTime)
           ) {
-            return -shame
-          } else return shame
+            return -1
+          } else return 1
         })
 
         scoreboard.forEach((outfitMember, idx) => {
@@ -226,15 +223,16 @@ export default new Command<discord.Message>({
         break
 
       default:
-        reply(
+        return reply(
           `Provided stat ${
             args[2]
           } is unknown. Here is the list of supported stats:\n   ${supportedStats.join(
             '\n   ',
           )}`,
         )
-        return
     }
+
+    if (shame) displayScoreboard.reverse()
 
     let page = 0
 
