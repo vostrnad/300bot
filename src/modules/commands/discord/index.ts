@@ -4,6 +4,7 @@ import certs from './certs'
 import cooldown from './cooldown'
 import directive from './directive'
 import hangman from './hangman'
+import outfitscoreboard from './outfitscoreboard'
 import outfitstats from './outfitstats'
 import playerstats from './playerstats'
 import population from './population'
@@ -26,4 +27,5 @@ export const discordCommands = [
   urbandictionary,
   outfitstats,
   directive,
+  outfitscoreboard,
 ]
