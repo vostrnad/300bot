@@ -1,7 +1,8 @@
+import assert from 'assert'
 import discord from 'discord.js'
-import { sleep } from '@app/utils/async'
 import { randomBigInt, randomChoice } from '@app/utils/random'
 import { Command } from '@commands/CommandHandler'
+import { killMember } from '@discord/revive'
 
 export default new Command<discord.Message>({
   keyword: 'russianroulette',
@@ -17,9 +18,11 @@ export default new Command<discord.Message>({
       return reply('The Dead role is not defined.')
     }
 
-    if (rolled === BigInt(1)) {
-      await raw.member?.roles.add(deadRole)
+    // should never fail
+    assert(raw.member)
 
+    if (rolled === BigInt(1)) {
+      await killMember(raw.member, deadRole, 3600 * 1000)
       reply(
         `**${author.displayName}** ` +
           randomChoice([
@@ -29,8 +32,6 @@ export default new Command<discord.Message>({
             'now has a sixth hole in their head.',
           ]),
       )
-      await sleep(10 * 1000)
-      await raw.member?.roles.remove(deadRole)
     } else {
       reply(
         `**${author.displayName}** ` +

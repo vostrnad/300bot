@@ -3,7 +3,7 @@ import { getUTCShort } from '@app/utils/time'
 import { Command } from '@commands/CommandHandler'
 import { validateArgumentNumber } from '@commands/validators'
 import { alertTrackerDatabase } from '@database/alerttracker'
-import { client } from '@discord/bot'
+import { client } from '@discord/client'
 import { formatWithEmojis, getTextChannel } from '@discord/utils'
 import { streamingApi } from '@planetside/StreamingApi'
 import {
