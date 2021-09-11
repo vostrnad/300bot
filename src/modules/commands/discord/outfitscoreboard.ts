@@ -37,10 +37,19 @@ export default new Command<discord.Message>({
         .setColor('#647CC4')
         .setTitle(
           `**${outfitName}** - ${stat} ${
-            shame === -1 ? 'shame' : ''
+            shame === 1 ? 'shame' : ''
           } scoreboard  (Page N°${page + 1}/${len})`,
         )
-        .addField(stat, displayArray.join('\n'), false)
+        .addField(
+          stat,
+          displayArray.slice(0, displayArray.length / 2).join('\n'),
+          true,
+        )
+        .addField(
+          stat,
+          displayArray.slice(displayArray.length / 2).join('\n'),
+          true,
+        )
         .setTimestamp()
         .setFooter('Interactive')
       return scoreboardEmbed
@@ -48,7 +57,9 @@ export default new Command<discord.Message>({
 
     const outfitAlias = args[0].toLowerCase()
 
-    const linesPerDisplay = 10
+    const linesPerDisplay = 15
+
+    const columns = 2
 
     const timeout = 10 * 60 * 1000 // 10 minutes
 
@@ -228,13 +239,13 @@ export default new Command<discord.Message>({
     let page = 0
 
     const scoreLen =
-      floor(divide(displayScoreboard.length, linesPerDisplay)) + 1
+      floor(divide(displayScoreboard.length, linesPerDisplay * 2)) + 1
 
     let scoreboardEmbed = genScoreboardEmbed(
       memberStats.name,
       displayScoreboard.slice(
-        linesPerDisplay * page,
-        linesPerDisplay * page + 10,
+        linesPerDisplay * page * columns,
+        (linesPerDisplay * page + linesPerDisplay) * columns,
       ),
       stat,
       page,
@@ -272,8 +283,8 @@ export default new Command<discord.Message>({
         scoreboardEmbed = genScoreboardEmbed(
           memberStats.name,
           displayScoreboard.slice(
-            linesPerDisplay * page,
-            linesPerDisplay * page + 10,
+            linesPerDisplay * page * columns,
+            (linesPerDisplay * page + linesPerDisplay) * columns,
           ),
           stat,
           page,
