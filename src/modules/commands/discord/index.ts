@@ -4,6 +4,7 @@ import certs from './certs'
 import cooldown from './cooldown'
 import directive from './directive'
 import hangman from './hangman'
+import kill from './kill'
 import outfitscoreboard from './outfitscoreboard'
 import outfitstats from './outfitstats'
 import playerstats from './playerstats'
@@ -19,6 +20,7 @@ export const discordCommands = [
   certs,
   cooldown,
   hangman,
+  kill,
   playerstats,
   population,
   prefix,

@@ -6,10 +6,13 @@ import { getUTCShort } from '@app/utils/time'
 import { CommandHandler, CommandMessage } from '@commands/CommandHandler'
 import { commands } from '@commands/index'
 import { guildDatabase } from '@database/guilds'
+import { client } from '@discord/client'
+import {
+  checkNewMemberDeadRole,
+  scheduleRevivesOnStartup,
+} from '@discord/revive'
 import { getTextChannel } from '@discord/utils'
 import { streamingApi } from '@planetside/StreamingApi'
-
-export const client = new discord.Client()
 
 /**
  * Sends a message with UTC timestamp and optionally an emoji.
@@ -116,6 +119,9 @@ client.on('message', (message: discord.Message) => {
 
   void commandHandler.process(commandMessage)
 })
+
+scheduleRevivesOnStartup()
+checkNewMemberDeadRole()
 
 export const init = async (): Promise<void> => {
   await client.login(env.discordBotToken)

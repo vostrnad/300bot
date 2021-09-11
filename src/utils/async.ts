@@ -8,3 +8,11 @@ export const sleep = async (ms: number): Promise<void> =>
     }, ms)
     globalTimeouts.add(timeout)
   })
+
+export const schedule = async <T>(
+  callback: () => T,
+  ms: number,
+): Promise<T> => {
+  await sleep(ms)
+  return callback()
+}
