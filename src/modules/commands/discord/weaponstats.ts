@@ -48,21 +48,24 @@ export default new Command<discord.Message>({
               Number(weapon.weaponStatsByFaction.weaponKills?.valueNc) +
                 Number(weapon.weaponStatsByFaction.weaponKills?.valueTr) +
                 Number(weapon.weaponStatsByFaction.weaponKills?.valueVs) ||
-              'NA',
+              'N/A',
             inline: true,
           },
           {
             name: 'Deaths',
-            value: weapon.weaponStats.weaponDeaths?.value || 'NA',
+            value: weapon.weaponStats.weaponDeaths?.value || 'N/A',
             inline: true,
           },
           {
             name: 'Playtime',
             value:
-              divide(
-                Number(weapon.weaponStats.weaponPlayTime?.value),
-                3600,
-              ).toFixed(0) + ' hours',
+              (
+                divide(
+                  Number(weapon.weaponStats.weaponPlayTime?.value),
+                  3600,
+                  0,
+                ) || 'N/A'
+              ).toString() + ' hours',
             inline: true,
           },
         )
@@ -80,7 +83,8 @@ export default new Command<discord.Message>({
                     Number(weapon.weaponStatsByFaction.weaponKills?.valueTr) +
                     Number(weapon.weaponStatsByFaction.weaponKills?.valueVs),
                   Number(weapon.weaponStats.weaponDeaths?.value),
-                ).toFixed(3) || 'NA',
+                  3,
+                ) || 'N/A',
               inline: true,
             },
             {
@@ -92,7 +96,8 @@ export default new Command<discord.Message>({
                     Number(weapon.weaponStatsByFaction.weaponKills?.valueVs)) *
                     60,
                   Number(weapon.weaponStats.weaponPlayTime?.value),
-                ).toFixed(3) || 'NA',
+                  3,
+                ) || 'N/A',
               inline: true,
             },
             {
@@ -101,7 +106,8 @@ export default new Command<discord.Message>({
                 divide(
                   Number(weapon.weaponStats.weaponScore?.value) * 60,
                   Number(weapon.weaponStats.weaponPlayTime?.value),
-                ).toFixed(0) || 'NA',
+                  0,
+                ) || 'N/A',
               inline: true,
             },
           )
@@ -109,30 +115,36 @@ export default new Command<discord.Message>({
             {
               name: 'Accuracy',
               value:
-                divide(
-                  Number(weapon.weaponStats.weaponHitCount?.value) * 100,
-                  Number(weapon.weaponStats.weaponFireCount?.value),
-                ).toFixed(3) + ' %' || 'NA',
+                (
+                  divide(
+                    Number(weapon.weaponStats.weaponHitCount?.value) * 100,
+                    Number(weapon.weaponStats.weaponFireCount?.value),
+                    3,
+                  ) || 'N/A'
+                ).toString() + ' %',
               inline: true,
             },
             {
               name: 'HSR',
               value:
-                divide(
-                  (Number(
-                    weapon.weaponStatsByFaction.weaponHeadshots?.valueNc,
-                  ) +
-                    Number(
-                      weapon.weaponStatsByFaction.weaponHeadshots?.valueTr,
+                (
+                  divide(
+                    (Number(
+                      weapon.weaponStatsByFaction.weaponHeadshots?.valueNc,
                     ) +
-                    Number(
-                      weapon.weaponStatsByFaction.weaponHeadshots?.valueVs,
-                    )) *
-                    100,
-                  Number(weapon.weaponStatsByFaction.weaponKills?.valueNc) +
-                    Number(weapon.weaponStatsByFaction.weaponKills?.valueTr) +
-                    Number(weapon.weaponStatsByFaction.weaponKills?.valueVs),
-                ).toFixed(3) + ' %' || 'NA',
+                      Number(
+                        weapon.weaponStatsByFaction.weaponHeadshots?.valueTr,
+                      ) +
+                      Number(
+                        weapon.weaponStatsByFaction.weaponHeadshots?.valueVs,
+                      )) *
+                      100,
+                    Number(weapon.weaponStatsByFaction.weaponKills?.valueNc) +
+                      Number(weapon.weaponStatsByFaction.weaponKills?.valueTr) +
+                      Number(weapon.weaponStatsByFaction.weaponKills?.valueVs),
+                    3,
+                  ) || 'N/A'
+                ).toString() + ' %',
               inline: true,
             },
             {
@@ -143,7 +155,8 @@ export default new Command<discord.Message>({
                   Number(weapon.weaponStatsByFaction.weaponKills?.valueNc) +
                     Number(weapon.weaponStatsByFaction.weaponKills?.valueTr) +
                     Number(weapon.weaponStatsByFaction.weaponKills?.valueVs),
-                ).toFixed(0) || 'NA',
+                  0,
+                ) || 'N/A',
               inline: true,
             },
           )
