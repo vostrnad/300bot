@@ -211,7 +211,6 @@ export default new Command<discord.Message>({
     const weaponStatsReformatted: RefomarttedStats[] = []
 
     weaponStatsList.forEach((weapon) => {
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
       const { weaponStatsByFaction, weaponStats, ...rest } = weapon
       // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
       const line: RefomarttedStats = Object.assign(rest)
@@ -219,16 +218,14 @@ export default new Command<discord.Message>({
       const res: Partial<
         Record<StatNamesByFaction, CharacterWeaponStatsByFaction>
       > = {}
-      // eslint-disable-next-line unicorn/consistent-destructuring
-      weapon.weaponStatsByFaction.forEach((stat) => {
+      weaponStatsByFaction.forEach((stat) => {
         const statNameCamelCase = camelCase(stat.statName) as StatNamesByFaction
         res[statNameCamelCase] = stat
       })
       line.weaponStatsByFaction = res
 
       const res1: Partial<Record<StatNames, CharacterWeaponStats>> = {}
-      // eslint-disable-next-line unicorn/consistent-destructuring
-      weapon.weaponStats.forEach((stat) => {
+      weaponStats.forEach((stat) => {
         const statNameCamelCase = camelCase(stat.statName) as StatNames
         res1[statNameCamelCase] = stat
       })
