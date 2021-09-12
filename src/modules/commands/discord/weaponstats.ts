@@ -17,7 +17,7 @@ import { validateArgumentRange } from '../validators'
 export default new Command<discord.Message>({
   keyword: 'weaponstats',
   description: 'show PS2 player weapon stats',
-  help: 'Usage:\n`{prefix}weaponstats <player name>` - shows a player weapons by kills\n`{prefix}weaponstats <player name> <option>` - shows a player weapons by the specified stat',
+  help: 'Usage:\n`{prefix}weaponstats <player name>` - shows player weapons by kills\n`{prefix}weaponstats <player name> full` - shows full player weapons stats',
   callback: async ({ args, reply, raw, env }) => {
     if (args.length === 0) {
       return reply(env.command.getHelp(env.handler))
