@@ -309,15 +309,15 @@ class CensusApi {
     return list
   }
 
-  async getPlayerWeaponStats(characterID: string) {
+  async getPlayerWeaponStats(characterId: string) {
     const list = (await this.getList(
       'charactersItem',
-      { characterId: characterID },
+      { characterId },
       {
         join: [
           `item^inject_at:item`,
-          `characters_weapon_stat^on:item_id^outer:0^terms:character_id=${characterID}^inject_at:weapon_stats^list:1`,
-          `characters_weapon_stat_by_faction^on:item_id^outer:0^terms:character_id=${characterID}^inject_at:weapon_stats_by_faction^list:1`,
+          `characters_weapon_stat^on:item_id^outer:0^terms:character_id=${characterId}^inject_at:weapon_stats^list:1`,
+          `characters_weapon_stat_by_faction^on:item_id^outer:0^terms:character_id=${characterId}^inject_at:weapon_stats_by_faction^list:1`,
         ],
         lang: 'en',
         limit: '65535',
