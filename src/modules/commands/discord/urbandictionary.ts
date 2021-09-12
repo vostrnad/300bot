@@ -2,7 +2,7 @@ import camelcaseKeys from 'camelcase-keys'
 import discord from 'discord.js'
 import got from 'got'
 import { constants } from '@app/global/constants'
-import { log } from '@app/utils/log'
+import { removeReaction } from '@app/modules/discord/utils'
 import { mod } from '@app/utils/math'
 import { isRecord } from '@app/validators/object'
 import { Command } from '@commands/CommandHandler'
@@ -30,14 +30,6 @@ export default new Command<discord.Message>({
     lastArgNumber: 1,
   },
   callback: async ({ args, reply, env, raw }) => {
-    const removeReaction = async (reaction: discord.MessageReaction) => {
-      try {
-        await reaction.users.remove(raw.author)
-      } catch (error) {
-        log.error('Error removing reaction:', error)
-      }
-    }
-
     const genDefinitionEmbed = (
       definition: Definition,
       len: number,
@@ -164,7 +156,7 @@ export default new Command<discord.Message>({
       }
 
       void (async () => {
-        await removeReaction(reaction)
+        await removeReaction(reaction, raw.author)
 
         definitionEmbed = genDefinitionEmbed(list[defN], list.length)
 

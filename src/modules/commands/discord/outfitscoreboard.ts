@@ -2,7 +2,7 @@ import discord from 'discord.js'
 import { floor } from 'mathjs'
 import { OutfitAliasNotFoundError } from '@app/errors'
 import { constants } from '@app/global/constants'
-import { log } from '@app/utils/log'
+import { removeReaction } from '@app/modules/discord/utils'
 import { divide, mod } from '@app/utils/math'
 import { Command } from '@commands/CommandHandler'
 import { censusApi } from '@planetside/CensusApi'
@@ -17,14 +17,6 @@ export default new Command<discord.Message>({
       return reply(env.command.getHelp(env.handler))
     }
     validateArgumentRange(args.length, 2, 3)
-
-    const removeReaction = async (reaction: discord.MessageReaction) => {
-      try {
-        await reaction.users.remove(raw.author)
-      } catch (error) {
-        log.error('Error removing reaction:', error)
-      }
-    }
 
     const genScoreboardEmbed = (
       outfitName: string,
@@ -276,7 +268,7 @@ export default new Command<discord.Message>({
       }
 
       void (async () => {
-        await removeReaction(reaction)
+        await removeReaction(reaction, raw.author)
 
         scoreboardEmbed = genScoreboardEmbed(
           memberStats.name,
