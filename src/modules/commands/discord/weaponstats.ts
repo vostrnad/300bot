@@ -24,17 +24,6 @@ export default new Command<discord.Message>({
     }
     validateArgumentRange(args.length, 1, 2)
 
-    // const removeReaction = async (
-    //   reaction: discord.MessageReaction,
-    //   user: discord.User,
-    // ) => {
-    //   try {
-    //     await reaction.users.remove(user)
-    //   } catch (error) {
-    //     log.error('Error removing reaction:', error)
-    //   }
-    // }
-
     const genWeaponEmbed = (
       character: Character,
       sortingStatDisplay: string,
@@ -235,10 +224,7 @@ export default new Command<discord.Message>({
       weaponStatsReformatted.push(line)
     })
 
-    // if (args.length > 1) {
-    //   sortingStatDisplay = 'full'
-    //   //return // TODO Add sorting options
-    // } else {
+    // TODO Add sorting options
     weaponStatsReformatted.sort((w1, w2) => {
       if (w1.weaponStatsByFaction.weaponKills === undefined) return 1
       if (w2.weaponStatsByFaction.weaponKills === undefined) return -1
@@ -254,7 +240,6 @@ export default new Command<discord.Message>({
       } else return -1
     })
     const sortingStatDisplay = 'kills'
-    // }
 
     let page = 0
 
