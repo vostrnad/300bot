@@ -139,3 +139,57 @@ export type PlayerDirective = {
     }>
   }>
 }
+
+export type CharactersItem = {
+  characterId: string
+  itemId: string
+}
+
+export type Item = {
+  itemId: string
+  itemTypeId: string
+  itemCategoryId: string
+  isVehicleWeapon: string
+  name: {
+    en: string
+  }
+  description: {
+    en: string
+  }
+  factionId: string
+  maxStackSize: string
+  imageSetId: string
+  imageId: string
+  imagePath: string
+  isDefaultAttachment: string
+}
+
+export type CharacterWeaponStats = {
+  characterId: string
+  statName: string
+  itemId: string
+  vehicleId: string
+  value: string
+  lastSave: string
+  lastSaveDate: string
+}
+
+export type CharacterWeaponStatsByFaction = {
+  characterId: string
+  statName: string
+  itemId: string
+  vehicleId: string
+  valueVs: string
+  valueNc: string
+  valueTr: string
+  lastSave: string
+  lastSaveDate: string
+}
+
+export type FullCharacterWeaponStats = {
+  characterId: string
+  itemId: string
+  item: Item
+  weaponStatsByFaction: CharacterWeaponStatsByFaction[]
+  weaponStats: CharacterWeaponStats[]
+}

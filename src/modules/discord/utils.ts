@@ -1,4 +1,5 @@
 import discord from 'discord.js'
+import { log } from '@app/utils/log'
 
 export const getTextChannel = (
   client: discord.Client,
@@ -67,4 +68,16 @@ export const formatWithEmojis = (
       },
     )
   }
+}
+
+export const removeReaction = async (
+  reaction: discord.MessageReaction,
+  user: discord.User,
+) => {
+  try {
+    await reaction.users.remove(user)
+  } catch (error) {
+    log.error('Error removing reaction:', error)
+  }
+  return null
 }
