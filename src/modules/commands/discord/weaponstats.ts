@@ -206,7 +206,7 @@ export default new Command<discord.Message>({
       character.characterId,
     )
 
-    if (weaponStatsList === null) return reply('No stats to show')
+    if (weaponStatsList === null) return reply('No stats to show.')
 
     const weaponStatsReformatted: RefomarttedStats[] = []
 
