@@ -13,6 +13,7 @@ import prefix from './prefix'
 import russianroulette from './russianroulette'
 import track from './track'
 import urbandictionary from './urbandictionary'
+import weaponstats from './weaponstats'
 
 export const discordCommands = [
   alerttracker,
@@ -30,4 +31,5 @@ export const discordCommands = [
   outfitstats,
   directive,
   outfitscoreboard,
+  weaponstats,
 ]

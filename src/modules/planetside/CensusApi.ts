@@ -22,6 +22,8 @@ import {
   OutfitMemberStats,
   DirectiveTreeCategory,
   PlayerDirective,
+  CharactersItem,
+  FullCharacterWeaponStats,
 } from './types'
 
 type CollectionMap = {
@@ -33,6 +35,7 @@ type CollectionMap = {
   title: Title
   world: World
   directiveTreeCategory: DirectiveTreeCategory
+  charactersItem: CharactersItem
 }
 
 type CollectionName = keyof CollectionMap
@@ -301,6 +304,25 @@ class CensusApi {
         limit: '65535',
       },
     )) as PlayerDirective[]
+
+    if (list.length === 0) return null
+    return list
+  }
+
+  async getPlayerWeaponStats(characterId: string) {
+    const list = (await this.getList(
+      'charactersItem',
+      { characterId },
+      {
+        join: [
+          `item^inject_at:item`,
+          `characters_weapon_stat^on:item_id^outer:0^terms:character_id=${characterId}^inject_at:weapon_stats^list:1`,
+          `characters_weapon_stat_by_faction^on:item_id^outer:0^terms:character_id=${characterId}^inject_at:weapon_stats_by_faction^list:1`,
+        ],
+        lang: 'en',
+        limit: '65535',
+      },
+    )) as FullCharacterWeaponStats[]
 
     if (list.length === 0) return null
     return list
