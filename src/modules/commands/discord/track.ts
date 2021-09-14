@@ -1,13 +1,13 @@
 import discord from 'discord.js'
 import { PlayerNotFoundError } from '@app/errors'
 import { Command } from '@commands/CommandHandler'
+import { validateArgumentNumber } from '@commands/validators'
 import { dmTrackerDatabase } from '@database/dmtracker'
 import { client } from '@discord/client'
 import { getDMChannel } from '@discord/utils'
 import { censusApi } from '@planetside/CensusApi'
 import { streamingApi } from '@planetside/StreamingApi'
 import { validatePlayerName } from '@planetside/validators'
-import { validateArgumentNumber } from '../validators'
 
 const sendCharacterStatus = async (characterId: string, online: boolean) => {
   const channelIds = dmTrackerDatabase.get(characterId)

@@ -5,8 +5,8 @@ import { constants } from '@app/global/constants'
 import { removeReaction } from '@app/modules/discord/utils'
 import { divide, mod } from '@app/utils/math'
 import { Command } from '@commands/CommandHandler'
+import { validateArgumentRange } from '@commands/validators'
 import { censusApi } from '@planetside/CensusApi'
-import { validateArgumentRange } from '../validators'
 
 export default new Command<discord.Message>({
   keyword: 'outfitscoreboard',

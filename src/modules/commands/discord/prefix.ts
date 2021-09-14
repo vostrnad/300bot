@@ -1,7 +1,7 @@
 import discord from 'discord.js'
 import { Command } from '@commands/CommandHandler'
+import { validateArgumentNumber } from '@commands/validators'
 import { guildDatabase } from '@database/guilds'
-import { validateArgumentNumber } from '../validators'
 
 export default new Command<discord.Message>({
   keyword: 'prefix',

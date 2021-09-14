@@ -2,9 +2,9 @@ import discord from 'discord.js'
 import { OutfitAliasNotFoundError } from '@app/errors'
 import { divide } from '@app/utils/math'
 import { Command } from '@commands/CommandHandler'
+import { validateArgumentRange } from '@commands/validators'
 import { getEmoji } from '@discord/utils'
 import { censusApi } from '@planetside/CensusApi'
-import { validateArgumentRange } from '../validators'
 
 export default new Command<discord.Message>({
   keyword: 'outfitstats',

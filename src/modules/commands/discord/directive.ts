@@ -4,8 +4,8 @@ import {
   DirectiveTreeCategoryNotFoundError,
 } from '@app/errors'
 import { Command } from '@commands/CommandHandler'
+import { validateArgumentNumber } from '@commands/validators'
 import { censusApi } from '@planetside/CensusApi'
-import { validateArgumentNumber } from '../validators'
 
 export default new Command<discord.Message>({
   keyword: 'directive',
