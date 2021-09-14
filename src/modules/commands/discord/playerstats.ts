@@ -4,7 +4,6 @@ import { divide } from '@app/utils/math'
 import { getShortDate } from '@app/utils/time'
 import { Command } from '@commands/CommandHandler'
 import { validateArgumentNumber } from '@commands/validators'
-import { getEmoji } from '@discord/utils'
 import { censusApi } from '@planetside/CensusApi'
 import { validatePlayerName } from '@planetside/validators'
 
@@ -12,7 +11,7 @@ export default new Command<discord.Message>({
   keyword: 'playerstats',
   description: 'show PS2 player stats',
   help: "Usage: `{prefix}playerstats <player name>` - shows player's PlanetSide 2 stats",
-  callback: async ({ args, reply, raw, env }) => {
+  callback: async ({ args, reply, env }) => {
     if (args.length === 0) {
       return reply(env.command.getHelp(env.handler))
     }
@@ -33,9 +32,7 @@ export default new Command<discord.Message>({
 
     reply(
       `__**${headerData.join(' ')}**__\n\nBattle Rank**${
-        character.prestigeLevel !== '0'
-          ? getEmoji(raw.channel, 'asp')?.toString() || ' ☆'
-          : ' '
+        character.prestigeLevel !== '0' ? '{emoji:asp| ☆}' : ' '
       }${character.battleRank}** | KDR **${divide(
         Number(character.kills),
         Number(character.deaths),

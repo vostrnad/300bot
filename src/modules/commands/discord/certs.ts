@@ -2,7 +2,6 @@ import discord from 'discord.js'
 import { PlayerNotFoundError } from '@app/errors'
 import { Command } from '@commands/CommandHandler'
 import { validateArgumentNumber } from '@commands/validators'
-import { getEmoji } from '@discord/utils'
 import { censusApi } from '@planetside/CensusApi'
 import { validatePlayerName } from '@planetside/validators'
 
@@ -10,7 +9,7 @@ export default new Command<discord.Message>({
   keyword: 'certs',
   description: "show player's available certs",
   help: "Usage: `{prefix}certs <player name>` - shows player's available certs",
-  callback: async ({ args, reply, env, raw }) => {
+  callback: async ({ args, reply, env }) => {
     if (args.length === 0) {
       return reply(env.command.getHelp(env.handler))
     }
@@ -23,9 +22,7 @@ export default new Command<discord.Message>({
     if (character === null) throw new PlayerNotFoundError()
 
     reply(
-      `**${character.name.first}** has ${character.certs.availablePoints} ${
-        getEmoji(raw.channel, 'certification_point')?.toString() || ' certs'
-      }.`,
+      `**${character.name.first}** has ${character.certs.availablePoints} {emoji:certification_point|certs}.`,
     )
   },
 })

@@ -6,7 +6,6 @@ import { divide } from '@app/utils/math'
 import { isRecord } from '@app/validators/object'
 import { Command } from '@commands/CommandHandler'
 import { validateArgumentRange } from '@commands/validators'
-import { getEmoji } from '@discord/utils'
 
 type Result = {
   worldId: number
@@ -23,7 +22,7 @@ export default new Command<discord.Message>({
   description: 'display the current population',
   help: 'Usage:\n`{prefix}population` - displays the current population\n`{prefix}population numbers` - diplays the current population with numbers',
   alias: ['pop'],
-  callback: async ({ args, reply, raw, env }) => {
+  callback: async ({ args, reply, env }) => {
     validateArgumentRange(args.length, 0, 1)
 
     if (args.length === 1 && args[0] !== 'numbers') {
@@ -57,22 +56,22 @@ export default new Command<discord.Message>({
 
     let message = `**Miller population:** ${totalPop}\n`
     message += [
-      `${getEmoji(raw.channel, 'faction_logo_tr')?.toString() || ' TR'} ${
+      `{emoji:faction_logo_tr| TR} ${
         numbersBool
           ? population.tr
           : Math.round(divide(population.tr, totalPop) * 100).toString() + '%'
       }`,
-      `${getEmoji(raw.channel, 'faction_logo_nc')?.toString() || ' NC'} ${
+      `{emoji:faction_logo_nc| NC} ${
         numbersBool
           ? population.nc
           : Math.round(divide(population.nc, totalPop) * 100).toString() + '%'
       }`,
-      `${getEmoji(raw.channel, 'faction_logo_vs')?.toString() || ' VS'} ${
+      `{emoji:faction_logo_vs| VS} ${
         numbersBool
           ? population.vs
           : Math.round(divide(population.vs, totalPop) * 100).toString() + '%'
       }`,
-      `${getEmoji(raw.channel, 'faction_logo_ns')?.toString() || ' NS'} ${
+      `{emoji:faction_logo_ns| NS} ${
         numbersBool
           ? population.ns
           : Math.round(divide(population.ns, totalPop) * 100).toString() + '%'

@@ -11,7 +11,7 @@ import {
   checkNewMemberDeadRole,
   scheduleRevivesOnStartup,
 } from '@discord/revive'
-import { getTextChannel } from '@discord/utils'
+import { getTextChannel, formatWithEmojis } from '@discord/utils'
 import { streamingApi } from '@planetside/StreamingApi'
 
 /**
@@ -84,7 +84,7 @@ client.on('message', (message: discord.Message) => {
       const TOO_LONG = '... (message too long)'
       text = text.slice(0, 1999 - TOO_LONG.length) + TOO_LONG
     }
-    void message.channel.send(text)
+    void message.channel.send(formatWithEmojis(message.channel, text))
   }
 
   const guild = message.guild
