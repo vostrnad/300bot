@@ -1,4 +1,3 @@
-import discord from 'discord.js'
 import {
   PlayerNotFoundError,
   DirectiveTreeCategoryNotFoundError,
@@ -7,7 +6,7 @@ import { Command } from '@commands/CommandHandler'
 import { validateArgumentNumber } from '@commands/validators'
 import { censusApi } from '@planetside/CensusApi'
 
-export default new Command<discord.Message>({
+export default new Command({
   keyword: 'directive',
   description: 'show PS2 player directive',
   help: "Usage:`{prefix}directive <player name> <directive category>` - shows player's Planetside 2 directives",

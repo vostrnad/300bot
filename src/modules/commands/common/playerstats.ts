@@ -1,4 +1,3 @@
-import discord from 'discord.js'
 import { PlayerNotFoundError } from '@app/errors'
 import { divide } from '@app/utils/math'
 import { getShortDate } from '@app/utils/time'
@@ -7,7 +6,7 @@ import { validateArgumentNumber } from '@commands/validators'
 import { censusApi } from '@planetside/CensusApi'
 import { validatePlayerName } from '@planetside/validators'
 
-export default new Command<discord.Message>({
+export default new Command({
   keyword: 'playerstats',
   description: 'show PS2 player stats',
   help: "Usage: `{prefix}playerstats <player name>` - shows player's PlanetSide 2 stats",

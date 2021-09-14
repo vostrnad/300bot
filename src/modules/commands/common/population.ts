@@ -1,5 +1,4 @@
 import camelcaseKeys from 'camelcase-keys'
-import discord from 'discord.js'
 import got from 'got'
 import { constants } from '@app/global/constants'
 import { divide } from '@app/utils/math'
@@ -17,7 +16,7 @@ type Result = {
   unknown: number
 }
 
-export default new Command<discord.Message>({
+export default new Command({
   keyword: 'population',
   description: 'display the current population',
   help: 'Usage:\n`{prefix}population` - displays the current population\n`{prefix}population numbers` - diplays the current population with numbers',

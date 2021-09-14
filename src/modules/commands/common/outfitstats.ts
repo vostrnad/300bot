@@ -1,11 +1,10 @@
-import discord from 'discord.js'
 import { OutfitAliasNotFoundError } from '@app/errors'
 import { divide } from '@app/utils/math'
 import { Command } from '@commands/CommandHandler'
 import { validateArgumentRange } from '@commands/validators'
 import { censusApi } from '@planetside/CensusApi'
 
-export default new Command<discord.Message>({
+export default new Command({
   keyword: 'outfitstats',
   description: 'show PS2 outfit stats',
   help: "Usage:\n`{prefix}outfitstats <alias>` - shows an outfit's players average stats\n`{prefix}outfitstats <alias> active` - shows an outfit's active players average stats",

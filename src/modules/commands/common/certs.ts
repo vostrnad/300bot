@@ -1,11 +1,10 @@
-import discord from 'discord.js'
 import { PlayerNotFoundError } from '@app/errors'
 import { Command } from '@commands/CommandHandler'
 import { validateArgumentNumber } from '@commands/validators'
 import { censusApi } from '@planetside/CensusApi'
 import { validatePlayerName } from '@planetside/validators'
 
-export default new Command<discord.Message>({
+export default new Command({
   keyword: 'certs',
   description: "show player's available certs",
   help: "Usage: `{prefix}certs <player name>` - shows player's available certs",
