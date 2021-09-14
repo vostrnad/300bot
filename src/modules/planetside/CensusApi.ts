@@ -8,7 +8,7 @@ import { log } from '@app/utils/log'
 import { flatten, objectToArray } from '@app/utils/object'
 import { QueryObjectDeep } from '@app/utils/types'
 import { isRecord } from '@app/validators/object'
-import { getFactionName } from './resources'
+import { getFactionName } from '@planetside/resources'
 import {
   Character,
   CharacterName,

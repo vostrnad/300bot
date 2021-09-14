@@ -23,16 +23,6 @@ export const getDMChannel = async (
   return null
 }
 
-export const getEmoji = (
-  channel: discord.Channel,
-  emojiName: string,
-): discord.GuildEmoji | null => {
-  if (!(channel instanceof discord.TextChannel)) return null
-  return (
-    channel.guild.emojis.cache.find(({ name }) => name === emojiName) || null
-  )
-}
-
 export const formatWithEmojis = (
   channel: discord.Channel,
   message: string,
@@ -73,11 +63,10 @@ export const formatWithEmojis = (
 export const removeReaction = async (
   reaction: discord.MessageReaction,
   user: discord.User,
-) => {
+): Promise<void> => {
   try {
     await reaction.users.remove(user)
   } catch (error) {
     log.error('Error removing reaction:', error)
   }
-  return null
 }

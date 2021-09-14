@@ -1,16 +1,14 @@
-import discord from 'discord.js'
 import { OutfitAliasNotFoundError } from '@app/errors'
 import { divide } from '@app/utils/math'
 import { Command } from '@commands/CommandHandler'
-import { getEmoji } from '@discord/utils'
+import { validateArgumentRange } from '@commands/validators'
 import { censusApi } from '@planetside/CensusApi'
-import { validateArgumentRange } from '../validators'
 
-export default new Command<discord.Message>({
+export default new Command({
   keyword: 'outfitstats',
   description: 'show PS2 outfit stats',
   help: "Usage:\n`{prefix}outfitstats <alias>` - shows an outfit's players average stats\n`{prefix}outfitstats <alias> active` - shows an outfit's active players average stats",
-  callback: async ({ args, reply, raw, env }) => {
+  callback: async ({ args, reply, env }) => {
     if (args.length === 0) {
       return reply(env.command.getHelp(env.handler))
     }
@@ -143,8 +141,7 @@ export default new Command<discord.Message>({
         memberStats.name
       }** - Average Stats__\n${subtitle}\nBattle Rank **${
         avgBr > 100
-          ? (getEmoji(raw.channel, 'asp')?.toString() || ' ☆') +
-            (avgBr - 100).toFixed(0).toString()
+          ? '{emoji:asp| ☆}' + (avgBr - 100).toFixed(0).toString()
           : avgBr.toFixed(0)
       }** | KDR **${avgKdr.toFixed(3)}** | SPM **${avgSpm.toFixed(
         0,

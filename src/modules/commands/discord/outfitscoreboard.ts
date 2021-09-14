@@ -1,12 +1,11 @@
 import discord from 'discord.js'
-import { floor } from 'mathjs'
 import { OutfitAliasNotFoundError } from '@app/errors'
-import { constants } from '@app/global/constants'
-import { removeReaction } from '@app/modules/discord/utils'
-import { divide, mod } from '@app/utils/math'
+import { partition } from '@app/utils/array'
+import { divide } from '@app/utils/math'
 import { Command } from '@commands/CommandHandler'
+import { validateArgumentRange } from '@commands/validators'
+import { sendScrollEmbed } from '@discord/embed'
 import { censusApi } from '@planetside/CensusApi'
-import { validateArgumentRange } from '../validators'
 
 export default new Command<discord.Message>({
   keyword: 'outfitscoreboard',
@@ -18,42 +17,11 @@ export default new Command<discord.Message>({
     }
     validateArgumentRange(args.length, 2, 3)
 
-    const genScoreboardEmbed = (
-      outfitName: string,
-      displayArray: string[],
-      stat: string,
-      page: number,
-      len: number,
-    ): discord.MessageEmbed => {
-      const scoreboardEmbed = new discord.MessageEmbed()
-        .setColor('#647CC4')
-        .setTitle(
-          `**${outfitName}** - ${stat} ${
-            shame === 1 ? 'shame' : ''
-          } scoreboard  (Page N°${page + 1}/${len})`,
-        )
-        .addField(
-          stat,
-          displayArray.slice(0, displayArray.length / 2).join('\n'),
-          true,
-        )
-        .addField(
-          stat,
-          displayArray.slice(displayArray.length / 2).join('\n'),
-          true,
-        )
-        .setTimestamp()
-        .setFooter('Interactive')
-      return scoreboardEmbed
-    }
-
     const outfitAlias = args[0].toLowerCase()
 
     const linesPerDisplay = 15
 
     const columns = 2
-
-    const timeout = 10 * 60 * 1000 // 10 minutes
 
     const acronyms = ['kdr', 'spm'] // Stats that will have a diplay name in full upper case
 
@@ -132,8 +100,8 @@ export default new Command<discord.Message>({
                 Number(goodPlayer2.character.times.minutesPlayed),
               )
             ) {
-              return -1
-            } else return 1
+              return 1
+            } else return -1
           },
         )
 
@@ -160,8 +128,8 @@ export default new Command<discord.Message>({
               Number(sweaty2.character.stats[2].allTime),
             )
           ) {
-            return -1
-          } else return 1
+            return 1
+          } else return -1
         })
 
         scoreboard.forEach((outfitMember, idx) => {
@@ -180,8 +148,8 @@ export default new Command<discord.Message>({
             Number(p1.character.stats[5].allTime) <
             Number(p2.character.stats[5].allTime)
           ) {
-            return -1
-          } else return 1
+            return 1
+          } else return -1
         })
 
         scoreboard.forEach((outfitMember, idx) => {
@@ -200,8 +168,8 @@ export default new Command<discord.Message>({
             Number(p1.character.stats[2].allTime) <
             Number(p2.character.stats[2].allTime)
           ) {
-            return -1
-          } else return 1
+            return 1
+          } else return -1
         })
 
         scoreboard.forEach((outfitMember, idx) => {
@@ -226,72 +194,25 @@ export default new Command<discord.Message>({
 
     if (shame) displayScoreboard.reverse()
 
-    let page = 0
+    const pages = partition(displayScoreboard, linesPerDisplay * columns)
 
-    const scoreLen =
-      floor(divide(displayScoreboard.length, linesPerDisplay * 2)) + 1
-
-    let scoreboardEmbed = genScoreboardEmbed(
-      memberStats.name,
-      displayScoreboard.slice(
-        linesPerDisplay * page * columns,
-        (linesPerDisplay * page + linesPerDisplay) * columns,
-      ),
-      stat,
-      page,
-      scoreLen,
-    )
-
-    const embedMessage = await raw.channel.send({ embed: scoreboardEmbed })
-
-    await embedMessage.react(constants.discord.emojis.arrowLeft)
-    await embedMessage.react(constants.discord.emojis.arrowRight)
-
-    const collector = embedMessage.createReactionCollector(
-      (reaction: discord.MessageReaction, user: discord.User) =>
-        [
-          constants.discord.emojis.arrowLeft,
-          constants.discord.emojis.arrowRight,
-        ].includes(reaction.emoji.name) && user.id === raw.author.id,
-      {
-        time: timeout,
-      },
-    )
-
-    collector.on('collect', (reaction: discord.MessageReaction) => {
-      if (reaction.emoji.name === constants.discord.emojis.arrowRight) {
-        page = mod(page + 1, scoreLen)
-      }
-
-      if (reaction.emoji.name === constants.discord.emojis.arrowLeft) {
-        page = mod(page - 1, scoreLen)
-      }
-
-      void (async () => {
-        await removeReaction(reaction, raw.author)
-
-        scoreboardEmbed = genScoreboardEmbed(
-          memberStats.name,
-          displayScoreboard.slice(
-            linesPerDisplay * page * columns,
-            (linesPerDisplay * page + linesPerDisplay) * columns,
-          ),
-          stat,
-          page,
-          scoreLen,
+    return sendScrollEmbed(raw, pages, (page, index, active) => {
+      const scoreboardEmbed = new discord.MessageEmbed()
+        .setTitle(
+          `**${memberStats.name}** - ${stat} ${
+            shame === 1 ? 'shame' : ''
+          } scoreboard  (Page N°${index + 1}/${pages.length})`,
         )
-
-        scoreboardEmbed.setTimestamp()
-        await embedMessage.edit({ embed: scoreboardEmbed })
-      })()
-    })
-
-    collector.on('end', () => {
-      scoreboardEmbed
-        .setFooter('Interaction ended')
-        .setColor('#1D2439')
+        .addField(stat, page.slice(0, page.length / 2).join('\n'), true)
+        .addField(stat, page.slice(page.length / 2).join('\n'), true)
         .setTimestamp()
-      void embedMessage.edit({ embed: scoreboardEmbed })
+
+      if (active) {
+        scoreboardEmbed.setFooter('Interactive').setColor('#647CC4')
+      } else {
+        scoreboardEmbed.setFooter('Interaction ended').setColor('#1D2439')
+      }
+      return scoreboardEmbed
     })
   },
 })

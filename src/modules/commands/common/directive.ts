@@ -1,16 +1,16 @@
-import discord from 'discord.js'
 import {
   PlayerNotFoundError,
   DirectiveTreeCategoryNotFoundError,
 } from '@app/errors'
 import { Command } from '@commands/CommandHandler'
+import { validateArgumentNumber } from '@commands/validators'
 import { censusApi } from '@planetside/CensusApi'
-import { validateArgumentNumber } from '../validators'
+import { validatePlayerName } from '@planetside/validators'
 
-export default new Command<discord.Message>({
+export default new Command({
   keyword: 'directive',
   description: 'show PS2 player directive',
-  help: "Usage:`{prefix}directive <player name> <directive category>` - shows player's Planetside 2 directives",
+  help: "Usage: `{prefix}directive <player name> [directive category]` - shows player's Planetside 2 directives",
   options: {
     lastArgNumber: 2,
   },
@@ -19,9 +19,11 @@ export default new Command<discord.Message>({
       return reply(env.command.getHelp(env.handler))
     }
     validateArgumentNumber(args.length, 2)
+    const characterName = args[0]
+    validatePlayerName(characterName)
 
     const character = await censusApi.getCharacter({
-      name: { firstLower: args[0].toLowerCase() },
+      name: { firstLower: characterName.toLowerCase() },
     })
 
     if (character === null) throw new PlayerNotFoundError()
