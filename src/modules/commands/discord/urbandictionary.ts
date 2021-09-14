@@ -1,9 +1,7 @@
 import camelcaseKeys from 'camelcase-keys'
 import discord from 'discord.js'
 import got from 'got'
-import { constants } from '@app/global/constants'
-import { removeReaction } from '@app/modules/discord/utils'
-import { mod } from '@app/utils/math'
+import { sendScrollEmbed } from '@app/modules/discord/embed'
 import { isRecord } from '@app/validators/object'
 import { Command } from '@commands/CommandHandler'
 
@@ -30,44 +28,7 @@ export default new Command<discord.Message>({
     lastArgNumber: 1,
   },
   callback: async ({ args, reply, env, raw }) => {
-    const genDefinitionEmbed = (
-      definition: Definition,
-      len: number,
-    ): discord.MessageEmbed => {
-      const definitionEmbed = new discord.MessageEmbed()
-        .setColor('#647CC4')
-        .setTitle(`${definition.word} (N°${defN + 1}/${len})`)
-        .setURL(definition.permalink)
-        .setAuthor('Urban dictionary', '', 'https://www.urbandictionary.com')
-        .setThumbnail('https://i.imgur.com/A6nvY85.png')
-        .addFields(
-          {
-            name: 'Definition',
-            value:
-              definition.definition.length > 0
-                ? definition.definition.replace(/\[|\]/g, '*')
-                : '**No definition**',
-          },
-          {
-            name: 'Example',
-            value:
-              definition.example.length > 0
-                ? definition.example.replace(/\[|\]/g, '*')
-                : '**No example**',
-          },
-        )
-        .addField('Written on', definition.writtenOn.slice(0, 10), true)
-        .addField('Thumbs up', definition.thumbsUp, true)
-        .addField('Thumbs down', definition.thumbsDown, true)
-        .setFooter('Interactive')
-        .setTimestamp()
-
-      return definitionEmbed
-    }
-
     if (args.length === 0) return reply(env.command.getHelp(env.handler))
-
-    const timeout = 10 * 60 * 1000 // 10 minutes
 
     const word = args[0]
 
@@ -118,59 +79,40 @@ export default new Command<discord.Message>({
       else return -1
     })
 
-    let defN = 0
-
-    let definitionEmbed = genDefinitionEmbed(list[defN], list.length)
-
-    if (list.length === 1) {
-      definitionEmbed.setFooter('Interaction ended').setColor('#1D2439')
-
-      await raw.channel.send({ embed: definitionEmbed })
-
-      return
-    }
-
-    const embedMessage = await raw.channel.send({ embed: definitionEmbed })
-
-    await embedMessage.react(constants.discord.emojis.arrowLeft)
-    await embedMessage.react(constants.discord.emojis.arrowRight)
-
-    const collector = embedMessage.createReactionCollector(
-      (reaction: discord.MessageReaction, user: discord.User) =>
-        [
-          constants.discord.emojis.arrowLeft,
-          constants.discord.emojis.arrowRight,
-        ].includes(reaction.emoji.name) && user.id === raw.author.id,
-      {
-        time: timeout,
-      },
-    )
-
-    collector.on('collect', (reaction: discord.MessageReaction) => {
-      if (reaction.emoji.name === constants.discord.emojis.arrowRight) {
-        defN = mod(defN + 1, list.length)
-      }
-
-      if (reaction.emoji.name === constants.discord.emojis.arrowLeft) {
-        defN = mod(defN - 1, list.length)
-      }
-
-      void (async () => {
-        await removeReaction(reaction, raw.author)
-
-        definitionEmbed = genDefinitionEmbed(list[defN], list.length)
-
-        definitionEmbed.setTimestamp()
-        await embedMessage.edit({ embed: definitionEmbed })
-      })()
-    })
-
-    collector.on('end', () => {
-      definitionEmbed
-        .setFooter('Interaction ended')
-        .setColor('#1D2439')
+    return sendScrollEmbed(raw, list, (definition, index, active) => {
+      const definitionEmbed = new discord.MessageEmbed()
+        .setTitle(`${definition.word} (N°${index + 1}/${list.length})`)
+        .setURL(definition.permalink)
+        .setAuthor('Urban dictionary', '', 'https://www.urbandictionary.com')
+        .setThumbnail('https://i.imgur.com/A6nvY85.png')
+        .addFields(
+          {
+            name: 'Definition',
+            value:
+              definition.definition.length > 0
+                ? definition.definition.replace(/\[|\]/g, '*')
+                : '**No definition**',
+          },
+          {
+            name: 'Example',
+            value:
+              definition.example.length > 0
+                ? definition.example.replace(/\[|\]/g, '*')
+                : '**No example**',
+          },
+        )
+        .addField('Written on', definition.writtenOn.slice(0, 10), true)
+        .addField('Thumbs up', definition.thumbsUp, true)
+        .addField('Thumbs down', definition.thumbsDown, true)
         .setTimestamp()
-      void embedMessage.edit({ embed: definitionEmbed })
+
+      if (active) {
+        definitionEmbed.setFooter('Interactive').setColor('#647CC4')
+      } else {
+        definitionEmbed.setFooter('Interaction ended').setColor('#1D2439')
+      }
+
+      return definitionEmbed
     })
   },
 })

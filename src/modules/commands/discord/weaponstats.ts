@@ -1,17 +1,15 @@
 import { camelCase } from 'camel-case'
 import discord from 'discord.js'
 import { PlayerNotFoundError } from '@app/errors'
-import { constants } from '@app/global/constants'
-import { removeReaction } from '@app/modules/discord/utils'
 import {
-  Character,
   CharacterWeaponStats,
   Item,
   CharacterWeaponStatsByFaction,
 } from '@app/modules/planetside/types'
-import { divide, mod } from '@app/utils/math'
+import { divide } from '@app/utils/math'
 import { Command } from '@commands/CommandHandler'
 import { validateArgumentRange } from '@commands/validators'
+import { sendScrollEmbed } from '@discord/embed'
 import { censusApi } from '@planetside/CensusApi'
 import { validatePlayerName } from '@planetside/validators'
 
@@ -26,147 +24,6 @@ export default new Command<discord.Message>({
     validateArgumentRange(args.length, 1, 2)
     validatePlayerName(args[0])
 
-    const genWeaponEmbed = (
-      character: Character,
-      sortingStatDisplay: string,
-      weapon: RefomarttedStats,
-      color: string,
-      page: number,
-      len: number,
-    ): discord.MessageEmbed => {
-      const weaponEmbed = new discord.MessageEmbed()
-        .setColor(color)
-        .setTitle(
-          `Weapons for ${character.name.first} by ${sortingStatDisplay} (${
-            page + 1
-          }/${len})`,
-        )
-        .setDescription('**' + weapon.item.name.en + '**')
-        .setThumbnail(`http://census.daybreakgames.com${weapon.item.imagePath}`)
-        .addFields(
-          {
-            name: 'Kills',
-            value:
-              Number(weapon.weaponStatsByFaction.weaponKills?.valueNc) +
-                Number(weapon.weaponStatsByFaction.weaponKills?.valueTr) +
-                Number(weapon.weaponStatsByFaction.weaponKills?.valueVs) ||
-              'N/A',
-            inline: true,
-          },
-          {
-            name: 'Deaths',
-            value: weapon.weaponStats.weaponDeaths?.value || 'N/A',
-            inline: true,
-          },
-          {
-            name: 'Playtime',
-            value:
-              (
-                divide(
-                  Number(weapon.weaponStats.weaponPlayTime?.value),
-                  3600,
-                  0,
-                ) || 'N/A'
-              ).toString() + ' hours',
-            inline: true,
-          },
-        )
-        .setTimestamp()
-        .setFooter('Interactive')
-
-      if (args.length > 1 && args[1] === 'full') {
-        weaponEmbed
-          .addFields(
-            {
-              name: 'KDR',
-              value:
-                divide(
-                  Number(weapon.weaponStatsByFaction.weaponKills?.valueNc) +
-                    Number(weapon.weaponStatsByFaction.weaponKills?.valueTr) +
-                    Number(weapon.weaponStatsByFaction.weaponKills?.valueVs),
-                  Number(weapon.weaponStats.weaponDeaths?.value),
-                  3,
-                ) || 'N/A',
-              inline: true,
-            },
-            {
-              name: 'KPM',
-              value:
-                divide(
-                  (Number(weapon.weaponStatsByFaction.weaponKills?.valueNc) +
-                    Number(weapon.weaponStatsByFaction.weaponKills?.valueTr) +
-                    Number(weapon.weaponStatsByFaction.weaponKills?.valueVs)) *
-                    60,
-                  Number(weapon.weaponStats.weaponPlayTime?.value),
-                  3,
-                ) || 'N/A',
-              inline: true,
-            },
-            {
-              name: 'SPM',
-              value:
-                divide(
-                  Number(weapon.weaponStats.weaponScore?.value) * 60,
-                  Number(weapon.weaponStats.weaponPlayTime?.value),
-                  0,
-                ) || 'N/A',
-              inline: true,
-            },
-          )
-          .addFields(
-            {
-              name: 'Accuracy',
-              value:
-                (
-                  divide(
-                    Number(weapon.weaponStats.weaponHitCount?.value) * 100,
-                    Number(weapon.weaponStats.weaponFireCount?.value),
-                    3,
-                  ) || 'N/A'
-                ).toString() + ' %',
-              inline: true,
-            },
-            {
-              name: 'HSR',
-              value:
-                (
-                  divide(
-                    (Number(
-                      weapon.weaponStatsByFaction.weaponHeadshots?.valueNc,
-                    ) +
-                      Number(
-                        weapon.weaponStatsByFaction.weaponHeadshots?.valueTr,
-                      ) +
-                      Number(
-                        weapon.weaponStatsByFaction.weaponHeadshots?.valueVs,
-                      )) *
-                      100,
-                    Number(weapon.weaponStatsByFaction.weaponKills?.valueNc) +
-                      Number(weapon.weaponStatsByFaction.weaponKills?.valueTr) +
-                      Number(weapon.weaponStatsByFaction.weaponKills?.valueVs),
-                    3,
-                  ) || 'N/A'
-                ).toString() + ' %',
-              inline: true,
-            },
-            {
-              name: 'HPK',
-              value:
-                divide(
-                  Number(weapon.weaponStats.weaponHitCount?.value),
-                  Number(weapon.weaponStatsByFaction.weaponKills?.valueNc) +
-                    Number(weapon.weaponStatsByFaction.weaponKills?.valueTr) +
-                    Number(weapon.weaponStatsByFaction.weaponKills?.valueVs),
-                  0,
-                ) || 'N/A',
-              inline: true,
-            },
-          )
-      }
-
-      return weaponEmbed
-    }
-
     type StatNames =
       | 'weaponDeaths'
       | 'weaponFireCount'
@@ -180,8 +37,6 @@ export default new Command<discord.Message>({
       | 'weaponKilledBy'
       | 'weaponKills'
       | 'weaponVehicleKills'
-
-    const timeout = 10 * 60 * 1000 // 10 minutes
 
     type RefomarttedStats = {
       characterId: string
@@ -201,8 +56,6 @@ export default new Command<discord.Message>({
 
     const factionColorsActive = ['#FFFFFF', '#951CFF', '#0165FF', '#FF311F'] // VS NC TR
     const factionColorsEnd = ['#000000', '#4B0E80', '#003380', '#80180F'] // VS NC TR
-
-    const color = factionColorsActive[Number(character.factionId)]
 
     const weaponStatsList = await censusApi.getPlayerWeaponStats(
       character.characterId,
@@ -253,75 +106,158 @@ export default new Command<discord.Message>({
     })
     const sortingStatDisplay = 'kills'
 
-    let page = 0
+    return sendScrollEmbed(
+      raw,
+      weaponStatsReformatted,
+      (weapon, index, active) => {
+        const weaponEmbed = new discord.MessageEmbed()
+          .setTitle(
+            `Weapons for ${character.name.first} by ${sortingStatDisplay} (${
+              index + 1
+            }/${weaponStatsReformatted.length})`,
+          )
+          .setDescription('**' + weapon.item.name.en + '**')
+          .setThumbnail(
+            `http://census.daybreakgames.com${weapon.item.imagePath}`,
+          )
+          .addFields(
+            {
+              name: 'Kills',
+              value:
+                Number(weapon.weaponStatsByFaction.weaponKills?.valueNc) +
+                  Number(weapon.weaponStatsByFaction.weaponKills?.valueTr) +
+                  Number(weapon.weaponStatsByFaction.weaponKills?.valueVs) ||
+                'N/A',
+              inline: true,
+            },
+            {
+              name: 'Deaths',
+              value: weapon.weaponStats.weaponDeaths?.value || 'N/A',
+              inline: true,
+            },
+            {
+              name: 'Playtime',
+              value:
+                (
+                  divide(
+                    Number(weapon.weaponStats.weaponPlayTime?.value),
+                    3600,
+                    0,
+                  ) || 'N/A'
+                ).toString() + ' hours',
+              inline: true,
+            },
+          )
+          .setTimestamp()
 
-    const listLen = weaponStatsReformatted.length
+        if (args.length > 1 && args[1] === 'full') {
+          weaponEmbed
+            .addFields(
+              {
+                name: 'KDR',
+                value:
+                  divide(
+                    Number(weapon.weaponStatsByFaction.weaponKills?.valueNc) +
+                      Number(weapon.weaponStatsByFaction.weaponKills?.valueTr) +
+                      Number(weapon.weaponStatsByFaction.weaponKills?.valueVs),
+                    Number(weapon.weaponStats.weaponDeaths?.value),
+                    3,
+                  ) || 'N/A',
+                inline: true,
+              },
+              {
+                name: 'KPM',
+                value:
+                  divide(
+                    (Number(weapon.weaponStatsByFaction.weaponKills?.valueNc) +
+                      Number(weapon.weaponStatsByFaction.weaponKills?.valueTr) +
+                      Number(
+                        weapon.weaponStatsByFaction.weaponKills?.valueVs,
+                      )) *
+                      60,
+                    Number(weapon.weaponStats.weaponPlayTime?.value),
+                    3,
+                  ) || 'N/A',
+                inline: true,
+              },
+              {
+                name: 'SPM',
+                value:
+                  divide(
+                    Number(weapon.weaponStats.weaponScore?.value) * 60,
+                    Number(weapon.weaponStats.weaponPlayTime?.value),
+                    0,
+                  ) || 'N/A',
+                inline: true,
+              },
+            )
+            .addFields(
+              {
+                name: 'Accuracy',
+                value:
+                  (
+                    divide(
+                      Number(weapon.weaponStats.weaponHitCount?.value) * 100,
+                      Number(weapon.weaponStats.weaponFireCount?.value),
+                      3,
+                    ) || 'N/A'
+                  ).toString() + ' %',
+                inline: true,
+              },
+              {
+                name: 'HSR',
+                value:
+                  (
+                    divide(
+                      (Number(
+                        weapon.weaponStatsByFaction.weaponHeadshots?.valueNc,
+                      ) +
+                        Number(
+                          weapon.weaponStatsByFaction.weaponHeadshots?.valueTr,
+                        ) +
+                        Number(
+                          weapon.weaponStatsByFaction.weaponHeadshots?.valueVs,
+                        )) *
+                        100,
+                      Number(weapon.weaponStatsByFaction.weaponKills?.valueNc) +
+                        Number(
+                          weapon.weaponStatsByFaction.weaponKills?.valueTr,
+                        ) +
+                        Number(
+                          weapon.weaponStatsByFaction.weaponKills?.valueVs,
+                        ),
+                      3,
+                    ) || 'N/A'
+                  ).toString() + ' %',
+                inline: true,
+              },
+              {
+                name: 'HPK',
+                value:
+                  divide(
+                    Number(weapon.weaponStats.weaponHitCount?.value),
+                    Number(weapon.weaponStatsByFaction.weaponKills?.valueNc) +
+                      Number(weapon.weaponStatsByFaction.weaponKills?.valueTr) +
+                      Number(weapon.weaponStatsByFaction.weaponKills?.valueVs),
+                    0,
+                  ) || 'N/A',
+                inline: true,
+              },
+            )
+        }
 
-    let weaponEmbed = genWeaponEmbed(
-      character,
-      sortingStatDisplay,
-      weaponStatsReformatted[0],
-      color,
-      page,
-      listLen,
-    )
+        if (active) {
+          weaponEmbed
+            .setFooter('Interactive')
+            .setColor(factionColorsActive[Number(character.factionId)])
+        } else {
+          weaponEmbed
+            .setFooter('Interaction ended')
+            .setColor(factionColorsEnd[Number(character.factionId)])
+        }
 
-    const embedMessage = await raw.channel.send({ embed: weaponEmbed })
-
-    const leftArrowReaction = await embedMessage.react(
-      constants.discord.emojis.arrowLeft,
-    )
-    const rightArrowReaction = await embedMessage.react(
-      constants.discord.emojis.arrowRight,
-    )
-
-    const collector = embedMessage.createReactionCollector(
-      (reaction: discord.MessageReaction, user: discord.User) =>
-        [
-          constants.discord.emojis.arrowLeft,
-          constants.discord.emojis.arrowRight,
-        ].includes(reaction.emoji.name) && user.id === raw.author.id,
-      {
-        time: timeout,
+        return weaponEmbed
       },
     )
-
-    collector.on('collect', (reaction: discord.MessageReaction) => {
-      if (reaction.emoji.name === constants.discord.emojis.arrowRight) {
-        page = mod(page + 1, listLen)
-      }
-
-      if (reaction.emoji.name === constants.discord.emojis.arrowLeft) {
-        page = mod(page - 1, listLen)
-      }
-
-      void (async () => {
-        await removeReaction(reaction, raw.author)
-
-        weaponEmbed = genWeaponEmbed(
-          character,
-          sortingStatDisplay,
-          weaponStatsReformatted[page],
-          color,
-          page,
-          listLen,
-        )
-
-        weaponEmbed.setTimestamp()
-        await embedMessage.edit({ embed: weaponEmbed })
-      })()
-    })
-
-    collector.on('end', () => {
-      weaponEmbed
-        .setFooter('Interaction ended')
-        .setColor(factionColorsEnd[Number(character.factionId)])
-        .setTimestamp()
-      void (async () => {
-        await removeReaction(leftArrowReaction, embedMessage.author)
-        await removeReaction(rightArrowReaction, embedMessage.author)
-        await embedMessage.edit({ embed: weaponEmbed })
-      })()
-    })
   },
 })
