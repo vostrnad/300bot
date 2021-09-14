@@ -100,8 +100,8 @@ export default new Command<discord.Message>({
                 Number(goodPlayer2.character.times.minutesPlayed),
               )
             ) {
-              return -1
-            } else return 1
+              return 1
+            } else return -1
           },
         )
 
@@ -128,8 +128,8 @@ export default new Command<discord.Message>({
               Number(sweaty2.character.stats[2].allTime),
             )
           ) {
-            return -1
-          } else return 1
+            return 1
+          } else return -1
         })
 
         scoreboard.forEach((outfitMember, idx) => {
@@ -148,8 +148,8 @@ export default new Command<discord.Message>({
             Number(p1.character.stats[5].allTime) <
             Number(p2.character.stats[5].allTime)
           ) {
-            return -1
-          } else return 1
+            return 1
+          } else return -1
         })
 
         scoreboard.forEach((outfitMember, idx) => {
@@ -168,8 +168,8 @@ export default new Command<discord.Message>({
             Number(p1.character.stats[2].allTime) <
             Number(p2.character.stats[2].allTime)
           ) {
-            return -1
-          } else return 1
+            return 1
+          } else return -1
         })
 
         scoreboard.forEach((outfitMember, idx) => {
