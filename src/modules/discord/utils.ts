@@ -73,11 +73,10 @@ export const formatWithEmojis = (
 export const removeReaction = async (
   reaction: discord.MessageReaction,
   user: discord.User,
-) => {
+): Promise<void> => {
   try {
     await reaction.users.remove(user)
   } catch (error) {
     log.error('Error removing reaction:', error)
   }
-  return null
 }
