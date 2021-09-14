@@ -5,6 +5,7 @@ import {
 import { Command } from '@commands/CommandHandler'
 import { validateArgumentNumber } from '@commands/validators'
 import { censusApi } from '@planetside/CensusApi'
+import { validatePlayerName } from '@planetside/validators'
 
 export default new Command({
   keyword: 'directive',
@@ -18,9 +19,11 @@ export default new Command({
       return reply(env.command.getHelp(env.handler))
     }
     validateArgumentNumber(args.length, 2)
+    const characterName = args[0]
+    validatePlayerName(characterName)
 
     const character = await censusApi.getCharacter({
-      name: { firstLower: args[0].toLowerCase() },
+      name: { firstLower: characterName.toLowerCase() },
     })
 
     if (character === null) throw new PlayerNotFoundError()

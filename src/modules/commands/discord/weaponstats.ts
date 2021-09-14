@@ -13,6 +13,7 @@ import { divide, mod } from '@app/utils/math'
 import { Command } from '@commands/CommandHandler'
 import { validateArgumentRange } from '@commands/validators'
 import { censusApi } from '@planetside/CensusApi'
+import { validatePlayerName } from '@planetside/validators'
 
 export default new Command<discord.Message>({
   keyword: 'weaponstats',
@@ -23,6 +24,7 @@ export default new Command<discord.Message>({
       return reply(env.command.getHelp(env.handler))
     }
     validateArgumentRange(args.length, 1, 2)
+    validatePlayerName(args[0])
 
     const genWeaponEmbed = (
       character: Character,
