@@ -10,7 +10,7 @@ import { validatePlayerName } from '@planetside/validators'
 export default new Command({
   keyword: 'directive',
   description: 'show PS2 player directive',
-  help: "Usage:`{prefix}directive <player name> <directive category>` - shows player's Planetside 2 directives",
+  help: "Usage: `{prefix}directive <player name> [directive category]` - shows player's Planetside 2 directives",
   options: {
     lastArgNumber: 2,
   },
