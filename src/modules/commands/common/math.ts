@@ -22,7 +22,7 @@ export default new Command({
           .exec('evaluate', [expression])
           .timeout(3000)) as string
         return reply(`= ${res}`)
-      } catch (e: unknown) {
+      } catch (e) {
         if (e instanceof WorkerPoolPromise.TimeoutError) {
           return reply(`Error: The expression took too long to evaluate.`)
         } else if (e instanceof Error) {
