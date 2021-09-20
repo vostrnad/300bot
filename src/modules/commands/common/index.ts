@@ -18,6 +18,7 @@ import restartsocket from './restartsocket'
 import uptime from './uptime'
 import whoisleading from './whoisleading'
 import whoisonline from './whoisonline'
+import whotokick from './whotokick'
 
 export const commonCommands: Command[] = [
   brudistance,
@@ -39,4 +40,5 @@ export const commonCommands: Command[] = [
   uptime,
   whoisleading,
   whoisonline,
+  whotokick,
 ]
