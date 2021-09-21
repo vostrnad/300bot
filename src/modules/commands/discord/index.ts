@@ -9,6 +9,7 @@ import russianroulette from './russianroulette'
 import track from './track'
 import urbandictionary from './urbandictionary'
 import weaponstats from './weaponstats'
+import whotokick from './whotokick'
 
 export const discordCommands = [
   alerttracker,
@@ -22,4 +23,5 @@ export const discordCommands = [
   track,
   urbandictionary,
   weaponstats,
+  whotokick,
 ]

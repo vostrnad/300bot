@@ -24,6 +24,7 @@ import {
   PlayerDirective,
   CharactersItem,
   FullCharacterWeaponStats,
+  CharacterStatHistoryStripped,
 } from './types'
 
 type CollectionMap = {
@@ -323,6 +324,22 @@ class CensusApi {
         limit: '65535',
       },
     )) as FullCharacterWeaponStats[]
+
+    if (list.length === 0) return null
+    return list
+  }
+
+  async getOutfitMembersStatsById(outfitId: string) {
+    const list = (await this.getList(
+      'outfitMember',
+      { outfitId },
+      {
+        limit: '65535',
+        join: [
+          "character^on:character_id^inject_at:character^show:name.first'stats'times.last_login'times.minutes_played'prestige_level(characters_stat_history^on:character_id^list:1^inject_at:stats^show:stat_name'all_time)",
+        ],
+      },
+    )) as Array<OutfitMember & CharacterStatHistoryStripped>
 
     if (list.length === 0) return null
     return list

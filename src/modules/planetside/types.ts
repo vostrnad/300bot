@@ -97,6 +97,24 @@ export type World = {
   name: { en: string }
 }
 
+export type CharacterStatHistoryStripped = {
+  characterId: string
+  character: {
+    prestigeLevel: string
+    name: {
+      first: string
+    }
+    times: {
+      lastLogin: string
+      minutesPlayed: string
+    }
+    stats: Array<{
+      statName: string
+      allTime: string
+    }>
+  }
+}
+
 export type OutfitMemberStats = {
   outfitMember: Array<{
     characterId: string
