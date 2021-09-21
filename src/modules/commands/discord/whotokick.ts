@@ -13,7 +13,7 @@ import { getShortDate } from '@app/utils/time'
 import { Command } from '@commands/CommandHandler'
 import { validateArgumentNumber } from '../validators'
 
-export default new Command({
+export default new Command<discord.Message>({
   keyword: 'whotokick',
   description: 'show players that can be kicked from the outfit',
   help: 'Usage:`{prefix}whotokick` - shows a list of players that can be kicked from the outfit',
@@ -108,32 +108,29 @@ export default new Command({
       return 1
     })
 
-    return sendScrollEmbed(
-      raw as discord.Message,
-      membersToKick,
-      (member, idx, active) => {
-        const kickEmbed = new discord.MessageEmbed()
-          .setTitle(
-            `**${member.character.name.first}** (${idx + 1}/${
-              membersToKick.length
-            })`,
-          )
-          .addField(
-            `${pluralize(
-              member.message?.match(/-/g)?.length || 1,
-              'Reason',
-              'Reasons',
-            )} to kick`,
-            member.message,
-          )
+    return sendScrollEmbed(raw, membersToKick, (member, idx, active) => {
+      const kickEmbed = new discord.MessageEmbed()
+        .setTitle(
+          `**${member.character.name.first}** (${idx + 1}/${
+            membersToKick.length
+          })`,
+        )
+        .addField(
+          `${pluralize(
+            member.message?.match(/-/g)?.length || 1,
+            'Reason',
+            'Reasons',
+          )} to kick`,
+          member.message,
+        )
+        .setTimestamp()
 
-        if (active) {
-          kickEmbed.setFooter('Interactive').setColor('#647CC4')
-        } else {
-          kickEmbed.setFooter('Interaction ended').setColor('#1D2439')
-        }
-        return kickEmbed
-      },
-    )
+      if (active) {
+        kickEmbed.setFooter('Interactive').setColor('#647CC4')
+      } else {
+        kickEmbed.setFooter('Interaction ended').setColor('#1D2439')
+      }
+      return kickEmbed
+    })
   },
 })
