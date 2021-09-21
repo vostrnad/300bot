@@ -1,6 +1,13 @@
+import discord from 'discord.js'
 import { OutfitAliasNotFoundError } from '@app/errors'
 import { constants } from '@app/global/constants'
+import { sendScrollEmbed } from '@app/modules/discord/embed'
 import { censusApi } from '@app/modules/planetside/CensusApi'
+import {
+  CharacterStatHistoryStripped,
+  OutfitMember,
+} from '@app/modules/planetside/types'
+import { pluralize } from '@app/utils/language'
 import { divide } from '@app/utils/math'
 import { getShortDate } from '@app/utils/time'
 import { Command } from '@commands/CommandHandler'
@@ -10,7 +17,7 @@ export default new Command({
   keyword: 'whotokick',
   description: 'show players that can be kicked from the outfit',
   help: 'Usage:`{prefix}whotokick` - shows a list of players that can be kicked from the outfit',
-  callback: async ({ args, reply }) => {
+  callback: async ({ args, raw }) => {
     validateArgumentNumber(args.length, 0)
     if (args.length > 0) return
 
@@ -33,11 +40,17 @@ export default new Command({
     const brThreshold = 16
     const strikeThreshold = 2
 
-    let message = ''
+    const message: string[] = []
 
-    memberStats = memberStats.filter((member) => {
+    type AddInfo = { message?: string; strikes?: number }
+
+    const membersToKick: Array<
+      OutfitMember & CharacterStatHistoryStripped & AddInfo
+    > = []
+
+    memberStats.forEach((member) => {
       let strikes = 0
-      let messageLine = `**${member.character.name.first}**:\n`
+      let messageLine = ''
       // Inactivity
       if (
         Number(member.character.times.lastLogin) <
@@ -76,12 +89,51 @@ export default new Command({
 
       // Check if we have enough strikes to kick this player
       if (strikes >= strikeThreshold) {
-        message += messageLine
-        return true
+        message.push(messageLine)
+        membersToKick.push(member)
+        membersToKick[membersToKick.length - 1].message = messageLine
+        membersToKick[membersToKick.length - 1].strikes = strikes
       }
-      return false
     })
 
-    return reply(message)
+    membersToKick.sort((m1, m2) => {
+      if (
+        typeof m1.strikes === 'undefined' ||
+        typeof m2.strikes === 'undefined'
+      ) {
+        return 0
+      }
+
+      if (m1.strikes > m2.strikes) return -1
+      return 1
+    })
+
+    return sendScrollEmbed(
+      raw as discord.Message,
+      membersToKick,
+      (member, idx, active) => {
+        const kickEmbed = new discord.MessageEmbed()
+          .setTitle(
+            `**${member.character.name.first}** (${idx + 1}/${
+              membersToKick.length
+            })`,
+          )
+          .addField(
+            `${pluralize(
+              member.message?.match(/-/g)?.length || 1,
+              'Reason',
+              'Reasons',
+            )} to kick`,
+            member.message,
+          )
+
+        if (active) {
+          kickEmbed.setFooter('Interactive').setColor('#647CC4')
+        } else {
+          kickEmbed.setFooter('Interaction ended').setColor('#1D2439')
+        }
+        return kickEmbed
+      },
+    )
   },
 })
