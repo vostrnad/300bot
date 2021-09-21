@@ -56,4 +56,26 @@ describe('whoisonline', () => {
       'These 3 outfit members are online: **TestMember1**, **TestMember3** and **TestMember5**.',
     )
   })
+
+  it('should work for a custom outfit', async () => {
+    const outfit = {
+      outfitId: '123456789',
+      name: 'Test Outfit',
+    }
+    const outfitRequestData = mockCensusApi({ outfit_list: [outfit] })
+    const list = generate(6, (index) => ({
+      character_id: `id${index}`,
+      character: {
+        name: { first: `TestMember${index}` },
+        online_status: index % 2 === 0 ? '0' : '1',
+      },
+    }))
+    const outfitMemberRequestData = mockCensusApi({ outfit_member_list: list })
+    const reply = await runCommand('+whoisonline test')
+    expect(outfitRequestData).toMatchSnapshot()
+    expect(outfitMemberRequestData).toMatchSnapshot()
+    expect(reply).toEqual(
+      'These 3 members of **Test Outfit** are online: **TestMember1**, **TestMember3** and **TestMember5**.',
+    )
+  })
 })
