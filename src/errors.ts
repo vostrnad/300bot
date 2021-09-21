@@ -46,6 +46,12 @@ export class InvalidPlayerNameError extends CustomError {
   }
 }
 
+export class InvalidOutfitAliasError extends CustomError {
+  constructor() {
+    super('Outfit tags can only contain alphanumeric characters')
+  }
+}
+
 export class PlayerNotFoundError extends CustomError {
   constructor() {
     super('There is no PlanetSide 2 character with this name')

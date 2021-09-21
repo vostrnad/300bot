@@ -1,5 +1,29 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`whoisonline should work for a custom outfit 1`] = `
+Object {
+  "pathname": "/s:test/get/ps2:v2/outfit",
+  "searchParams": Object {
+    "alias_lower": "test",
+  },
+}
+`;
+
+exports[`whoisonline should work for a custom outfit 2`] = `
+Object {
+  "pathname": "/s:test/get/ps2:v2/outfit_member",
+  "searchParams": Object {
+    "c:join": Array [
+      "character_name^on:character_id^inject_at:character^show:name.first",
+      "characters_online_status^on:character_id^inject_at:character^show:name.first",
+    ],
+    "c:limit": "65535",
+    "c:show": "character_id",
+    "outfit_id": "123456789",
+  },
+}
+`;
+
 exports[`whoisonline should work when API response is empty 1`] = `
 Object {
   "pathname": "/s:test/get/ps2:v2/outfit_member",
