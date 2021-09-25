@@ -5,7 +5,10 @@ import { Command } from '@commands/CommandHandler'
 export default new Command<discord.Message>({
   keyword: 'hasbrulefttheserver',
   description: 'check if Bru is online',
-  help: 'Usage: `{prefix}isbruonline` - checks if Bru is online',
+  help: 'Usage: `{prefix}hasbrulefttheserver` - checks if Bru has left the server',
+  options: {
+    hidden: true,
+  },
   callback: ({ args, reply, raw }) => {
     if (args.length > 0) return
     if (raw.guild === null) {
