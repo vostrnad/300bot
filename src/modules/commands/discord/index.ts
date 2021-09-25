@@ -2,6 +2,7 @@ import alerttracker from './alerttracker'
 import alts from './alts'
 import cooldown from './cooldown'
 import hangman from './hangman'
+import hasbrulefttheserver from './hasbrulefttheserver'
 import kill from './kill'
 import outfitscoreboard from './outfitscoreboard'
 import prefix from './prefix'
@@ -24,4 +25,5 @@ export const discordCommands = [
   urbandictionary,
   weaponstats,
   whotokick,
+  hasbrulefttheserver,
 ]
