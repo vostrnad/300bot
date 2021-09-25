@@ -19,6 +19,7 @@ export const constants = {
     },
     userIds: {
       alfav: '259419275457069056',
+      bru: '192539444836958208',
     },
     emojis: {
       arrowLeft: '\u2B05\uFE0F',
