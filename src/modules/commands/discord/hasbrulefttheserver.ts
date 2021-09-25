@@ -4,7 +4,6 @@ import { Command } from '@commands/CommandHandler'
 
 export default new Command<discord.Message>({
   keyword: 'hasbrulefttheserver',
-  alias: ['hasbrulefttheserver'],
   description: 'check if Bru is online',
   help: 'Usage: `{prefix}isbruonline` - checks if Bru is online',
   callback: ({ args, reply, raw }) => {
