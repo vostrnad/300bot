@@ -13,4 +13,10 @@ export const staticCommands: StaticCommand[] = [
     help: 'Usage: `{prefix}hi` - says hi',
     response: 'Hi!',
   }),
+  new StaticCommand({
+    keyword: 'poop',
+    description: 'poop',
+    help: 'Usage: `{prefix}poop` - poop',
+    response: '💩',
+  }),
 ]
