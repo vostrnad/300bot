@@ -75,3 +75,9 @@ export class CensusApiUnavailableError extends CustomError {
     super('Daybreak API is currently unavailable')
   }
 }
+
+export class CensusApiNoDataFoundError extends CustomError {
+  constructor() {
+    super('Daybreak API no longer supports this query')
+  }
+}
