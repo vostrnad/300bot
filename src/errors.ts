@@ -78,6 +78,6 @@ export class CensusApiUnavailableError extends CustomError {
 
 export class CensusApiNoDataFoundError extends CustomError {
   constructor() {
-    super('Table does not exist in API')
+    super('Daybreak API no longer supports this query')
   }
 }
