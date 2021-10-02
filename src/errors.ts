@@ -75,3 +75,9 @@ export class CensusApiUnavailableError extends CustomError {
     super('Daybreak API is currently unavailable')
   }
 }
+
+export class NoDataFoundError extends CustomError {
+  constructor() {
+    super('Table does not exist in API')
+  }
+}
