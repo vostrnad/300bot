@@ -1,9 +1,7 @@
 import {
   PlayerNotFoundError,
   DirectiveTreeCategoryNotFoundError,
-  NoDataFoundError,
 } from '@app/errors'
-import { log } from '@app/utils/log'
 import { Command } from '@commands/CommandHandler'
 import { validateArgumentNumber } from '@commands/validators'
 import { censusApi } from '@planetside/CensusApi'
@@ -44,20 +42,10 @@ export default new Command({
       .map((s) => s.charAt(0).toUpperCase() + s.slice(1).toLowerCase())
       .join(' ')
 
-    let playerDirective
-    try {
-      playerDirective = await censusApi.getPlayerDirective(
-        character.characterId,
-        category,
-      )
-    } catch (e) {
-      log.error('Directive command error', e)
-      const error: Error = e as Error
-      if (error.message === 'Query error: No data found.') {
-        throw new NoDataFoundError()
-      }
-      return reply('Unknown error while contacting the API')
-    }
+    let playerDirective = await censusApi.getPlayerDirective(
+      character.characterId,
+      category,
+    )
 
     if (playerDirective === null) throw new DirectiveTreeCategoryNotFoundError()
 

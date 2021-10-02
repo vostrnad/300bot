@@ -76,7 +76,7 @@ export class CensusApiUnavailableError extends CustomError {
   }
 }
 
-export class NoDataFoundError extends CustomError {
+export class CensusApiNoDataFoundError extends CustomError {
   constructor() {
     super('Table does not exist in API')
   }

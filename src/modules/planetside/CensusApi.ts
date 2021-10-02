@@ -3,7 +3,10 @@ import got from 'got'
 import { snakeCase } from 'snake-case'
 import snakecaseKeys from 'snakecase-keys'
 import { env } from '@app/env'
-import { CensusApiUnavailableError } from '@app/errors'
+import {
+  CensusApiUnavailableError,
+  CensusApiNoDataFoundError,
+} from '@app/errors'
 import { log } from '@app/utils/log'
 import { flatten, objectToArray } from '@app/utils/object'
 import { QueryObjectDeep } from '@app/utils/types'
@@ -92,11 +95,16 @@ class CensusApi {
           throw new Error('Unexpected query return type')
         }
         if (data.error) {
-          if (data.error === 'service_unavailable') {
-            throw new CensusApiUnavailableError()
-          } else {
-            // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
-            throw new Error(`Query error: ${data.error}`)
+          switch (data.error) {
+            case 'service_unavailable':
+              throw new CensusApiUnavailableError()
+
+            case 'No data found.':
+              throw new CensusApiNoDataFoundError()
+
+            default:
+              // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
+              throw new Error(`Query error: ${data.error}`)
           }
         }
         if (data.errorCode) {
