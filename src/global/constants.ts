@@ -17,6 +17,9 @@ export const constants = {
       // #public
       brutracker: '198313979863367680',
     },
+    guildIds: {
+      spartans: '197635243442700288',
+    },
     userIds: {
       alfav: '259419275457069056',
       bru: '192539444836958208',
