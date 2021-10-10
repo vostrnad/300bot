@@ -58,6 +58,28 @@ client.on('ready', () => {
       )
     }
   })
+
+  streamingApi.on('playerLogin', async ({ characterId }) => {
+    if (characterId === constants.planetside.characterIds.bru) {
+      const guild = client.guilds.resolve(constants.discord.guildIds.spartans)
+      if (!guild) {
+        log.error('Cannot find Spartan guild')
+        return
+      }
+      await guild.members.unban(constants.discord.userIds.bru)
+    }
+  })
+})
+
+client.on('guildMemberAdd', (member) => {
+  if (member.id === constants.discord.userIds.bru) {
+    const bruRole = member.guild.roles.cache.find((role) => role.name === 'Bru')
+    if (!bruRole) {
+      log.error('Cannot find Bru role')
+      return
+    }
+    void member.roles.add(bruRole)
+  }
 })
 
 client.on('error', (e) => {
