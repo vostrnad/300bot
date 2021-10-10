@@ -704,6 +704,11 @@
     "@types/node" "*"
     "@types/responselike" "*"
 
+"@types/fuzzyset.js@^0.0.2":
+  version "0.0.2"
+  resolved "https://registry.yarnpkg.com/@types/fuzzyset.js/-/fuzzyset.js-0.0.2.tgz#5aab6eaebc50445c5752e6603d1724b834fe2f07"
+  integrity sha512-gNHcafWmEGjAULHs5br9XIQFiS8IzWeL8911al3aKV4fcFzyK52XHKmHHWbS+Xoixs3EsMyWb4z/hRai1QHK8w==
+
 "@types/glob@^7.1.4":
   version "7.1.4"
   resolved "https://registry.yarnpkg.com/@types/glob/-/glob-7.1.4.tgz#ea59e21d2ee5c517914cb4bc8e4153b99e566672"
@@ -2428,6 +2433,11 @@ functional-red-black-tree@^1.0.1:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/functional-red-black-tree/-/functional-red-black-tree-1.0.1.tgz#1b0ab3bd553b2a0d6399d29c0e3ea0b252078327"
   integrity sha1-GwqzvVU7Kg1jmdKcDj6gslIHgyc=
+
+fuzzyset.js@^1.0.6:
+  version "1.0.6"
+  resolved "https://registry.yarnpkg.com/fuzzyset.js/-/fuzzyset.js-1.0.6.tgz#c33da713ee7d052bc8399747cf578f40e0595588"
+  integrity sha512-M16E9/d3Ogiy6XEWQ1CbTCqbULcNaEIg3Qxs0VKhdDSjH3kAskWBZKGyTFb6tPF9FfwSBDcrIjsMQ7R62dNOYw==
 
 gensync@^1.0.0-beta.2:
   version "1.0.0-beta.2"
