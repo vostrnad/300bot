@@ -1,3 +1,4 @@
+import fuzzySet from 'fuzzyset.js'
 import { CustomError } from '@app/errors'
 import { log } from '@app/utils/log'
 
@@ -236,6 +237,30 @@ export class CommandHandler<T = unknown> {
       }
     }
 
+    if (message.text.startsWith(`${prefix}`)) {
+      const commandsAliases: string[] = []
+      this._commands.forEach((command) => {
+        commandsAliases.push(command.keyword, ...command.alias)
+      })
+
+      const fz = fuzzySet(commandsAliases)
+      const match = fz.get(message.text.slice(prefix.length))
+      if (match === null || match === undefined) {
+        // if match is less than 33% null is returned by default in the module
+        return false
+      }
+
+      const distthreshold = 0.6 // 60% of the keyword/alias has to be right for a suggestion to be relevant
+      if (match[0][0] < 1 - distthreshold) {
+        message.reply(
+          `Unknown command, use **${prefix}help** to get a list of all commands`,
+        )
+      } else {
+        message.reply(
+          `Unknown command, did you mean **${prefix}${match[0][1]}**?`,
+        )
+      }
+    }
     return false
   }
 
