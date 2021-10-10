@@ -250,8 +250,8 @@ export class CommandHandler<T = unknown> {
         return false
       }
 
-      const distthreshold = 0.6 // 60% of the keyword/alias has to be right for a suggestion to be relevant
-      if (match[0][0] < 1 - distthreshold) {
+      const similarityThreshold = 0.5 // 50% of the keyword/alias has to be right for a suggestion to be relevant
+      if (match[0][0] < similarityThreshold) {
         message.reply(
           `Unknown command, use **${prefix}help** to get a list of all commands.`,
         )
