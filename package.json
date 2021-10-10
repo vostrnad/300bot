@@ -25,12 +25,10 @@
     "node": ">=12"
   },
   "dependencies": {
-    "@types/fuzzyset.js": "^0.0.2",
     "camel-case": "^4.1.2",
     "camelcase-keys": "^7.0.0",
     "discord.js": "^12.5.3",
     "dotenv": "^10.0.0",
-    "fuzzyset.js": "^1.0.6",
     "got": "^11.8.2",
     "mathjs": "^9.4.4",
     "pascal-case": "^3.1.2",
