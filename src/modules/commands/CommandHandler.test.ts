@@ -10,6 +10,7 @@ const dummyCommandConfig: CommandConfig = {
   keyword: 'testcommand',
   description: 'test description',
   help: 'no help for this one',
+  category: null,
   callback: () => {
     // eslint-disable-next-line no-console
     console.warn('No callback defined for test command')
