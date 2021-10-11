@@ -7,6 +7,7 @@ export default new Command({
   keyword: 'diceroll',
   description: 'roll a dice',
   help: 'Usage: `{prefix}diceroll <number of sides>` - rolls a dice',
+  category: 'Fun',
   callback: ({ args, reply, env }) => {
     if (args.length === 0) {
       return reply(env.command.getHelp(env.handler))

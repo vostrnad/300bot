@@ -17,6 +17,7 @@ export default new Command<discord.Message>({
   keyword: 'weaponstats',
   description: 'show PS2 player weapon stats',
   help: 'Usage:\n`{prefix}weaponstats <player name>` - shows player weapons by kills\n`{prefix}weaponstats <player name> full` - shows full player weapons stats',
+  category: 'Advanced',
   callback: async ({ args, reply, raw, env }) => {
     if (args.length === 0) {
       return reply(env.command.getHelp(env.handler))

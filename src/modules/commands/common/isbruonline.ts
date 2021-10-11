@@ -7,6 +7,7 @@ export default new Command({
   alias: ['isbruoffline'],
   description: 'check if Bru is online',
   help: 'Usage: `{prefix}isbruonline` - checks if Bru is online',
+  category: 'Basic',
   callback: async ({ args, alias, reply }) => {
     if (args.length > 0) return
 

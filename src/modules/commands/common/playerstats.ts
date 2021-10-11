@@ -10,6 +10,7 @@ export default new Command({
   keyword: 'playerstats',
   description: 'show PS2 player stats',
   help: "Usage: `{prefix}playerstats <player name>` - shows player's PlanetSide 2 stats",
+  category: 'Basic',
   callback: async ({ args, reply, env }) => {
     if (args.length === 0) {
       return reply(env.command.getHelp(env.handler))

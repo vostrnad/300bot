@@ -17,6 +17,7 @@ export default new Command<discord.Message>({
   keyword: 'whotokick',
   description: 'show players that can be kicked from the outfit',
   help: 'Usage:`{prefix}whotokick` - shows a list of players that can be kicked from the outfit',
+  category: 'Advanced',
   callback: async ({ args, raw }) => {
     validateArgumentNumber(args.length, 0)
     if (args.length > 0) return

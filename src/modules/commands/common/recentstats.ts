@@ -9,6 +9,7 @@ export default new Command({
   keyword: 'recentstats',
   description: 'show recent player stats',
   help: "Usage: `{prefix}recentstats <player name>` - shows player's recent stats",
+  category: 'Advanced',
   callback: async ({ args, reply, env }) => {
     if (args.length === 0) {
       return reply(env.command.getHelp(env.handler))

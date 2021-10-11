@@ -25,6 +25,7 @@ export default new Command({
   keyword: 'whoisleading',
   description: 'check who is leading',
   help: 'Usage: `{prefix}whoisleading` - checks who is leading',
+  category: 'Basic',
   callback: async ({ args, reply }) => {
     if (args.length > 0) return
 

@@ -38,6 +38,9 @@ export type CommandCallback<T = unknown> = (
   data: CommandCallbackData<T>,
 ) => Promise<void> | void
 
+export const commandCategories = ['Basic', 'Advanced', 'Fun', 'Admin'] as const
+export type CommandCategory = typeof commandCategories[number] | null
+
 interface CommandOptions {
   /**
    * If defined, Limits the number of arguments and joins all excessive
@@ -69,6 +72,7 @@ export interface CommandConfig<T = unknown> {
   readonly help: string
   readonly callback: CommandCallback<T>
   readonly options?: Partial<CommandOptions>
+  readonly category: CommandCategory
 }
 
 export class Command<T = unknown> {
@@ -84,11 +88,13 @@ export class Command<T = unknown> {
   public readonly description: string
   public readonly callback: CommandCallback<T>
   public readonly options: CommandOptions
+  public readonly category: CommandCategory
 
   private readonly _help: string
 
   constructor(config: CommandConfig<T>) {
-    const { keyword, alias, description, help, callback, options } = config
+    const { keyword, alias, description, help, callback, options, category } =
+      config
     this.keyword = keyword
     this.alias = alias || []
     this.description = description
@@ -98,6 +104,7 @@ export class Command<T = unknown> {
       ...options,
     }
     this._help = help
+    this.category = category
   }
 
   public getHelp(handler: CommandHandler<T>): string {
@@ -126,8 +133,12 @@ export class CommandHandler<T = unknown> {
     this._allowArgumentBrackets = config.allowArgumentBrackets || false
   }
 
-  public getPublicCommands(): Array<Command<T>> {
-    return this._commands.filter((command) => !command.options.hidden)
+  public getPublicCommands(category?: CommandCategory): Array<Command<T>> {
+    return this._commands.filter(
+      (command) =>
+        (category ? category === command.category : true) &&
+        !command.options.hidden,
+    )
   }
 
   public getCommandHelp(keyword: string): string | null {

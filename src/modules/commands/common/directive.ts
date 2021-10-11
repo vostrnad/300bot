@@ -14,6 +14,7 @@ export default new Command({
   options: {
     lastArgNumber: 2,
   },
+  category: 'Advanced',
   callback: async ({ args, reply, env }) => {
     if (args.length === 0) {
       return reply(env.command.getHelp(env.handler))

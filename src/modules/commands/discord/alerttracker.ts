@@ -85,6 +85,7 @@ export default new Command<discord.Message>({
   keyword: 'alerttracker',
   description: 'configure the alert tracker',
   help: 'Usage: `{prefix}alerttracker <on/off>` - turns the alert tracker on or off',
+  category: 'Admin',
   callback: async ({ args, reply, env, raw }) => {
     if (args.length === 0) {
       return reply(env.command.getHelp(env.handler))

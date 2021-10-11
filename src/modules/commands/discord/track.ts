@@ -41,6 +41,7 @@ export default new Command<discord.Message>({
   alias: ['donottrack'],
   description: 'track PlanetSide 2 characters',
   help: 'Usage:\n`{prefix}track <character>` - starts tracking character\n`{prefix}donottrack <character>` - stops tracking character',
+  category: 'Admin',
   callback: async ({ alias, args, reply, env, raw }) => {
     if (args.length === 0) {
       return reply(env.command.getHelp(env.handler))

@@ -21,6 +21,7 @@ export default new Command({
   description: 'display the current population',
   help: 'Usage:\n`{prefix}population` - displays the current population\n`{prefix}population numbers` - diplays the current population with numbers',
   alias: ['pop'],
+  category: 'Basic',
   callback: async ({ args, reply, env }) => {
     validateArgumentRange(args.length, 0, 1)
 

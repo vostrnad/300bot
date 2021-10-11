@@ -8,6 +8,7 @@ export default new Command({
   keyword: 'outfitstats',
   description: 'show PS2 outfit stats',
   help: "Usage:\n`{prefix}outfitstats <alias>` - shows an outfit's players average stats\n`{prefix}outfitstats <alias> active` - shows an outfit's active players average stats",
+  category: 'Advanced',
   callback: async ({ args, reply, env }) => {
     if (args.length === 0) {
       return reply(env.command.getHelp(env.handler))
