@@ -37,6 +37,12 @@ export default new Command({
       keptCategories.forEach((category) => {
         const brick = env.handler
           .getPublicCommands(category)
+          .sort((com1, com2) => {
+            if (com1.keyword < com2.keyword) {
+              return -1
+            }
+            return 1
+          })
           .map(
             (command) =>
               `**${env.handler.prefix}${command.keyword}** - ${command.description}`,
