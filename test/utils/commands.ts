@@ -1,3 +1,4 @@
+import { commands } from '@app/modules/commands'
 import { Command, CommandHandler } from '@commands/CommandHandler'
 
 export const getCommandRunner = (command: Command) => {
@@ -6,6 +7,28 @@ export const getCommandRunner = (command: Command) => {
       const handler = new CommandHandler({
         prefix: '+',
         commands: [command],
+      })
+      const message = {
+        text,
+        author: {
+          id: 'testrunner',
+          displayName: 'Test Runner',
+          admin: true,
+          mention: '@testrunner',
+        },
+        reply: resolve,
+        raw: null,
+      }
+      void handler.process(message)
+    })
+}
+
+export const getFullCommandRunner = () => {
+  return async (text: string): Promise<string> =>
+    new Promise((resolve) => {
+      const handler = new CommandHandler({
+        prefix: '+',
+        commands: commands as Command[],
       })
       const message = {
         text,
