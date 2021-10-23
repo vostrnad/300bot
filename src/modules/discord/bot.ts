@@ -13,6 +13,8 @@ import {
 } from '@discord/revive'
 import { getTextChannel, formatWithEmojis } from '@discord/utils'
 import { streamingApi } from '@planetside/StreamingApi'
+import { bruCharactersDatabase } from '../database/brucharacters'
+import { censusApi } from '../planetside/CensusApi'
 
 /**
  * Sends a message with UTC timestamp and optionally an emoji.
@@ -40,21 +42,55 @@ client.on('ready', () => {
 
   streamingApi.init()
 
-  streamingApi.on('playerLogin', ({ characterId }) => {
-    if (characterId === constants.planetside.characterIds.bru) {
+  const bruCharacterIds = Object.keys(bruCharactersDatabase.root)
+
+  const factionEmojis = [
+    'Unknown Faction',
+    '{emoji:faction_logo_vs|VS}',
+    '{emoji:faction_logo_nc|NC}',
+    '{emoji:faction_logo_tr|TR}',
+    '{emoji:faction_logo_ns|NS}',
+  ]
+
+  streamingApi.on('playerLogin', async ({ characterId }) => {
+    if (bruCharacterIds.includes(characterId)) {
+      const character = await censusApi.getCharacter({ characterId })
+      if (!character) {
+        return
+      }
       sendAnnouncement(
         constants.discord.channelIds.brutracker,
         'spartan_helmet',
-        'Bru is online!',
+        formatWithEmojis(
+          getTextChannel(
+            client,
+            constants.discord.channelIds.brutracker,
+          ) as discord.Channel,
+          `Bru is online as **${character.name.first}** (${
+            factionEmojis[Number(character.factionId)] ?? factionEmojis[0]
+          }).`,
+        ),
       )
     }
   })
-  streamingApi.on('playerLogout', ({ characterId }) => {
-    if (characterId === constants.planetside.characterIds.bru) {
+  streamingApi.on('playerLogout', async ({ characterId }) => {
+    if (bruCharacterIds.includes(characterId)) {
+      const character = await censusApi.getCharacter({ characterId })
+      if (!character) {
+        return
+      }
       sendAnnouncement(
         constants.discord.channelIds.brutracker,
         'spartan_helmet',
-        'Bru is offline.',
+        formatWithEmojis(
+          getTextChannel(
+            client,
+            constants.discord.channelIds.brutracker,
+          ) as discord.Channel,
+          `Bru has just logged off as **${character.name.first}** (${
+            factionEmojis[Number(character.factionId)] ?? factionEmojis[0]
+          }).`,
+        ),
       )
     }
   })
