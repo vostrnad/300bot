@@ -1,7 +1,10 @@
-import { getFullCommandRunner } from '@test/utils/commands'
+import { Command } from '@commands/CommandHandler'
+import { commands } from '@commands/index'
+import { getMultipleCommandRunner } from '@test/utils/commands'
 
 describe('help', () => {
-  const runcommand = getFullCommandRunner()
+  const comm = commands as Command[]
+  const runcommand = getMultipleCommandRunner(comm)
 
   it('should display the help message', async () => {
     const reply = await runcommand('+help')
