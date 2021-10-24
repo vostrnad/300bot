@@ -10,11 +10,14 @@ export default new Command({
   keyword: 'brucharacters',
   description: "manage Bru's characters",
   help: "Usage: `{prefix}brucharacters <add|remove|list>` - lists adds or removes Bru's characters",
-  callback: async ({ args, reply, env }) => {
+  callback: async ({ args, reply, env, author }) => {
     validateArgumentRange(args.length, 1, 2)
 
     switch (args[0]) {
       case 'add': {
+        if (!author.admin) {
+          return reply('You are not an admin or a bot operator in this server.')
+        }
         validateArgumentNumber(args.length, 2)
         validatePlayerName(args[1])
         const character = await censusApi.getCharacterName({
@@ -39,6 +42,9 @@ export default new Command({
         }
       }
       case 'remove': {
+        if (!author.admin) {
+          return reply('You are not an admin or a bot operator in this server.')
+        }
         validateArgumentNumber(args.length, 2)
         validatePlayerName(args[1])
         const character = await censusApi.getCharacterName({
@@ -70,7 +76,7 @@ export default new Command({
         characterIds.reverse() // Display by most recent addition first
         const characters = await censusApi.getPlayerNames(characterIds)
         const characterNames = Object.values(characters).map((character) => {
-          return character.name.first
+          return `**${character.name.first}**`
         })
         const message =
           'Here is the list of all known Bru characters: ' +
