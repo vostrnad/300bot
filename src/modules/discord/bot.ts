@@ -42,8 +42,6 @@ client.on('ready', () => {
 
   streamingApi.init()
 
-  const bruCharacterIds = Object.keys(bruCharactersDatabase.root)
-
   const factionEmojis = [
     'Unknown Faction',
     '{emoji:faction_logo_vs|VS}',
@@ -53,7 +51,7 @@ client.on('ready', () => {
   ]
 
   streamingApi.on('playerLogin', async ({ characterId }) => {
-    if (bruCharacterIds.includes(characterId)) {
+    if (bruCharactersDatabase.get(characterId)) {
       const character = await censusApi.getCharacter({ characterId })
       if (!character) {
         return
@@ -66,15 +64,15 @@ client.on('ready', () => {
             client,
             constants.discord.channelIds.brutracker,
           ) as discord.Channel,
-          `Bru is online as **${character.name.first}** (${
+          `Bru is online as **${character.name.first}** ${
             factionEmojis[Number(character.factionId)] ?? factionEmojis[0]
-          }).`,
+          }!`,
         ),
       )
     }
   })
   streamingApi.on('playerLogout', async ({ characterId }) => {
-    if (bruCharacterIds.includes(characterId)) {
+    if (bruCharactersDatabase.get(characterId)) {
       const character = await censusApi.getCharacter({ characterId })
       if (!character) {
         return
@@ -89,7 +87,7 @@ client.on('ready', () => {
           ) as discord.Channel,
           `Bru has just logged off as **${character.name.first}** (${
             factionEmojis[Number(character.factionId)] ?? factionEmojis[0]
-          }).`,
+          })!`,
         ),
       )
     }

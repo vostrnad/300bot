@@ -8,8 +8,8 @@ import { validateArgumentRange, validateArgumentNumber } from '../validators'
 
 export default new Command({
   keyword: 'brucharacters',
-  description: "manage bru's characters",
-  help: "Usage: `{prefix}brucharaters <add|remove|list>` - lists adds or removes bru's characters",
+  description: "manage Bru's characters",
+  help: "Usage: `{prefix}brucharacters <add|remove|list>` - lists adds or removes Bru's characters",
   callback: async ({ args, reply, env }) => {
     validateArgumentRange(args.length, 1, 2)
 
@@ -65,17 +65,17 @@ export default new Command({
         const list = bruCharactersDatabase.root
         const characterIds = Object.keys(list)
         if (characterIds.length === 0) {
-          return reply("The list of Bru's characters is empty")
+          return reply("The list of Bru's characters is empty.")
         }
         characterIds.reverse() // Display by most recent addition first
         const characters = await censusApi.getPlayerNames(characterIds)
-        const characterNames: string[] = []
-        characterIds.forEach((id) => {
-          characterNames.push(`**${characters[id].name.first}**`)
+        const characterNames = Object.values(characterIds).map((id) => {
+          return `**${characters[id].name.first}**`
         })
         const message =
-          'Here is the list of all known Bru characters:\n' +
-          sentence(characterNames)
+          'Here is the list of all known Bru characters: ' +
+          sentence(characterNames) +
+          '.'
 
         return reply(message)
       }
