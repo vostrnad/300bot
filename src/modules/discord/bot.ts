@@ -85,9 +85,9 @@ client.on('ready', () => {
             client,
             constants.discord.channelIds.brutracker,
           ) as discord.Channel,
-          `Bru has just logged off as **${character.name.first}** (${
+          `Bru has just logged off as **${character.name.first}** ${
             factionEmojis[Number(character.factionId)] ?? factionEmojis[0]
-          })!`,
+          }.`,
         ),
       )
     }

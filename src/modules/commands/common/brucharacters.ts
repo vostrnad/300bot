@@ -69,8 +69,8 @@ export default new Command({
         }
         characterIds.reverse() // Display by most recent addition first
         const characters = await censusApi.getPlayerNames(characterIds)
-        const characterNames = Object.values(characterIds).map((id) => {
-          return `**${characters[id].name.first}**`
+        const characterNames = Object.values(characters).map((character) => {
+          return character.name.first
         })
         const message =
           'Here is the list of all known Bru characters: ' +
