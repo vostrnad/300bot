@@ -1,6 +1,10 @@
 import discord from 'discord.js'
 import { env } from '@app/env'
 import { constants } from '@app/global/constants'
+import {
+  startAlertTrackerService,
+  startTrackingService,
+} from '@app/modules/planetside/StreamingApiServices'
 import { log } from '@app/utils/log'
 import { getUTCShort } from '@app/utils/time'
 import { CommandHandler, CommandMessage } from '@commands/CommandHandler'
@@ -175,6 +179,9 @@ client.on('message', (message: discord.Message) => {
 
   void commandHandler.process(commandMessage)
 })
+
+startTrackingService()
+startAlertTrackerService()
 
 scheduleRevivesOnStartup()
 checkNewMemberDeadRole()

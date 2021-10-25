@@ -3,37 +3,8 @@ import { PlayerNotFoundError } from '@app/errors'
 import { Command } from '@commands/CommandHandler'
 import { validateArgumentNumber } from '@commands/validators'
 import { dmTrackerDatabase } from '@database/dmtracker'
-import { client } from '@discord/client'
-import { getDMChannel } from '@discord/utils'
 import { censusApi } from '@planetside/CensusApi'
-import { streamingApi } from '@planetside/StreamingApi'
 import { validatePlayerName } from '@planetside/validators'
-
-const sendCharacterStatus = async (characterId: string, online: boolean) => {
-  const channelIds = dmTrackerDatabase.get(characterId)
-  if (!channelIds) return
-  const character = await censusApi.getCharacterName({ characterId })
-  if (!character) return
-  const characterName = character.name.first
-  const message = online
-    ? `**${characterName}** is online!`
-    : `**${characterName}** is offline.`
-  Object.keys(channelIds).forEach((channelId) => {
-    void (async () => {
-      const channel = await getDMChannel(client, channelId)
-      if (channel) {
-        void channel.send(message)
-      }
-    })()
-  })
-}
-
-streamingApi.on('playerLogin', async ({ characterId }) => {
-  await sendCharacterStatus(characterId, true)
-})
-streamingApi.on('playerLogout', async ({ characterId }) => {
-  await sendCharacterStatus(characterId, false)
-})
 
 export default new Command<discord.Message>({
   keyword: 'track',

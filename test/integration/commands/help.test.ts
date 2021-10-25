@@ -1,6 +1,6 @@
 import { Command } from '@app/modules/commands/CommandHandler'
+import { client } from '@app/modules/discord/client'
 import { commands } from '@commands/index'
-import { client } from '@discord/client'
 import { getMultipleCommandRunner } from '@test/utils/commands'
 
 afterAll(() => {
