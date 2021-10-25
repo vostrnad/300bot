@@ -28,7 +28,6 @@ const sendCharacterStatus = async (characterId: string, online: boolean) => {
   })
 }
 
-streamingApi.init()
 streamingApi.on('playerLogin', async ({ characterId }) => {
   await sendCharacterStatus(characterId, true)
 })

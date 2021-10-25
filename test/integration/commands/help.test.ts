@@ -1,6 +1,11 @@
-import { Command } from '@commands/CommandHandler'
+import { Command } from '@app/modules/commands/CommandHandler'
 import { commands } from '@commands/index'
+import { client } from '@discord/client'
 import { getMultipleCommandRunner } from '@test/utils/commands'
+
+afterAll(() => {
+  client.destroy()
+})
 
 describe('help', () => {
   const comm = commands as Command[]
@@ -65,6 +70,7 @@ __**Fun**__
 
 __**Admin**__
 **+alerttracker** - configure the alert tracker
+**+brucharacters** - manage Bru's characters
 **+cooldown** - close a channel temporarily
 **+prefix** - set command prefix
 **+track** - track PlanetSide 2 characters

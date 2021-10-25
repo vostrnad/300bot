@@ -23,7 +23,6 @@ const sendAlertMessage = (message: string) => {
   })
 }
 
-streamingApi.init()
 streamingApi.on('continentLock', ({ zoneId }) => {
   const continentName = getContinentName(zoneId)
   if (!continentName) return

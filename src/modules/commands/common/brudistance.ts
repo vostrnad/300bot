@@ -119,7 +119,6 @@ const events: Record<string, [string, string]> = {
 
 const separationTree = new SeparationTree(constants.planetside.characterIds.bru)
 
-streamingApi.init()
 streamingApi.on('gainExperience', ({ characterId, otherId, experienceId }) => {
   if (!(experienceId in events)) return
   if (characterId.length !== otherId.length) return
