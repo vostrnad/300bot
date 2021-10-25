@@ -10,6 +10,7 @@ export default new Command({
   keyword: 'brucharacters',
   description: "manage Bru's characters",
   help: "Usage: `{prefix}brucharacters <add|remove|list>` - lists adds or removes Bru's characters",
+  category: 'Admin',
   callback: async ({ args, reply, env, author }) => {
     validateArgumentRange(args.length, 1, 2)
 
