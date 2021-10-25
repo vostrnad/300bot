@@ -1,8 +1,8 @@
-import discord from 'discord.js'
 import { schedule } from '@app/utils/async'
 import { log } from '@app/utils/log'
 import { reviveDatabase } from '@database/revive'
 import { client } from '@discord/client'
+import { reviveMember } from './utils'
 
 export const scheduleRevivesOnStartup = (): void => {
   client.on('ready', () => {
@@ -62,37 +62,4 @@ export const checkNewMemberDeadRole = (): void => {
       }
     }
   })
-}
-
-export const reviveMember = async (
-  member: discord.GuildMember,
-  deadRole: discord.Role,
-): Promise<void> => {
-  const guildId = member.guild.id
-  const userId = member.id
-
-  await member.roles.remove(deadRole)
-  await reviveDatabase.delete(`${guildId}.${userId}`)
-}
-
-export const killMember = async (
-  member: discord.GuildMember,
-  deadRole: discord.Role,
-  reviveDelayMs: number,
-): Promise<void> => {
-  const userId = member.id
-  const guildId = member.guild.id
-
-  const reviveTime = Date.now() + reviveDelayMs
-
-  await reviveDatabase.set(`${guildId}.${userId}`, reviveTime)
-  await member.roles.add(deadRole)
-
-  void schedule(async () => {
-    try {
-      await reviveMember(member, deadRole)
-    } catch (e) {
-      log.error('Cannot revive member:', e)
-    }
-  }, reviveDelayMs)
 }

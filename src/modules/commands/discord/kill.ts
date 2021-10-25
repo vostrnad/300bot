@@ -1,7 +1,7 @@
 import discord from 'discord.js'
 import { Command } from '@commands/CommandHandler'
 import { validateArgumentNumber } from '@commands/validators'
-import { killMember } from '@discord/revive'
+import { killMember } from '@discord/utils'
 
 export default new Command<discord.Message>({
   keyword: 'kill',

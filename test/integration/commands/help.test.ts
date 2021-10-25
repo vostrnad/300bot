@@ -1,11 +1,6 @@
 import { Command } from '@app/modules/commands/CommandHandler'
-import { client } from '@app/modules/discord/client'
 import { commands } from '@commands/index'
 import { getMultipleCommandRunner } from '@test/utils/commands'
-
-afterAll(() => {
-  client.destroy()
-})
 
 describe('help', () => {
   const comm = commands as Command[]
