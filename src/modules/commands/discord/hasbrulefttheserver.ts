@@ -12,7 +12,7 @@ export default new Command<discord.Message>({
   callback: ({ args, reply, raw }) => {
     if (args.length > 0) return
     if (raw.guild === null) {
-      return reply('This command can only be used inside of a server')
+      return reply('This command can only be used in a server.')
     }
 
     if (
@@ -20,9 +20,9 @@ export default new Command<discord.Message>({
         (user) => user.id === constants.discord.userIds.bru,
       ) === 'undefined'
     ) {
-      return reply('**Bru** has left the server')
+      return reply('Yes, Bru has left the server.')
     } else {
-      return reply('**Bru** is currently on the server')
+      return reply('No, Bru is currently in the server.')
     }
   },
 })
