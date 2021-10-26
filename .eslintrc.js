@@ -36,6 +36,7 @@ module.exports = {
 
     // typescript-eslint
     '@typescript-eslint/array-type': [1, { default: 'array-simple' }],
+    '@typescript-eslint/explicit-module-boundary-types': 1,
     '@typescript-eslint/naming-convention': [
       1,
       {

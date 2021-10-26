@@ -136,7 +136,7 @@ class StreamingApi {
             void (async () => {
               try {
                 // https://github.com/microsoft/TypeScript/issues/45373
-                // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-explicit-any
                 await listener(payload as any)
               } catch (e) {
                 log.error('Error in StreamingApi listener:', e)
