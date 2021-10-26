@@ -12,7 +12,7 @@ type DatabaseRecord = { [key in string]: DatabaseRecord | string | number }
  */
 export class Database<T extends DatabaseRecord> {
   private static readonly _dirPath = resolve(__dirname, '../../../.data')
-  private readonly _data: T
+  private _data: T
   private readonly _saveDb: Debounce
 
   constructor(dbName: string) {
@@ -86,6 +86,11 @@ export class Database<T extends DatabaseRecord> {
     })
     delete ref[steps[steps.length - 1]]
     return this._saveDb.call()
+  }
+
+  async clear(): Promise<void> {
+    this._data = {} as T
+    await this._saveDb.call()
   }
 }
 

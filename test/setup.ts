@@ -4,7 +4,7 @@ import { globalIntervals, globalTimeouts } from '@app/global/timeouts'
 
 dotenv.config({ path: resolve(__dirname, './.env.test') })
 
-afterEach(() => {
+afterAll(() => {
   globalTimeouts.forEach(clearTimeout)
   globalIntervals.forEach(clearInterval)
 })
