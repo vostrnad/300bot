@@ -18,11 +18,48 @@ Object {
 }
 `;
 
+exports[`brucharacters should display the list of characters in the database 1`] = `
+Object {
+  "pathname": "/s:test/get/ps2:v2/character_name",
+  "searchParams": Object {
+    "name.first_lower": "customcharlist",
+  },
+}
+`;
+
+exports[`brucharacters should display the list of characters in the database 2`] = `
+Object {
+  "pathname": "/s:test/get/ps2:v2/character_name",
+  "searchParams": Object {
+    "c:limit": "100",
+    "character_id": "testlist",
+  },
+}
+`;
+
 exports[`brucharacters should not remove a character that is not in the list 1`] = `
 Object {
   "pathname": "/s:test/get/ps2:v2/character_name",
   "searchParams": Object {
     "name.first_lower": "unknownchar",
+  },
+}
+`;
+
+exports[`brucharacters should say that the character is already in the list 1`] = `
+Object {
+  "pathname": "/s:test/get/ps2:v2/character_name",
+  "searchParams": Object {
+    "name.first_lower": "customchardup",
+  },
+}
+`;
+
+exports[`brucharacters should say that the character is already in the list 2`] = `
+Object {
+  "pathname": "/s:test/get/ps2:v2/character_name",
+  "searchParams": Object {
+    "name.first_lower": "customchardup",
   },
 }
 `;
