@@ -1,0 +1,19 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`brucharacters should say that the character is already in the list 1`] = `
+Object {
+  "pathname": "/s:test/get/ps2:v2/character_name",
+  "searchParams": Object {
+    "name.first_lower": "customchardup",
+  },
+}
+`;
+
+exports[`brucharacters should say that the character is already in the list 2`] = `
+Object {
+  "pathname": "/s:test/get/ps2:v2/character_name",
+  "searchParams": Object {
+    "name.first_lower": "customchardup",
+  },
+}
+`;
