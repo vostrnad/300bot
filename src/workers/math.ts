@@ -1,6 +1,7 @@
+import 'module-alias/register'
 import { evaluate, format } from 'mathjs'
 import { worker } from 'workerpool'
-import { roundIfClose } from '../utils/math'
+import { roundIfClose } from '@app/utils/math'
 
 type MathJsResult = number | { re: number; im: number }
 

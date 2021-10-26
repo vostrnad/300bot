@@ -5,6 +5,7 @@ import { log } from '@app/utils/log'
 import { getUTCShort } from '@app/utils/time'
 import { CommandHandler, CommandMessage } from '@commands/CommandHandler'
 import { commands } from '@commands/index'
+import { bruCharactersDatabase } from '@database/brucharacters'
 import { guildDatabase } from '@database/guilds'
 import { client } from '@discord/client'
 import {
@@ -12,9 +13,8 @@ import {
   scheduleRevivesOnStartup,
 } from '@discord/revive'
 import { getTextChannel, formatWithEmojis } from '@discord/utils'
+import { censusApi } from '@planetside/CensusApi'
 import { streamingApi } from '@planetside/StreamingApi'
-import { bruCharactersDatabase } from '../database/brucharacters'
-import { censusApi } from '../planetside/CensusApi'
 
 /**
  * Sends a message with UTC timestamp and optionally an emoji.

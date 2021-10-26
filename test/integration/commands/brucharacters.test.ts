@@ -1,5 +1,5 @@
-import brucharacters from '@app/modules/commands/common/brucharacters'
-import { bruCharactersDatabase } from '@app/modules/database/brucharacters'
+import brucharacters from '@commands/common/brucharacters'
+import { bruCharactersDatabase } from '@database/brucharacters'
 import { getCommandRunner } from '@test/utils/commands'
 import { mockCensusApi } from '@test/utils/planetside'
 
