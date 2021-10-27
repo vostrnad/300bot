@@ -1,7 +1,7 @@
 import discord from 'discord.js'
 import { schedule } from '@app/utils/async'
 import { log } from '@app/utils/log'
-import { reviveDatabase } from '../database/revive'
+import { reviveDatabase } from '@database/revive'
 
 export const getTextChannel = (
   client: discord.Client,

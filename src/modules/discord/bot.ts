@@ -1,10 +1,6 @@
 import discord from 'discord.js'
 import { env } from '@app/env'
 import { constants } from '@app/global/constants'
-import {
-  startAlertTrackerService,
-  startTrackingService,
-} from '@app/modules/planetside/StreamingApiServices'
 import { log } from '@app/utils/log'
 import { getUTCShort } from '@app/utils/time'
 import { CommandHandler, CommandMessage } from '@commands/CommandHandler'
@@ -19,6 +15,10 @@ import {
 import { formatWithEmojis, getTextChannel } from '@discord/utils'
 import { censusApi } from '@planetside/CensusApi'
 import { streamingApi } from '@planetside/StreamingApi'
+import {
+  startAlertTrackerService,
+  startTrackingService,
+} from '@planetside/StreamingApiServices'
 
 /**
  * Sends a message with UTC timestamp and optionally an emoji.

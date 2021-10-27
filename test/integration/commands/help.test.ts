@@ -1,4 +1,4 @@
-import { Command } from '@app/modules/commands/CommandHandler'
+import { Command } from '@commands/CommandHandler'
 import { commands } from '@commands/index'
 import { getMultipleCommandRunner } from '@test/utils/commands'
 

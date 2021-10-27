@@ -1,15 +1,15 @@
 import { getUTCShort } from '@app/utils/time'
+import { alertTrackerDatabase } from '@database/alerttracker'
 import { dmTrackerDatabase } from '@database/dmtracker'
 import { client } from '@discord/client'
 import { formatWithEmojis, getDMChannel, getTextChannel } from '@discord/utils'
 import { censusApi } from '@planetside/CensusApi'
 import { streamingApi } from '@planetside/StreamingApi'
 import {
-  getAlertType,
   getAlertState,
+  getAlertType,
   getContinentName,
 } from '@planetside/resources'
-import { alertTrackerDatabase } from '../database/alerttracker'
 
 export const startTrackingService = (): void => {
   const sendCharacterStatus = async (characterId: string, online: boolean) => {
