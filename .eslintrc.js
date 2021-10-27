@@ -131,6 +131,7 @@ module.exports = {
     'no-sequences': 1,
     'no-useless-concat': 1,
     radix: 2,
+    'sort-imports': [1, { ignoreDeclarationSort: true }],
     'spaced-comment': 1,
     yoda: 1,
 

@@ -8,8 +8,8 @@ import { sendScrollEmbed } from '@discord/embed'
 import { censusApi } from '@planetside/CensusApi'
 import {
   CharacterWeaponStats,
-  Item,
   CharacterWeaponStatsByFaction,
+  Item,
 } from '@planetside/types'
 import { validatePlayerName } from '@planetside/validators'
 

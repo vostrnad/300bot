@@ -1,6 +1,6 @@
 import {
-  PlayerNotFoundError,
   DirectiveTreeCategoryNotFoundError,
+  PlayerNotFoundError,
 } from '@app/errors'
 import { Command } from '@commands/CommandHandler'
 import { validateArgumentNumber } from '@commands/validators'

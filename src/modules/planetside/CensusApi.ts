@@ -4,8 +4,8 @@ import { snakeCase } from 'snake-case'
 import snakecaseKeys from 'snakecase-keys'
 import { env } from '@app/env'
 import {
-  CensusApiUnavailableError,
   CensusApiNoDataFoundError,
+  CensusApiUnavailableError,
 } from '@app/errors'
 import { log } from '@app/utils/log'
 import { flatten, objectToArray } from '@app/utils/object'
@@ -17,18 +17,18 @@ import {
   CharacterName,
   CharacterResolvedOutfitMemberExtended,
   CharacterResolvedStatHistory,
+  CharacterStatHistoryStripped,
+  CharactersItem,
   CharactersOnlineStatus,
+  DirectiveTreeCategory,
+  FullCharacterWeaponStats,
   Outfit,
+  OutfitLeader,
   OutfitMember,
+  OutfitMemberStats,
+  PlayerDirective,
   Title,
   World,
-  OutfitMemberStats,
-  DirectiveTreeCategory,
-  PlayerDirective,
-  CharactersItem,
-  FullCharacterWeaponStats,
-  CharacterStatHistoryStripped,
-  OutfitLeader,
 } from './types'
 
 type CollectionMap = {

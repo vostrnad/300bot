@@ -2,8 +2,8 @@ import { PlayerNotFoundError } from '@app/errors'
 import { sentence } from '@app/utils/language'
 import { Command } from '@commands/CommandHandler'
 import {
-  validateArgumentRange,
   validateArgumentNumber,
+  validateArgumentRange,
 } from '@commands/validators'
 import { bruCharactersDatabase } from '@database/brucharacters'
 import { censusApi } from '@planetside/CensusApi'

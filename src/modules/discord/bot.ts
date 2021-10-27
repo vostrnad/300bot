@@ -12,7 +12,7 @@ import {
   checkNewMemberDeadRole,
   scheduleRevivesOnStartup,
 } from '@discord/revive'
-import { getTextChannel, formatWithEmojis } from '@discord/utils'
+import { formatWithEmojis, getTextChannel } from '@discord/utils'
 import { censusApi } from '@planetside/CensusApi'
 import { streamingApi } from '@planetside/StreamingApi'
 
