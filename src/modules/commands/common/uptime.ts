@@ -7,7 +7,7 @@ export default new Command({
   keyword: 'uptime',
   description: 'display time since last reboot',
   help: 'Usage: `{prefix}uptime` - displays time since last reboot',
-  category: 'Admin',
+  category: 'Advanced',
   callback: ({ args, reply }) => {
     if (args.length > 0) return
     const timeDelta = getLongTimeDelta(startTime, new Date())

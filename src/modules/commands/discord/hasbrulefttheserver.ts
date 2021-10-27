@@ -9,7 +9,7 @@ export default new Command<discord.Message>({
   options: {
     hidden: true,
   },
-  category: 'Fun',
+  category: null,
   callback: ({ args, reply, raw }) => {
     if (args.length > 0) return
     if (raw.guild === null) {

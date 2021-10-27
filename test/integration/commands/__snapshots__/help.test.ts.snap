@@ -5,8 +5,6 @@ exports[`help should display the full help 1`] = `
 
 __**Basic**__
 **+certs** - show player's available certs
-**+hello** - say hello
-**+help** - show command help
 **+isbruonline** - check if Bru is online
 **+membercount** - count outfit members
 **+playerstats** - show PS2 player stats
@@ -22,6 +20,7 @@ __**Advanced**__
 **+outfitstats** - show PS2 outfit stats
 **+playersearch** - find PlanetSide 2 players
 **+recentstats** - show recent player stats
+**+uptime** - display time since last reboot
 **+weaponstats** - show PS2 player weapon stats
 **+whotokick** - show players that can be kicked from the outfit
 
@@ -39,7 +38,6 @@ __**Admin**__
 **+cooldown** - close a channel temporarily
 **+prefix** - set command prefix
 **+track** - track PlanetSide 2 characters
-**+uptime** - display time since last reboot
 
 "
 `;
@@ -48,8 +46,6 @@ exports[`help should display the help message 1`] = `
 "This is a list of all my basic commands:
 
 **+certs** - show player's available certs
-**+hello** - say hello
-**+help** - show command help
 **+isbruonline** - check if Bru is online
 **+membercount** - count outfit members
 **+playerstats** - show PS2 player stats

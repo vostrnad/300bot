@@ -10,7 +10,7 @@ export default new Command<discord.Message>({
   options: {
     hidden: true,
   },
-  category: 'Admin',
+  category: null,
   callback: async ({ args, author, reply, env, raw }) => {
     if (args.length === 0) {
       return reply(env.command.getHelp(env.handler))
