@@ -1,0 +1,61 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`help should display the full help 1`] = `
+"This is a list of all my commands:
+
+__**Basic**__
+**+certs** - show player's available certs
+**+hello** - say hello
+**+help** - show command help
+**+isbruonline** - check if Bru is online
+**+membercount** - count outfit members
+**+playerstats** - show PS2 player stats
+**+population** - display the current population
+**+whoisleading** - check who is leading
+**+whoisonline** - check who is online
+
+__**Advanced**__
+**+alts** - show player's alts
+**+brudistance** - find player's interaction chain with Bru
+**+directive** - show PS2 player directive
+**+outfitscoreboard** - show PS2 outfit player scoreboard
+**+outfitstats** - show PS2 outfit stats
+**+playersearch** - find PlanetSide 2 players
+**+recentstats** - show recent player stats
+**+weaponstats** - show PS2 player weapon stats
+**+whotokick** - show players that can be kicked from the outfit
+
+__**Fun**__
+**+coinflip** - flip a coin
+**+diceroll** - roll a dice
+**+hangman** - play a game of hangman
+**+math** - evaluate a math expression
+**+russianroulette** - kill yourself for fun purposes
+**+urbandictionary** - get the modern definition of a word or expression
+
+__**Admin**__
+**+alerttracker** - configure the alert tracker
+**+brucharacters** - manage Bru's characters
+**+cooldown** - close a channel temporarily
+**+prefix** - set command prefix
+**+track** - track PlanetSide 2 characters
+**+uptime** - display time since last reboot
+
+"
+`;
+
+exports[`help should display the help message 1`] = `
+"This is a list of all my basic commands:
+
+**+certs** - show player's available certs
+**+hello** - say hello
+**+help** - show command help
+**+isbruonline** - check if Bru is online
+**+membercount** - count outfit members
+**+playerstats** - show PS2 player stats
+**+population** - display the current population
+**+whoisleading** - check who is leading
+**+whoisonline** - check who is online
+
+"
+`;
