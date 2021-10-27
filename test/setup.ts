@@ -1,10 +1,9 @@
-import { resolve } from 'path'
-import dotenv from 'dotenv'
 import { globalIntervals, globalTimeouts } from '@app/global/timeouts'
+import { terminateAllPools } from '@app/workers'
 
-dotenv.config({ path: resolve(__dirname, './.env.test') })
-
-afterEach(() => {
+afterAll(() => {
   globalTimeouts.forEach(clearTimeout)
   globalIntervals.forEach(clearInterval)
+
+  void terminateAllPools()
 })

@@ -1,9 +1,9 @@
 import camelcaseKeys from 'camelcase-keys'
 import discord from 'discord.js'
 import got from 'got'
-import { sendScrollEmbed } from '@app/modules/discord/embed'
 import { isRecord } from '@app/validators/object'
 import { Command } from '@commands/CommandHandler'
+import { sendScrollEmbed } from '@discord/embed'
 
 type Definition = {
   definition: string

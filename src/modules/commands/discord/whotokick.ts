@@ -1,17 +1,14 @@
 import discord from 'discord.js'
 import { OutfitAliasNotFoundError } from '@app/errors'
 import { constants } from '@app/global/constants'
-import { sendScrollEmbed } from '@app/modules/discord/embed'
-import { censusApi } from '@app/modules/planetside/CensusApi'
-import {
-  CharacterStatHistoryStripped,
-  OutfitMember,
-} from '@app/modules/planetside/types'
 import { pluralize } from '@app/utils/language'
 import { divide } from '@app/utils/math'
 import { getShortDate } from '@app/utils/time'
 import { Command } from '@commands/CommandHandler'
-import { validateArgumentNumber } from '../validators'
+import { validateArgumentNumber } from '@commands/validators'
+import { sendScrollEmbed } from '@discord/embed'
+import { censusApi } from '@planetside/CensusApi'
+import { CharacterStatHistoryStripped, OutfitMember } from '@planetside/types'
 
 export default new Command<discord.Message>({
   keyword: 'whotokick',
