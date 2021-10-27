@@ -5,6 +5,7 @@ export default new Command({
   keyword: 'coinflip',
   description: 'flip a coin',
   help: 'Usage: `{prefix}coinflip` - flips a coin',
+  category: 'Fun',
   callback: ({ args, reply }) => {
     if (args.length > 0) return
 

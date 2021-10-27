@@ -11,6 +11,7 @@ export default new Command<discord.Message>({
   keyword: 'outfitscoreboard',
   description: 'show PS2 outfit player scoreboard',
   help: "Usage:\n`{prefix}outfitscoreboard <alias> <stat>` - shows an outfit's player scoreboard\n`{prefix}outfitstats <alias> <stat> shame` - shows an outfit's players scoreboard starting from the worst",
+  category: 'Advanced',
   callback: async ({ args, reply, raw, env }) => {
     if (args.length === 0) {
       return reply(env.command.getHelp(env.handler))

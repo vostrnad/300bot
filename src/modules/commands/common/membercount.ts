@@ -7,6 +7,7 @@ export default new Command({
   keyword: 'membercount',
   description: 'count outfit members',
   help: 'Usage:\n`{prefix}membercount` - counts outfit members\n`{prefix}membercount <alias>` - counts members of the specified outfit',
+  category: 'Basic',
   callback: async ({ args, reply }) => {
     validateArgumentRange(args.length, 0, 1)
     let outfit

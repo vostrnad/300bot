@@ -7,6 +7,7 @@ export default new Command<discord.Message>({
   keyword: 'prefix',
   description: 'set command prefix',
   help: 'Usage: `{prefix}prefix <prefix>` - updates command prefix',
+  category: 'Admin',
   callback: async ({ args, author, reply, env, raw }) => {
     if (args.length === 0) {
       return reply(env.command.getHelp(env.handler))

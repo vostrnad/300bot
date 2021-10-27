@@ -8,6 +8,7 @@ export default new Command({
   options: {
     hidden: true,
   },
+  category: 'Admin',
   callback: ({ args, author, reply }) => {
     if (args.length > 0) return
     if (!author.admin) {

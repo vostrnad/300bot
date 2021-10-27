@@ -2,12 +2,13 @@ import assert from 'assert'
 import discord from 'discord.js'
 import { randomChoice, randomInteger } from '@app/utils/random'
 import { Command } from '@commands/CommandHandler'
-import { killMember } from '@discord/revive'
+import { killMember } from '@discord/utils'
 
 export default new Command<discord.Message>({
   keyword: 'russianroulette',
   description: 'kill yourself for fun purposes',
   help: 'Usage: `{prefix}russianroulette` - kill yourself for fun purposes',
+  category: 'Fun',
   callback: async ({ args, author, reply, raw }) => {
     if (args.length > 0) return
     const rounds = 6

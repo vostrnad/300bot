@@ -10,6 +10,7 @@ export default new Command({
   keyword: 'whoisonline',
   description: 'check who is online',
   help: 'Usage:\n`{prefix}whoisonline` - checks who is online\n`{prefix}whoisonline <outfit tag>` - list online members of a specific outfit',
+  category: 'Basic',
   callback: async ({ args, reply }) => {
     validateArgumentRange(args.length, 0, 1)
 

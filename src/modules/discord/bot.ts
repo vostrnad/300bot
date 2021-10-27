@@ -15,6 +15,10 @@ import {
 import { formatWithEmojis, getTextChannel } from '@discord/utils'
 import { censusApi } from '@planetside/CensusApi'
 import { streamingApi } from '@planetside/StreamingApi'
+import {
+  startAlertTrackerService,
+  startTrackingService,
+} from '@planetside/StreamingApiServices'
 
 /**
  * Sends a message with UTC timestamp and optionally an emoji.
@@ -175,6 +179,9 @@ client.on('message', (message: discord.Message) => {
 
   void commandHandler.process(commandMessage)
 })
+
+startTrackingService()
+startAlertTrackerService()
 
 scheduleRevivesOnStartup()
 checkNewMemberDeadRole()

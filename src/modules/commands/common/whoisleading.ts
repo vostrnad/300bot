@@ -7,7 +7,6 @@ import { streamingApi } from '@planetside/StreamingApi'
 const squadLeaders = new TimeoutSet(1800 * 1000)
 const platoonLeaders = new TimeoutSet(1800 * 1000)
 
-streamingApi.init()
 streamingApi.on('achievementEarned', ({ characterId, achievementId }) => {
   if (achievementId === '90039' || achievementId === '90040') {
     squadLeaders.add(characterId)
@@ -25,6 +24,7 @@ export default new Command({
   keyword: 'whoisleading',
   description: 'check who is leading',
   help: 'Usage: `{prefix}whoisleading` - checks who is leading',
+  category: 'Basic',
   callback: async ({ args, reply }) => {
     if (args.length > 0) return
 

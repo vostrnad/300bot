@@ -8,6 +8,7 @@ export default new Command({
   keyword: 'certs',
   description: "show player's available certs",
   help: "Usage: `{prefix}certs <player name>` - shows player's available certs",
+  category: 'Basic',
   callback: async ({ args, reply, env }) => {
     if (args.length === 0) {
       return reply(env.command.getHelp(env.handler))

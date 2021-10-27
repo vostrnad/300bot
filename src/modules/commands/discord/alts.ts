@@ -31,6 +31,7 @@ export default new Command<discord.Message>({
   keyword: 'alts',
   description: "show player's alts",
   help: "Usage: `{prefix}alts <player name>` - shows player's alts",
+  category: 'Advanced',
   callback: async ({ args, reply, env, raw }) => {
     if (args.length === 0) return reply(env.command.getHelp(env.handler))
     validateArgumentNumber(args.length, 1)

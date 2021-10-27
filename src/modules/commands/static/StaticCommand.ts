@@ -19,6 +19,7 @@ export class StaticCommand extends Command {
       options: {
         hidden: true,
       },
+      category: null,
       callback: ({ args, reply }) => {
         if (args.length > 0) return
         reply(response)

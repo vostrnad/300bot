@@ -119,7 +119,6 @@ const events: Record<string, [string, string]> = {
 
 const separationTree = new SeparationTree(constants.planetside.characterIds.bru)
 
-streamingApi.init()
 streamingApi.on('gainExperience', ({ characterId, otherId, experienceId }) => {
   if (!(experienceId in events)) return
   if (characterId.length !== otherId.length) return
@@ -137,6 +136,7 @@ export default new Command({
   keyword: 'brudistance',
   description: "find player's interaction chain with Bru",
   help: "Usage: `{prefix}brudistance <player name>` - finds player's interaction chain with Bru",
+  category: 'Advanced',
   callback: async ({ args, reply, env }) => {
     if (args.length === 0) {
       return reply(env.command.getHelp(env.handler))

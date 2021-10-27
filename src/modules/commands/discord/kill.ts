@@ -1,7 +1,7 @@
 import discord from 'discord.js'
 import { Command } from '@commands/CommandHandler'
 import { validateArgumentNumber } from '@commands/validators'
-import { killMember } from '@discord/revive'
+import { killMember } from '@discord/utils'
 
 export default new Command<discord.Message>({
   keyword: 'kill',
@@ -10,6 +10,7 @@ export default new Command<discord.Message>({
   options: {
     hidden: true,
   },
+  category: null,
   callback: async ({ args, author, reply, env, raw }) => {
     if (args.length === 0) {
       return reply(env.command.getHelp(env.handler))

@@ -14,6 +14,7 @@ export default new Command<discord.Message>({
   keyword: 'hangman',
   description: 'play a game of hangman',
   help: 'Usage: `{prefix}hangman` - play a game of hangman',
+  category: 'Fun',
   callback: async ({ args, raw, reply }) => {
     if (args.length > 0) return
 
