@@ -36,6 +36,7 @@ module.exports = {
 
     // typescript-eslint
     '@typescript-eslint/array-type': [1, { default: 'array-simple' }],
+    '@typescript-eslint/explicit-module-boundary-types': 1,
     '@typescript-eslint/naming-convention': [
       1,
       {
@@ -81,6 +82,18 @@ module.exports = {
     ],
     '@typescript-eslint/no-confusing-non-null-assertion': 1,
     '@typescript-eslint/no-meaningless-void-operator': 2,
+    '@typescript-eslint/no-restricted-imports': [
+      1,
+      {
+        patterns: [
+          {
+            group: ['@app/modules/*'],
+            message:
+              'Unnecessary path prefix, please import using the module alias.',
+          },
+        ],
+      },
+    ],
     '@typescript-eslint/no-unnecessary-condition': 2,
     '@typescript-eslint/prefer-for-of': 1,
     '@typescript-eslint/prefer-includes': 1,
@@ -118,6 +131,7 @@ module.exports = {
     'no-sequences': 1,
     'no-useless-concat': 1,
     radix: 2,
+    'sort-imports': [1, { ignoreDeclarationSort: true }],
     'spaced-comment': 1,
     yoda: 1,
 
@@ -125,6 +139,7 @@ module.exports = {
     'import/no-absolute-path': 2,
     'import/no-deprecated': 1,
     'import/no-mutable-exports': 2,
+    'import/no-relative-parent-imports': 1,
     'import/first': 1,
     'import/order': [
       1,

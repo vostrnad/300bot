@@ -2,7 +2,11 @@
 import { resolve } from 'path'
 import dotenv from 'dotenv'
 
-dotenv.config({ path: resolve(__dirname, '../.env') })
+if (process.env.NODE_ENV === 'test') {
+  dotenv.config({ path: resolve(__dirname, '../test/.env.test') })
+} else {
+  dotenv.config({ path: resolve(__dirname, '../.env') })
+}
 
 export const env = {
   logLevel: process.env.LOG_LEVEL,

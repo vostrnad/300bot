@@ -116,7 +116,7 @@ export type CharacterStatHistoryStripped = {
 }
 
 export type OutfitMemberStats = {
-  outfitMember: Array<{
+  members: Array<{
     characterId: string
     character: {
       prestigeLevel: string
@@ -133,6 +133,15 @@ export type OutfitMemberStats = {
       }>
     }
   }>
+}
+
+export type OutfitLeader = {
+  leader: {
+    name: {
+      first: string
+    }
+    factionId: string
+  }
 }
 
 export type DirectiveTreeCategory = {

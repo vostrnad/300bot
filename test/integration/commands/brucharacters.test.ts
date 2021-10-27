@@ -1,5 +1,5 @@
-import brucharacters from '@app/modules/commands/common/brucharacters'
-import { bruCharactersDatabase } from '@app/modules/database/brucharacters'
+import brucharacters from '@commands/common/brucharacters'
+import { bruCharactersDatabase } from '@database/brucharacters'
 import { getCommandRunner } from '@test/utils/commands'
 import { mockCensusApi } from '@test/utils/planetside'
 
@@ -11,29 +11,19 @@ describe('brucharacters', () => {
   const runCommand = getCommandRunner(brucharacters)
 
   it('should say that the character is already in the list', async () => {
-    const requestDataAdd = mockCensusApi({
-      character_name_list: [
-        {
-          characterId: 'testduplicate',
-          name: { first: 'CustomCharDup', firstLower: 'customchardup' },
-        },
-      ],
-    })
+    const character = {
+      character_id: 'testduplicate',
+      name: { first: 'CustomCharDup' },
+    }
+
+    const requestDataAdd = mockCensusApi({ character_name_list: [character] })
     const replyAdd = await runCommand('+brucharacters add CustomCharDup')
     expect(requestDataAdd).toMatchSnapshot()
     expect(replyAdd).toEqual(
       "**CustomCharDup** has been added to the list of Bru's characters.",
     )
 
-    const requestDataDup = mockCensusApi({
-      character_name_list: [
-        {
-          characterId: 'testduplicate',
-          name: { first: 'CustomCharDup', firstLower: 'customchardup' },
-        },
-      ],
-    })
-
+    const requestDataDup = mockCensusApi({ character_name_list: [character] })
     const replyDup = await runCommand('+brucharacters add CustomCharDup')
     expect(requestDataDup).toMatchSnapshot()
     expect(replyDup).toEqual(
@@ -42,47 +32,35 @@ describe('brucharacters', () => {
   })
 
   it('should add and remove characters from the database regardless of case', async () => {
-    const requestData = mockCensusApi({
-      character_name_list: [
-        {
-          characterId: 'testaddremove',
-          name: { first: 'CustomChar', firstLower: 'customchar' },
-        },
-      ],
-    })
+    const character = {
+      character_id: 'testaddremove',
+      name: { first: 'CustomChar' },
+    }
 
-    const reply = await runCommand('+brucharacters add CUStomChar')
-    expect(requestData).toMatchSnapshot()
-    expect(reply).toEqual(
+    const requestDataAdd = mockCensusApi({ character_name_list: [character] })
+    const replyAdd = await runCommand('+brucharacters add CUStomChar')
+    expect(requestDataAdd).toMatchSnapshot()
+    expect(replyAdd).toEqual(
       "**CustomChar** has been added to the list of Bru's characters.",
     )
 
-    const requestData1 = mockCensusApi({
-      character_name_list: [
-        {
-          characterId: 'testaddremove',
-          name: { first: 'CustomChar', firstLower: 'customchar' },
-        },
-      ],
+    const requestDataRemove = mockCensusApi({
+      character_name_list: [character],
     })
-
-    const reply1 = await runCommand('+brucharacters remove CUStomChar')
-    expect(requestData1).toMatchSnapshot()
-    expect(reply1).toEqual(
+    const replyRemove = await runCommand('+brucharacters remove CUStomChar')
+    expect(requestDataRemove).toMatchSnapshot()
+    expect(replyRemove).toEqual(
       "**CustomChar** has been removed from the list of Bru's characters.",
     )
   })
 
   it('should not remove a character that is not in the list', async () => {
-    const requestData = mockCensusApi({
-      character_name_list: [
-        {
-          characterId: 'testunknown',
-          name: { first: 'unknownChar', firstLower: 'unknownchar' },
-        },
-      ],
-    })
+    const character = {
+      character_id: 'testunknown',
+      name: { first: 'unknownChar' },
+    }
 
+    const requestData = mockCensusApi({ character_name_list: [character] })
     const reply = await runCommand('+brucharacters remove unknownChar')
     expect(requestData).toMatchSnapshot()
     expect(reply).toEqual(
@@ -96,33 +74,22 @@ describe('brucharacters', () => {
   })
 
   it('should display the list of characters in the database', async () => {
-    const requestData = mockCensusApi({
-      character_name_list: [
-        {
-          characterId: 'testlist',
-          name: { first: 'CustomCharList', firstLower: 'customcharlist' },
-        },
-      ],
-    })
+    const character = {
+      character_id: 'testlist',
+      name: { first: 'CustomCharList' },
+    }
 
-    const reply = await runCommand('+brucharacters add customcharlist')
-    expect(requestData).toMatchSnapshot()
-    expect(reply).toEqual(
+    const requestDataAdd = mockCensusApi({ character_name_list: [character] })
+    const replyAdd = await runCommand('+brucharacters add customcharlist')
+    expect(requestDataAdd).toMatchSnapshot()
+    expect(replyAdd).toEqual(
       "**CustomCharList** has been added to the list of Bru's characters.",
     )
 
-    const requestData1 = mockCensusApi({
-      character_name_list: [
-        {
-          characterId: 'testlist',
-          name: { first: 'CustomCharList', firstLower: 'customcharlist' },
-        },
-      ],
-    })
-
-    const reply1 = await runCommand('+brucharacters list')
-    expect(requestData1).toMatchSnapshot()
-    expect(reply1).toEqual(
+    const requestDataList = mockCensusApi({ character_name_list: [character] })
+    const replyList = await runCommand('+brucharacters list')
+    expect(requestDataList).toMatchSnapshot()
+    expect(replyList).toEqual(
       'Here is the list of all known Bru characters: **CustomCharList**.',
     )
   })

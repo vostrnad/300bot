@@ -7,8 +7,8 @@ import { client } from '@discord/client'
 import { formatWithEmojis, getTextChannel } from '@discord/utils'
 import { streamingApi } from '@planetside/StreamingApi'
 import {
-  getAlertType,
   getAlertState,
+  getAlertType,
   getContinentName,
 } from '@planetside/resources'
 

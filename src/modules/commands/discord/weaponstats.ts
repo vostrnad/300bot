@@ -1,16 +1,16 @@
 import { camelCase } from 'camel-case'
 import discord from 'discord.js'
 import { PlayerNotFoundError } from '@app/errors'
-import {
-  CharacterWeaponStats,
-  Item,
-  CharacterWeaponStatsByFaction,
-} from '@app/modules/planetside/types'
 import { divide } from '@app/utils/math'
 import { Command } from '@commands/CommandHandler'
 import { validateArgumentRange } from '@commands/validators'
 import { sendScrollEmbed } from '@discord/embed'
 import { censusApi } from '@planetside/CensusApi'
+import {
+  CharacterWeaponStats,
+  CharacterWeaponStatsByFaction,
+  Item,
+} from '@planetside/types'
 import { validatePlayerName } from '@planetside/validators'
 
 export default new Command<discord.Message>({

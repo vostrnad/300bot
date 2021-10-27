@@ -1,6 +1,6 @@
 import assert from 'assert'
 import discord from 'discord.js'
-import { randomInteger, randomChoice } from '@app/utils/random'
+import { randomChoice, randomInteger } from '@app/utils/random'
 import { Command } from '@commands/CommandHandler'
 import { killMember } from '@discord/revive'
 

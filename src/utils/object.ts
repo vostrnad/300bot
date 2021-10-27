@@ -1,4 +1,6 @@
-type StringObject = { [key: string]: string | string[] | StringObject }
+type StringObject = {
+  [key: string]: string | string[] | StringObject | undefined
+}
 
 /**
  * Flattens the object into an array of key-value pairs with paths that are
@@ -19,7 +21,7 @@ export const flatten = (
       })
     } else if (typeof item === 'string') {
       result.push([(c + '.' + key).replace(/^\./, ''), item])
-    } else {
+    } else if (typeof item === 'object') {
       result.push(...flatten(item, c + '.' + key))
     }
   }

@@ -1,6 +1,7 @@
 import 'module-alias/register'
 import 'source-map-support/register'
-import { globalTimeouts, globalIntervals } from '@app/global/timeouts'
+import { globalIntervals, globalTimeouts } from '@app/global/timeouts'
+import { terminateAllPools } from '@app/workers'
 import * as bot from '@discord/bot'
 import { streamingApi } from '@planetside/StreamingApi'
 
@@ -12,4 +13,6 @@ process.on('SIGINT', () => {
 
   globalTimeouts.forEach(clearTimeout)
   globalIntervals.forEach(clearInterval)
+
+  void terminateAllPools()
 })

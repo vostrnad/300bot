@@ -1,10 +1,13 @@
 import { PlayerNotFoundError } from '@app/errors'
-import { bruCharactersDatabase } from '@app/modules/database/brucharacters'
-import { validatePlayerName } from '@app/modules/planetside/validators'
 import { sentence } from '@app/utils/language'
+import { Command } from '@commands/CommandHandler'
+import {
+  validateArgumentNumber,
+  validateArgumentRange,
+} from '@commands/validators'
+import { bruCharactersDatabase } from '@database/brucharacters'
 import { censusApi } from '@planetside/CensusApi'
-import { Command } from '../CommandHandler'
-import { validateArgumentRange, validateArgumentNumber } from '../validators'
+import { validatePlayerName } from '@planetside/validators'
 
 export default new Command({
   keyword: 'brucharacters',
