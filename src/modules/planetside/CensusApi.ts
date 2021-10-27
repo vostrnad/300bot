@@ -28,6 +28,7 @@ import {
   CharactersItem,
   FullCharacterWeaponStats,
   CharacterStatHistoryStripped,
+  OutfitLeader,
 } from './types'
 
 type CollectionMap = {
@@ -286,10 +287,11 @@ class CensusApi {
       {
         limit: '65535',
         join: [
-          "outfit_member^on:outfit_id^list:1^inject_at:outfit_member^show:character_id(character^on:character_id^inject_at:character^show:name.first'stats'times.last_login'times.minutes_played'prestige_level(characters_stat_history^on:character_id^list:1^inject_at:stats^show:stat_name'all_time))",
+          "outfit_member^on:outfit_id^list:1^inject_at:members^show:character_id(character^on:character_id^inject_at:character^show:name.first'stats'times.last_login'times.minutes_played'prestige_level(characters_stat_history^on:character_id^list:1^inject_at:stats^show:stat_name'all_time))",
+          "character^on:leader_character_id^to:character_id^inject_at:leader^show:name.first'faction_id",
         ],
       },
-    )) as Array<Outfit & OutfitMemberStats>
+    )) as Array<Outfit & OutfitMemberStats & OutfitLeader>
 
     if (list.length === 0) return null
     return list[0]

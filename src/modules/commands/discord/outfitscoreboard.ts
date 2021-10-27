@@ -33,19 +33,17 @@ export default new Command<discord.Message>({
           .map((s) => s.charAt(0).toUpperCase() + s.slice(1).toLowerCase())
           .join(' ')
 
-    const memberStats = await censusApi.getOutfitMembersStats(outfitAlias)
-    if (memberStats === null) throw new OutfitAliasNotFoundError()
+    const outfit = await censusApi.getOutfitMembersStats(outfitAlias)
+    if (outfit === null) throw new OutfitAliasNotFoundError()
 
-    memberStats.outfitMember = memberStats.outfitMember.filter(
-      (outfitMember) => {
-        return (
-          typeof outfitMember.character !== 'undefined' &&
-          typeof outfitMember.character.stats[8] !== 'undefined'
-        )
-      },
-    )
+    outfit.members = outfit.members.filter((member) => {
+      return (
+        typeof member.character !== 'undefined' &&
+        typeof member.character.stats[8] !== 'undefined'
+      )
+    })
 
-    let scoreboard: typeof memberStats.outfitMember
+    let scoreboard: typeof outfit.members
 
     const displayScoreboard: string[] = []
 
@@ -67,7 +65,7 @@ export default new Command<discord.Message>({
 
     switch (args[1].toLowerCase()) {
       case 'playtime':
-        scoreboard = memberStats.outfitMember.sort((nerd1, nerd2) => {
+        scoreboard = outfit.members.sort((nerd1, nerd2) => {
           if (
             Number(nerd1.character.times.minutesPlayed) <
             Number(nerd2.character.times.minutesPlayed)
@@ -76,48 +74,46 @@ export default new Command<discord.Message>({
           } else return -1
         })
 
-        scoreboard.forEach((outfitMember, idx) => {
+        scoreboard.forEach((member, idx) => {
           displayScoreboard.push(
             `**${idx + 1}** | ${divide(
-              Number(outfitMember.character.times.minutesPlayed),
+              Number(member.character.times.minutesPlayed),
               60,
-            ).toFixed(0)} hours - **${outfitMember.character.name.first}**`,
+            ).toFixed(0)} hours - **${member.character.name.first}**`,
           )
         })
 
         break
 
       case 'spm':
-        scoreboard = memberStats.outfitMember.sort(
-          (goodPlayer1, goodPlayer2) => {
-            if (
-              divide(
-                Number(goodPlayer1.character.stats[8].allTime),
-                Number(goodPlayer1.character.times.minutesPlayed),
-              ) <
-              divide(
-                Number(goodPlayer2.character.stats[8].allTime),
-                Number(goodPlayer2.character.times.minutesPlayed),
-              )
-            ) {
-              return 1
-            } else return -1
-          },
-        )
+        scoreboard = outfit.members.sort((goodPlayer1, goodPlayer2) => {
+          if (
+            divide(
+              Number(goodPlayer1.character.stats[8].allTime),
+              Number(goodPlayer1.character.times.minutesPlayed),
+            ) <
+            divide(
+              Number(goodPlayer2.character.stats[8].allTime),
+              Number(goodPlayer2.character.times.minutesPlayed),
+            )
+          ) {
+            return 1
+          } else return -1
+        })
 
-        scoreboard.forEach((outfitMember, idx) => {
+        scoreboard.forEach((member, idx) => {
           displayScoreboard.push(
             `**${idx + 1}** | ${divide(
-              Number(outfitMember.character.stats[8].allTime),
-              Number(outfitMember.character.times.minutesPlayed),
-            ).toFixed(0)} - **${outfitMember.character.name.first}**`,
+              Number(member.character.stats[8].allTime),
+              Number(member.character.times.minutesPlayed),
+            ).toFixed(0)} - **${member.character.name.first}**`,
           )
         })
 
         break
 
       case 'kdr':
-        scoreboard = memberStats.outfitMember.sort((sweaty1, sweaty2) => {
+        scoreboard = outfit.members.sort((sweaty1, sweaty2) => {
           if (
             divide(
               Number(sweaty1.character.stats[5].allTime),
@@ -132,18 +128,18 @@ export default new Command<discord.Message>({
           } else return -1
         })
 
-        scoreboard.forEach((outfitMember, idx) => {
+        scoreboard.forEach((member, idx) => {
           displayScoreboard.push(
             `**${idx + 1}** | ${divide(
-              Number(outfitMember.character.stats[5].allTime),
-              Number(outfitMember.character.stats[2].allTime),
-            ).toFixed(3)} - **${outfitMember.character.name.first}**`,
+              Number(member.character.stats[5].allTime),
+              Number(member.character.stats[2].allTime),
+            ).toFixed(3)} - **${member.character.name.first}**`,
           )
         })
         break
 
       case 'kills':
-        scoreboard = memberStats.outfitMember.sort((p1, p2) => {
+        scoreboard = outfit.members.sort((p1, p2) => {
           if (
             Number(p1.character.stats[5].allTime) <
             Number(p2.character.stats[5].allTime)
@@ -152,18 +148,18 @@ export default new Command<discord.Message>({
           } else return -1
         })
 
-        scoreboard.forEach((outfitMember, idx) => {
+        scoreboard.forEach((member, idx) => {
           displayScoreboard.push(
             `**${idx + 1}** | ${Number(
-              outfitMember.character.stats[5].allTime,
-            )} - **${outfitMember.character.name.first}**`,
+              member.character.stats[5].allTime,
+            )} - **${member.character.name.first}**`,
           )
         })
 
         break
 
       case 'deaths':
-        scoreboard = memberStats.outfitMember.sort((p1, p2) => {
+        scoreboard = outfit.members.sort((p1, p2) => {
           if (
             Number(p1.character.stats[2].allTime) <
             Number(p2.character.stats[2].allTime)
@@ -172,11 +168,11 @@ export default new Command<discord.Message>({
           } else return -1
         })
 
-        scoreboard.forEach((outfitMember, idx) => {
+        scoreboard.forEach((member, idx) => {
           displayScoreboard.push(
             `**${idx + 1}** | ${Number(
-              outfitMember.character.stats[2].allTime,
-            )} - **${outfitMember.character.name.first}**`,
+              member.character.stats[2].allTime,
+            )} - **${member.character.name.first}**`,
           )
         })
 
@@ -199,7 +195,7 @@ export default new Command<discord.Message>({
     return sendScrollEmbed(raw, pages, (page, index, active) => {
       const scoreboardEmbed = new discord.MessageEmbed()
         .setTitle(
-          `**${memberStats.name}** - ${stat} ${
+          `**${outfit.name}** - ${stat} ${
             shame === 1 ? 'shame' : ''
           } scoreboard  (Page N°${index + 1}/${pages.length})`,
         )
