@@ -92,22 +92,22 @@ export default new Command({
 
     let message = ''
     for (const factionCode of ['tr', 'nc', 'vs'] as const) {
-      const factionName = factionCode.toUpperCase()
+      const factionName = `{emoji:faction_logo_${factionCode}|${factionCode.toUpperCase()}}`
       const faction = factions[factionCode]
       if (faction.platoon.length > 0) {
         const formattedLeaders = faction.platoon.map((name) => `**${name}**`)
-        message += `${factionName} platoon leaders: ${sentence(
+        message += `${factionName} Platoon leaders: ${sentence(
           formattedLeaders,
-        )}.\n`
+        )}.${full && faction.squad.length > 0 ? ' ' : '\n'}`
       }
       if (faction.squad.length > 0 && (full || faction.platoon.length === 0)) {
         const formattedLeaders = faction.squad.map((name) => `**${name}**`)
-        message += `${factionName} squad leaders: ${sentence(
-          formattedLeaders,
-        )}.\n`
+        message += `${
+          faction.platoon.length > 0 ? '' : factionName
+        } Squad leaders: ${sentence(formattedLeaders)}.\n`
       }
       if (faction.squad.length === 0 && faction.platoon.length === 0) {
-        message += `Nobody is leading on ${factionName} at the moment.\n`
+        message += `${factionName} Nobody is leading at the moment.\n`
       }
     }
 
