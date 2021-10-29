@@ -1,6 +1,7 @@
 import { TimeoutSet } from '@app/utils/TimeoutSet'
 import { sentence } from '@app/utils/language'
 import { Command } from '@commands/CommandHandler'
+import { validateArgumentRange } from '@commands/validators'
 import { censusApi } from '@planetside/CensusApi'
 import { streamingApi } from '@planetside/StreamingApi'
 
@@ -24,9 +25,11 @@ streamingApi.on('playerLogout', ({ characterId }) => {
 export default new Command({
   keyword: 'whoisleading',
   description: 'check who is leading',
-  help: 'Usage: `{prefix}whoisleading` - checks who is leading',
+  help: 'Usage: `{prefix}whoisleading` - checks who is leading\n`{prefix}whoisleading full` - shows squads everytime',
   callback: async ({ args, reply }) => {
-    if (args.length > 0) return
+    validateArgumentRange(args.length, 0, 1)
+
+    const full = args.length > 0 && args[0] === 'full'
 
     const squadLeaderIds = squadLeaders.getAll()
     const platoonLeaderIds = platoonLeaders.getAll()
@@ -96,12 +99,14 @@ export default new Command({
         message += `${factionName} platoon leaders: ${sentence(
           formattedLeaders,
         )}.\n`
-      } else if (faction.squad.length > 0) {
+      }
+      if (faction.squad.length > 0 && (full || faction.platoon.length === 0)) {
         const formattedLeaders = faction.squad.map((name) => `**${name}**`)
         message += `${factionName} squad leaders: ${sentence(
           formattedLeaders,
         )}.\n`
-      } else {
+      }
+      if (faction.squad.length === 0 && faction.platoon.length === 0) {
         message += `Nobody is leading on ${factionName} at the moment.\n`
       }
     }
