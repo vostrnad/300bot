@@ -28,7 +28,7 @@ export const formatWithEmojis = (
   message: string,
 ): string => {
   // eslint-disable-next-line unicorn/no-unsafe-regex
-  const emojiExpressionRegex = /{emoji:([^|]*)(?:\|([^}]*))?}/g
+  const emojiExpressionRegex = /{emoji:([^|}]*)(?:\|([^}]*))?}/g
 
   if (channel instanceof discord.TextChannel) {
     return message.replace(
