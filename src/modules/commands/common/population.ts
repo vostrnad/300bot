@@ -36,15 +36,15 @@ export default new Command({
       .json()
       .then((data) => {
         if (!isRecord(data)) {
-          return Promise.reject(new Error(`Unexpected query return type`))
+          throw new Error(`Unexpected query return type`)
         }
 
         const result = data.result
         if (!result) {
-          return Promise.reject(new Error(`List not in result`))
+          throw new Error(`List not in result`)
         }
         if (!Array.isArray(result)) {
-          return Promise.reject(new Error(`List is not an array`))
+          throw new Error(`List is not an array`)
         }
         // eslint-disable-next-line @typescript-eslint/no-unsafe-return
         return camelcaseKeys(result[0], { deep: true })
