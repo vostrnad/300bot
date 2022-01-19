@@ -36,8 +36,16 @@ export const getShortDate = (date: Date): string => {
   const month = date.getUTCMonth() + 1
   const year = date.getUTCFullYear()
 
+  const dayTrailDigit = day % 10
+
   const dayName =
-    day === 1 ? '1st' : day === 2 ? '2nd' : day === 3 ? '3rd' : `${day}th`
+    dayTrailDigit === 1
+      ? `${day}st`
+      : dayTrailDigit === 2
+      ? `${day}nd`
+      : dayTrailDigit === 3
+      ? `${day}rd`
+      : `${day}th`
   const monthName = months[month.toString()] || 'unknown'
   return `${dayName} ${monthName} ${year}`
 }
