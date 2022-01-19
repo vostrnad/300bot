@@ -38,15 +38,15 @@ export default new Command<discord.Message>({
       .json()
       .then((data) => {
         if (!isRecord(data)) {
-          return Promise.reject(new Error(`Unexpected query return type`))
+          throw new Error(`Unexpected query return type`)
         }
 
         const definitions = data.list
         if (!definitions) {
-          return Promise.reject(new Error(`List not in result`))
+          throw new Error(`List not in result`)
         }
         if (!Array.isArray(definitions)) {
-          return Promise.reject(new Error(`List is not an array`))
+          throw new Error(`List is not an array`)
         }
         // eslint-disable-next-line @typescript-eslint/no-unsafe-return
         return camelcaseKeys(definitions, { deep: true })
