@@ -36,10 +36,12 @@ export const getShortDate = (date: Date): string => {
   const month = date.getUTCMonth() + 1
   const year = date.getUTCFullYear()
 
-  const dayTrailDigit = day % 10
+  const [dayLeadDigit, dayTrailDigit] = divmod(day, 10)
 
   const dayName =
-    dayTrailDigit === 1
+    dayLeadDigit === 1
+      ? `${day}th`
+      : dayTrailDigit === 1
       ? `${day}st`
       : dayTrailDigit === 2
       ? `${day}nd`
