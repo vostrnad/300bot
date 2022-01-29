@@ -1,18 +1,18 @@
-import { Database } from './Database'
+import { DocumentDatabase } from 'nodatabase'
+import { env } from '@app/env'
 
-type Schema = Record<string, Record<string, 1>>
+type Schema = {
+  characterId: string
+  channelId: string
+}
 
 /**
  * Database of PlanetSide 2 characters and the Discord users that are tracking
- * them. Example:
- * ```
- * {
- *   // character ID
- *   "8258984096545401457": {
- *     // user ID
- *     "192539444836958208": 1
- *   }
- * }
- * ```
+ * them.
  */
-export const dmTrackerDatabase = new Database<Schema>('dmtracker')
+export const dmTrackerDatabase = new DocumentDatabase<Schema>({
+  dirPath: env.databaseDirPath,
+  fileName: 'dmtracker',
+  indexedFields: ['characterId', 'channelId'],
+  maxDocuments: 100_000,
+})

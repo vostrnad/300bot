@@ -1,9 +1,11 @@
-import { Database } from './Database'
+import { KeyValueDatabase } from 'nodatabase'
+import { env } from '@app/env'
 
 type Schema = {
-  [id in string]: {
-    prefix: string
-  }
+  prefix: string
 }
 
-export const guildDatabase = new Database<Schema>('guilds-v1')
+export const guildDatabase = new KeyValueDatabase<Schema>({
+  dirPath: env.databaseDirPath,
+  fileName: 'guilds-v1',
+})

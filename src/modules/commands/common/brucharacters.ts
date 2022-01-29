@@ -31,14 +31,14 @@ export default new Command({
         const characterId = character.characterId
         const characterName = character.name.first
 
-        const dbPath = `${characterId}` as const
+        const dbKey = characterId
 
-        if (bruCharactersDatabase.get(dbPath)) {
+        if (bruCharactersDatabase.has(dbKey)) {
           return reply(
             `**${characterName}** is already in the list of Bru's characters.`,
           )
         } else {
-          await bruCharactersDatabase.set(dbPath, 1)
+          await bruCharactersDatabase.set(dbKey, 1)
           return reply(
             `**${characterName}** has been added to the list of Bru's characters.`,
           )
@@ -59,7 +59,7 @@ export default new Command({
         const characterName = character.name.first
 
         const dbPath = `${characterId}` as const
-        if (!bruCharactersDatabase.get(dbPath)) {
+        if (!bruCharactersDatabase.has(dbPath)) {
           return reply(
             `**${characterName}** is not listed as one of Bru's characters.`,
           )
@@ -71,8 +71,7 @@ export default new Command({
         }
       }
       case 'list': {
-        const list = bruCharactersDatabase.root
-        const characterIds = Object.keys(list)
+        const characterIds = bruCharactersDatabase.keys
         if (characterIds.length === 0) {
           return reply("The list of Bru's characters is empty.")
         }

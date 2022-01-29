@@ -29,6 +29,7 @@
     "fuzzyset.js": "^1.0.7",
     "got": "^11",
     "mathjs": "^10.0.2",
+    "nodatabase": "^1.0.0",
     "pascal-case": "^3.1.2",
     "snake-case": "^3.0.4",
     "snakecase-keys": "^5.1.2",
