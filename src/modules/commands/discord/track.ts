@@ -10,15 +10,15 @@ import { streamingApi } from '@planetside/StreamingApi'
 import { validatePlayerName } from '@planetside/validators'
 
 const sendCharacterStatus = async (characterId: string, online: boolean) => {
-  const channelIds = dmTrackerDatabase.get(characterId)
-  if (!channelIds) return
+  const subscriptions = dmTrackerDatabase.findMany({ characterId })
+  if (subscriptions.length === 0) return
   const character = await censusApi.getCharacterName({ characterId })
   if (!character) return
   const characterName = character.name.first
   const message = online
     ? `**${characterName}** is online!`
     : `**${characterName}** is offline.`
-  Object.keys(channelIds).forEach((channelId) => {
+  subscriptions.forEach(({ channelId }) => {
     void (async () => {
       const channel = await getDMChannel(client, channelId)
       if (channel) {
@@ -57,21 +57,23 @@ export default new Command<discord.Message>({
     })
     if (character === null) throw new PlayerNotFoundError()
 
-    const characterId = character.characterId
     const characterName = character.name.first
-    const dbPath = `${characterId}.${channel.id}` as const
+    const dbItem = {
+      characterId: character.characterId,
+      channelId: channel.id,
+    }
 
     if (alias === 'track') {
-      if (dmTrackerDatabase.get(dbPath)) {
+      if (dmTrackerDatabase.findOne(dbItem)) {
         return reply(`You are already tracking **${characterName}**.`)
       }
-      await dmTrackerDatabase.set(dbPath, 1)
+      await dmTrackerDatabase.insert(dbItem)
       return reply(`Started tracking **${characterName}**.`)
     } else {
-      if (!dmTrackerDatabase.get(dbPath)) {
+      if (!dmTrackerDatabase.findOne(dbItem)) {
         return reply(`You are not currently tracking **${characterName}**.`)
       }
-      await dmTrackerDatabase.delete(dbPath)
+      await dmTrackerDatabase.delete(dbItem)
       return reply(`Stopped tracking **${characterName}**.`)
     }
   },

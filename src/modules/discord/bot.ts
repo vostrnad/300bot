@@ -144,7 +144,7 @@ client.on('message', (message: discord.Message) => {
   }
 
   const guild = message.guild
-  const prefix = guild ? guildDatabase.get(`${guild.id}.prefix`) || '+' : '+'
+  const prefix = (guild && guildDatabase.get(guild.id))?.prefix || '+'
 
   // eslint-disable-next-line unicorn/prefer-includes
   if (message.mentions.users.some((user) => user === client.user)) {

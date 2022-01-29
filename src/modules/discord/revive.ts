@@ -9,32 +9,30 @@ export const scheduleRevivesOnStartup = (): void => {
     const now = Date.now()
 
     void (async () => {
-      for (const [guildId, users] of Object.entries(reviveDatabase.root)) {
+      for (const { guildId, userId, reviveAt } of reviveDatabase.findMany({})) {
         const guild = client.guilds.resolve(guildId)
         if (!guild) continue
 
         const deadRole = guild.roles.cache.find((role) => role.name === 'Dead')
         if (!deadRole) continue
 
-        for (const [userId, reviveTimestamp] of Object.entries(users)) {
-          const reviveUser = async () => {
-            try {
-              const member = await guild.members.fetch(userId)
-              await reviveMember(member, deadRole)
-            } catch (e) {
-              log.error('Cannot revive member:', e)
-            }
+        const reviveUser = async () => {
+          try {
+            const member = await guild.members.fetch(userId)
+            await reviveMember(member, deadRole)
+          } catch (e) {
+            log.error('Cannot revive member:', e)
           }
+        }
 
-          if (now >= reviveTimestamp) {
-            log.debug(`Reviving member ${guildId}:${userId}`)
-            await reviveUser()
-          } else {
-            const delay = reviveTimestamp - now
-            const delayText = `${Math.round(delay / 1000)}s`
-            log.debug(`Reviving member ${guildId}:${userId} in ${delayText}`)
-            void schedule(reviveUser, delay)
-          }
+        if (now >= reviveAt) {
+          log.debug(`Reviving member ${guildId}:${userId}`)
+          await reviveUser()
+        } else {
+          const delay = reviveAt - now
+          const delayText = `${Math.round(delay / 1000)}s`
+          log.debug(`Reviving member ${guildId}:${userId} in ${delayText}`)
+          void schedule(reviveUser, delay)
         }
       }
     })()
@@ -45,9 +43,10 @@ export const checkNewMemberDeadRole = (): void => {
   client.on('guildMemberAdd', (member) => {
     const guildId = member.guild.id
     const userId = member.id
-    const dbPath = `${guildId}.${userId}` as const
+    // const dbPath = `${guildId}.${userId}` as const
+    const dbQuery = { guildId, userId }
 
-    const reviveTime = reviveDatabase.get(dbPath)
+    const reviveTime = reviveDatabase.findOne(dbQuery)?.reviveAt
 
     if (reviveTime) {
       if (Date.now() < reviveTime) {
@@ -58,7 +57,7 @@ export const checkNewMemberDeadRole = (): void => {
 
         void member.roles.add(deadRole)
       } else {
-        void reviveDatabase.delete(dbPath)
+        void reviveDatabase.delete(dbQuery)
       }
     }
   })
@@ -72,7 +71,7 @@ export const reviveMember = async (
   const userId = member.id
 
   await member.roles.remove(deadRole)
-  await reviveDatabase.delete(`${guildId}.${userId}`)
+  await reviveDatabase.delete({ guildId, userId })
 }
 
 export const killMember = async (
@@ -83,9 +82,13 @@ export const killMember = async (
   const userId = member.id
   const guildId = member.guild.id
 
-  const reviveTime = Date.now() + reviveDelayMs
+  const reviveAt = Date.now() + reviveDelayMs
 
-  await reviveDatabase.set(`${guildId}.${userId}`, reviveTime)
+  await reviveDatabase.insert({
+    guildId,
+    userId,
+    reviveAt,
+  })
   await member.roles.add(deadRole)
 
   void schedule(async () => {

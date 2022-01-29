@@ -14,8 +14,7 @@ import {
 
 const sendAlertMessage = (message: string) => {
   message = `[${getUTCShort()}] ${message}`
-  const channelIds = Object.values(alertTrackerDatabase.root)
-  channelIds.forEach((channelId) => {
+  alertTrackerDatabase.forEach((channelId) => {
     const channel = getTextChannel(client, channelId)
     if (channel) {
       void channel.send(formatWithEmojis(channel, message))
@@ -99,21 +98,21 @@ export default new Command<discord.Message>({
       return reply('Error: This type of channel is not supported.')
     }
 
-    const dbPath = `${channel.guild.id}` as const
-    const currentChannelId = alertTrackerDatabase.get(dbPath)
+    const dbKey = channel.guild.id
+    const currentChannelId = alertTrackerDatabase.get(dbKey)
 
     if (option === 'on') {
       if (channel.id === currentChannelId) {
         return reply('Alert tracker is already on in this channel.')
       } else {
-        await alertTrackerDatabase.set(dbPath, channel.id)
+        await alertTrackerDatabase.set(dbKey, channel.id)
         return reply('Alert tracker is now on in this channel.')
       }
     } else {
       if (currentChannelId === undefined) {
         return reply('Alert tracker is already turned off.')
       } else {
-        await alertTrackerDatabase.delete(dbPath)
+        await alertTrackerDatabase.delete(dbKey)
         return reply('Alert tracker is now turned off.')
       }
     }

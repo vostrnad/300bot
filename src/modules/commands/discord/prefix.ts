@@ -20,7 +20,8 @@ export default new Command<discord.Message>({
       return reply('You are not an admin or a bot operator in this server.')
     }
 
-    await guildDatabase.set(`${channel.guild.id}.prefix`, args[0])
+    await guildDatabase.set(channel.guild.id, { prefix: args[0] })
+
     reply('Command prefix updated.')
   },
 })

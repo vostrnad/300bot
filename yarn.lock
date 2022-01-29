@@ -3745,6 +3745,11 @@ nock@^13.2.1:
     lodash.set "^4.3.2"
     propagate "^2.0.0"
 
+nodatabase@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/nodatabase/-/nodatabase-1.0.0.tgz#f6f1413820c6394f6b73e8e1392d35851f704332"
+  integrity sha512-BosqHhtNsKL9Jc2UDgC68DwSwIFhyb2rslsxyfvFQcCy08uJDTfLTnqVsRty9nOa7gaR28Z2tydnTltwMDTd5w==
+
 node-fetch@^2.6.1:
   version "2.6.1"
   resolved "https://registry.yarnpkg.com/node-fetch/-/node-fetch-2.6.1.tgz#045bd323631f76ed2e2b55573394416b639a0052"
