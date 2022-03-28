@@ -59,6 +59,7 @@ export default new Command({
     }
 
     type FactionCode = 'vs' | 'nc' | 'tr'
+    const factionCodes = ['vs', 'nc', 'tr'] as FactionCode[]
     type LeaderType = 'squad' | 'platoon'
     const factions: Record<FactionCode, Record<LeaderType, string[]>> = {
       tr: {
@@ -77,10 +78,9 @@ export default new Command({
 
     for (const character of list) {
       let factionCode: FactionCode
-      if (character.factionId === '1') factionCode = 'vs'
-      else if (character.factionId === '2') factionCode = 'nc'
-      else if (character.factionId === '3') factionCode = 'tr'
-      else continue
+      if (factionCodes[Number(character.factionId) - 1]) {
+        factionCode = factionCodes[Number(character.factionId) - 1]
+      } else continue // NS leaders are not supported yet
 
       let leaderType: LeaderType
       if (platoonLeaderIds.has(character.characterId)) leaderType = 'platoon'
