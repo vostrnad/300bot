@@ -4,6 +4,7 @@ import { Command } from '@commands/CommandHandler'
 import { validateArgumentRange } from '@commands/validators'
 import { censusApi } from '@planetside/CensusApi'
 import { streamingApi } from '@planetside/StreamingApi'
+import { Character, Outfit } from '@planetside/types'
 
 const squadLeaders = new TimeoutSet(1800 * 1000)
 const platoonLeaders = new TimeoutSet(1800 * 1000)
@@ -50,9 +51,12 @@ export default new Command({
         },
         {
           show: 'character_id,name.first,faction_id',
+          resolve: 'outfit',
         },
       )
-    ).sort((a, b) => Intl.Collator().compare(a.name.first, b.name.first))
+    ).sort((a, b) =>
+      Intl.Collator().compare(a.name.first, b.name.first),
+    ) as Array<Character & { outfit?: Outfit }>
 
     if (list.length === 0) {
       return reply('Nobody is leading on any faction at the moment.')
@@ -61,7 +65,10 @@ export default new Command({
     type FactionCode = 'vs' | 'nc' | 'tr'
     const factionCodes = ['vs', 'nc', 'tr'] as FactionCode[]
     type LeaderType = 'squad' | 'platoon'
-    const factions: Record<FactionCode, Record<LeaderType, string[]>> = {
+    const factions: Record<
+      FactionCode,
+      Record<LeaderType, Array<{ name: string; outfitAlias: string | null }>>
+    > = {
       tr: {
         squad: [],
         platoon: [],
@@ -80,14 +87,31 @@ export default new Command({
       let factionCode: FactionCode
       if (factionCodes[Number(character.factionId) - 1]) {
         factionCode = factionCodes[Number(character.factionId) - 1]
-      } else continue // NS leaders are not supported yet
+      } else continue // NS leaders are not yet supported
 
       let leaderType: LeaderType
       if (platoonLeaderIds.has(character.characterId)) leaderType = 'platoon'
       else if (squadLeaderIds.has(character.characterId)) leaderType = 'squad'
       else continue // should never happen
 
-      factions[factionCode][leaderType].push(character.name.first)
+      factions[factionCode][leaderType].push({
+        name: character.name.first,
+        outfitAlias: character.outfit?.alias ?? null,
+      })
+    }
+
+    const formatLeaderNames = (
+      squad: Array<{
+        name: string
+        outfitAlias: string | null
+      }>,
+    ) => {
+      return squad.map(
+        (char) =>
+          `**${char.outfitAlias !== null ? '[' + char.outfitAlias + '] ' : ''}${
+            char.name
+          }**`,
+      ) // Returns ['[300s] Brubaker1', 'RandomNoob']
     }
 
     let message = ''
@@ -96,9 +120,8 @@ export default new Command({
       const faction = factions[factionCode]
 
       if (faction.platoon.length > 0) {
-        const formattedLeaders = faction.platoon.map((name) => `**${name}**`)
         message += `${factionName} platoon leaders: ${sentence(
-          formattedLeaders,
+          formatLeaderNames(faction.platoon),
         )}.\n`
       }
 
@@ -106,9 +129,8 @@ export default new Command({
         faction.squad.length > 0 &&
         (faction.platoon.length === 0 || showFull)
       ) {
-        const formattedLeaders = faction.squad.map((name) => `**${name}**`)
         message += `${factionName} squad leaders: ${sentence(
-          formattedLeaders,
+          formatLeaderNames(faction.squad),
         )}.\n`
       }
 
