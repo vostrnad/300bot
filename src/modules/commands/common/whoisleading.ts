@@ -43,6 +43,8 @@ export default new Command({
       return reply('Nobody is leading on any faction at the moment.')
     }
 
+    type CharacterWithOutfit = Character & { outfit?: Outfit }
+
     const list = (
       await censusApi.getList(
         'character',
@@ -56,18 +58,17 @@ export default new Command({
       )
     ).sort((a, b) =>
       Intl.Collator().compare(a.name.first, b.name.first),
-    ) as Array<Character & { outfit?: Outfit }>
+    ) as CharacterWithOutfit[]
 
     if (list.length === 0) {
       return reply('Nobody is leading on any faction at the moment.')
     }
 
     type FactionCode = 'vs' | 'nc' | 'tr'
-    const factionCodes = ['vs', 'nc', 'tr'] as FactionCode[]
     type LeaderType = 'squad' | 'platoon'
     const factions: Record<
       FactionCode,
-      Record<LeaderType, Array<{ name: string; outfitAlias: string | null }>>
+      Record<LeaderType, CharacterWithOutfit[]>
     > = {
       tr: {
         squad: [],
@@ -85,33 +86,24 @@ export default new Command({
 
     for (const character of list) {
       let factionCode: FactionCode
-      if (factionCodes[Number(character.factionId) - 1]) {
-        factionCode = factionCodes[Number(character.factionId) - 1]
-      } else continue // NS leaders are not yet supported
+      if (character.factionId === '1') factionCode = 'vs'
+      else if (character.factionId === '2') factionCode = 'nc'
+      else if (character.factionId === '3') factionCode = 'tr'
+      else continue
 
       let leaderType: LeaderType
       if (platoonLeaderIds.has(character.characterId)) leaderType = 'platoon'
       else if (squadLeaderIds.has(character.characterId)) leaderType = 'squad'
       else continue // should never happen
 
-      factions[factionCode][leaderType].push({
-        name: character.name.first,
-        outfitAlias: character.outfit?.alias ?? null,
-      })
+      factions[factionCode][leaderType].push(character)
     }
 
-    const formatLeaderNames = (
-      squad: Array<{
-        name: string
-        outfitAlias: string | null
-      }>,
-    ) => {
-      return squad.map(
-        (char) =>
-          `**${char.outfitAlias !== null ? '[' + char.outfitAlias + '] ' : ''}${
-            char.name
-          }**`,
-      ) // Returns ['[300s] Brubaker1', 'RandomNoob']
+    const formatLeaderName = (character: CharacterWithOutfit) => {
+      const outfitAliasPrefix = character.outfit?.alias
+        ? `[${character.outfit.alias}] `
+        : ''
+      return `**${outfitAliasPrefix}${character.name.first}**`
     }
 
     let message = ''
@@ -120,8 +112,9 @@ export default new Command({
       const faction = factions[factionCode]
 
       if (faction.platoon.length > 0) {
+        const formattedLeaders = faction.platoon.map(formatLeaderName)
         message += `${factionName} platoon leaders: ${sentence(
-          formatLeaderNames(faction.platoon),
+          formattedLeaders,
         )}.\n`
       }
 
@@ -129,8 +122,9 @@ export default new Command({
         faction.squad.length > 0 &&
         (faction.platoon.length === 0 || showFull)
       ) {
+        const formattedLeaders = faction.squad.map(formatLeaderName)
         message += `${factionName} squad leaders: ${sentence(
-          formatLeaderNames(faction.squad),
+          formattedLeaders,
         )}.\n`
       }
 
