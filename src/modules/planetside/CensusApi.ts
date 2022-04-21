@@ -18,6 +18,7 @@ import {
   CharacterResolvedOutfitMemberExtended,
   CharacterResolvedStatHistory,
   CharacterStatHistoryStripped,
+  CharacterWithOutfitWithLeader,
   CharactersItem,
   CharactersOnlineStatus,
   DirectiveTreeCategory,
@@ -353,6 +354,16 @@ class CensusApi {
 
     if (list.length === 0) return null
     return list
+  }
+
+  async getCharacterOutfitLeaderFaction(query: QueryObject<Character>) {
+    const list = (await censusApi.getList('character', query, {
+      join: 'outfit_member^show:outfit_id^inject_at:outfit_member(outfit^inject_at:outfit^show:leader_character_id(character^on:leader_character_id^to:character_id^show:faction_id^inject_at:leader))',
+    })) as CharacterWithOutfitWithLeader[]
+    if (list.length === 0) return null
+    const character = list[0]
+
+    return character
   }
 }
 

@@ -220,3 +220,15 @@ export type FullCharacterWeaponStats = {
   weaponStatsByFaction: CharacterWeaponStatsByFaction[]
   weaponStats: CharacterWeaponStats[]
 }
+
+export type CharacterWithOutfitWithLeader = Character & {
+  outfitMember?: {
+    outfitId: string
+    outfit: {
+      leaderCharacterId: string
+      leader: {
+        factionId: string
+      }
+    }
+  }
+}
