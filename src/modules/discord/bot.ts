@@ -52,10 +52,13 @@ client.on('ready', () => {
 
   streamingApi.on('playerLogin', async ({ characterId }) => {
     if (bruCharactersDatabase.get(characterId)) {
-      const character = await censusApi.getCharacter({ characterId })
+      const character = await censusApi.getCharacterOutfitLeaderFaction({
+        characterId,
+      })
       if (!character) {
         return
       }
+
       sendAnnouncement(
         constants.discord.channelIds.brutracker,
         'spartan_helmet',
@@ -66,6 +69,14 @@ client.on('ready', () => {
           ) as discord.Channel,
           `Bru is online as **${character.name.first}** ${
             factionEmojis[Number(character.factionId)] ?? factionEmojis[0]
+          }${
+            character.factionId === '4' && character.outfitMember
+              ? `${
+                  factionEmojis[
+                    Number(character.outfitMember.outfit.leader.factionId)
+                  ]
+                }`
+              : ''
           }!`,
         ),
       )
