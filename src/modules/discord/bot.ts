@@ -55,7 +55,9 @@ client.on('ready', () => {
       const character = await censusApi.getCharacterOutfitLeaderFaction({
         characterId,
       })
-      if (character === null) return
+      if (!character) {
+        return
+      }
 
       sendAnnouncement(
         constants.discord.channelIds.brutracker,
@@ -69,7 +71,7 @@ client.on('ready', () => {
             factionEmojis[Number(character.factionId)] ?? factionEmojis[0]
           }${
             character.factionId === '4' && character.outfitMember
-              ? ` and playing as ${
+              ? `${
                   factionEmojis[
                     Number(character.outfitMember.outfit.leader.factionId)
                   ]
