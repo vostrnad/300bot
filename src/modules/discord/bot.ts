@@ -15,6 +15,7 @@ import {
 import { formatWithEmojis, getTextChannel } from '@discord/utils'
 import { censusApi } from '@planetside/CensusApi'
 import { streamingApi } from '@planetside/StreamingApi'
+import { Character } from '@planetside/types'
 
 /**
  * Sends a message with UTC timestamp and optionally an emoji.
@@ -50,12 +51,30 @@ client.on('ready', () => {
     '{emoji:faction_logo_ns|NS}',
   ]
 
+  type CharacterWithOutfitWithLeader = Character & {
+    outfitMember?: {
+      outfitId: string
+      outfit: {
+        leaderCharacterId: string
+        leader: {
+          factionId: string
+        }
+      }
+    }
+  }
+
   streamingApi.on('playerLogin', async ({ characterId }) => {
     if (bruCharactersDatabase.get(characterId)) {
-      const character = await censusApi.getCharacter({ characterId })
-      if (!character) {
-        return
-      }
+      const list = (await censusApi.getList(
+        'character',
+        { characterId },
+        {
+          join: 'outfit_member^show:outfit_id^inject_at:outfit_member(outfit^inject_at:outfit^show:leader_character_id(character^on:leader_character_id^to:character_id^show:faction_id^inject_at:leader))',
+        },
+      )) as CharacterWithOutfitWithLeader[]
+      if (list.length === 0) return
+      const character = list[0]
+
       sendAnnouncement(
         constants.discord.channelIds.brutracker,
         'spartan_helmet',
@@ -66,6 +85,14 @@ client.on('ready', () => {
           ) as discord.Channel,
           `Bru is online as **${character.name.first}** ${
             factionEmojis[Number(character.factionId)] ?? factionEmojis[0]
+          }${
+            character.factionId === '4' && character.outfitMember
+              ? ` and playing as ${
+                  factionEmojis[
+                    Number(character.outfitMember.outfit.leader.factionId)
+                  ]
+                }`
+              : ''
           }!`,
         ),
       )
