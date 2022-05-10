@@ -3,6 +3,7 @@ import camelcaseKeys from 'camelcase-keys'
 import { pascalCase } from 'pascal-case'
 import Ws from 'ws'
 import { env } from '@app/env'
+import { ExponentialBackoff } from '@app/utils/ExponentialBackoff'
 import { log } from '@app/utils/log'
 import { isRecord } from '@app/validators/object'
 
@@ -49,6 +50,7 @@ class StreamingApi {
   private _client: Ws | null = null
   private _initialized = false
   private _destroyed = false
+  private readonly _backoff = new ExponentialBackoff(1000, 300 * 1000)
   private readonly _listeners: { [E in Event]: Array<EventListener<E>> } = {
     playerLogin: [],
     playerLogout: [],
@@ -85,20 +87,22 @@ class StreamingApi {
   }
 
   private connectToEventStreaming() {
-    this._client = new Ws(
+    const client = new Ws(
       `wss://push.planetside2.com/streaming?environment=ps2&service-id=s:${this._serviceId}`,
     )
+    this._client = client
 
-    this._client.on('open', () => {
+    let socketTimeout: NodeJS.Timeout
+
+    client.on('open', () => {
       log.info('Streaming API client connected')
-
-      let socketTimeout: NodeJS.Timeout
+      this._backoff.reset()
 
       const updateSocketTimeout = () => {
         clearTimeout(socketTimeout)
         socketTimeout = setTimeout(() => {
           log.warn('Restarting Streaming API')
-          this._client?.close()
+          client.close()
         }, 5 * 60 * 1000)
       }
 
@@ -113,9 +117,9 @@ class StreamingApi {
         eventNames: Object.keys(this._listeners).map((e) => pascalCase(e)),
       }
 
-      this._client?.send(JSON.stringify(initialCommand))
+      client.send(JSON.stringify(initialCommand))
 
-      this._client?.on('message', (message) => {
+      client.on('message', (message) => {
         let data
         try {
           // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
@@ -145,21 +149,22 @@ class StreamingApi {
           })
         }
       })
+    })
 
-      this._client?.on('close', () => {
-        log.info('Streaming API client closed')
-        clearTimeout(socketTimeout)
-        if (!this._destroyed) {
-          setTimeout(() => {
-            this.connectToEventStreaming()
-          }, 1000)
-        }
-      })
+    client.on('close', () => {
+      log.info('Streaming API client closed')
+      clearTimeout(socketTimeout)
+      if (!this._destroyed) {
+        const delay = this._backoff.getNextDelay()
+        setTimeout(() => {
+          this.connectToEventStreaming()
+        }, delay)
+      }
+    })
 
-      this._client?.on('error', (e) => {
-        log.error('Streaming API client error:', e)
-        this._client?.close()
-      })
+    client.on('error', (e) => {
+      log.error('Streaming API client error:', e)
+      client.close()
     })
   }
 }
