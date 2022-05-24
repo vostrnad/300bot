@@ -244,14 +244,11 @@ export class CommandHandler<T = unknown> {
       })
 
       const fz = fuzzySet(commandsAliases)
-      const match = fz.get(message.text.slice(prefix.length))
-      if (!match) {
-        // if match is less than 33% null is returned by default in the module
-        return false
-      }
+      const match = fz.get(message.text.slice(prefix.length).split(' ')[0])
 
       const similarityThreshold = 0.5 // 50% of the keyword/alias has to be right for a suggestion to be relevant
-      if (match[0][0] < similarityThreshold) {
+      if (!match || match[0][0] < similarityThreshold) {
+        // !match because the fuzzySet module returns null when similarity is less then 33%
         message.reply(
           `Unknown command, use **${prefix}help** to get a list of all commands.`,
         )
