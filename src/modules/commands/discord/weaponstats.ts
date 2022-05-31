@@ -3,6 +3,7 @@ import discord from 'discord.js'
 import { PlayerNotFoundError } from '@app/errors'
 import { divide } from '@app/utils/math'
 import { Command } from '@commands/CommandHandler'
+import { DiscordParams } from '@commands/params'
 import { validateArgumentRange } from '@commands/validators'
 import { sendScrollEmbed } from '@discord/embed'
 import { censusApi } from '@planetside/CensusApi'
@@ -13,11 +14,11 @@ import {
 } from '@planetside/types'
 import { validatePlayerName } from '@planetside/validators'
 
-export default new Command<discord.Message>({
+export default new Command<DiscordParams>({
   keyword: 'weaponstats',
   description: 'show PS2 player weapon stats',
   help: 'Usage:\n`{prefix}weaponstats <player name>` - shows player weapons by kills\n`{prefix}weaponstats <player name> full` - shows full player weapons stats',
-  callback: async ({ args, reply, raw, env }) => {
+  callback: async ({ args, reply, env }) => {
     if (args.length === 0) {
       return reply(env.command.getHelp(env.handler))
     }
@@ -107,7 +108,7 @@ export default new Command<discord.Message>({
     const sortingStatDisplay = 'kills'
 
     return sendScrollEmbed(
-      raw,
+      env.message,
       weaponStatsReformatted,
       (weapon, index, active) => {
         const weaponEmbed = new discord.MessageEmbed()

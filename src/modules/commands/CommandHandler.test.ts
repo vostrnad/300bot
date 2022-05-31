@@ -30,7 +30,7 @@ const dummyCommandMessage: CommandMessage = {
     mention: '@testrunner',
   },
   reply: () => null,
-  raw: null,
+  params: null,
 }
 
 const testCommandHandler = async (

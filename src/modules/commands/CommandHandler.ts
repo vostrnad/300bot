@@ -6,7 +6,7 @@ export interface CommandMessage<T = unknown> {
   text: string
   author: MessageAuthor
   reply: ReplyToMessage
-  raw: T
+  params: T
 }
 
 type ReplyToMessage = (text: string) => void
@@ -27,11 +27,10 @@ export interface CommandCallbackData<T = unknown> {
   args: string[]
   reply: ReplyToMessage
   author: MessageAuthor
-  env: {
+  env: T & {
     handler: CommandHandler<never>
     command: Command<never>
   }
-  raw: T
 }
 
 export type CommandCallback<T = unknown> = (
@@ -219,10 +218,10 @@ export class CommandHandler<T = unknown> {
             reply: message.reply,
             author: message.author,
             env: {
+              ...message.params,
               handler: this,
               command,
             },
-            raw: message.raw,
           })
         } catch (e) {
           if (e instanceof CustomError) {

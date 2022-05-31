@@ -8,6 +8,7 @@ import { constants } from '@app/global/constants'
 import { pluralize, sentence } from '@app/utils/language'
 import { log } from '@app/utils/log'
 import { Command } from '@commands/CommandHandler'
+import { DiscordParams } from '@commands/params'
 import { validateArgumentNumber } from '@commands/validators'
 import { censusApi } from '@planetside/CensusApi'
 import { validatePlayerName } from '@planetside/validators'
@@ -27,11 +28,11 @@ type AltsServiceError = {
 
 type AltsServiceResponse = AltsServiceSuccess | AltsServiceError
 
-export default new Command<discord.Message>({
+export default new Command<DiscordParams>({
   keyword: 'alts',
   description: "show player's alts",
   help: "Usage: `{prefix}alts <player name>` - shows player's alts",
-  callback: async ({ args, reply, env, raw }) => {
+  callback: async ({ args, reply, env }) => {
     if (args.length === 0) return reply(env.command.getHelp(env.handler))
     validateArgumentNumber(args.length, 1)
 
@@ -85,10 +86,10 @@ export default new Command<discord.Message>({
     const textShort = `${textBase}.`
     const textLong = `${textBase}: ${sentence(altsFormatted)}.`
 
-    if (raw.author.id === constants.discord.userIds.alfav) {
+    if (env.message.author.id === constants.discord.userIds.alfav) {
       return reply(textLong)
     } else {
-      const sent = await raw.channel.send(textShort)
+      const sent = await env.message.channel.send(textShort)
       await sent.react(constants.discord.emojis.checkMark)
       const collector = sent.createReactionCollector(
         (reaction: discord.MessageReaction, user: discord.User) =>

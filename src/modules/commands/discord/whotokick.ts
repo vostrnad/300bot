@@ -5,16 +5,17 @@ import { pluralize } from '@app/utils/language'
 import { divide } from '@app/utils/math'
 import { getShortDate } from '@app/utils/time'
 import { Command } from '@commands/CommandHandler'
+import { DiscordParams } from '@commands/params'
 import { validateArgumentNumber } from '@commands/validators'
 import { sendScrollEmbed } from '@discord/embed'
 import { censusApi } from '@planetside/CensusApi'
 import { CharacterStatHistoryStripped, OutfitMember } from '@planetside/types'
 
-export default new Command<discord.Message>({
+export default new Command<DiscordParams>({
   keyword: 'whotokick',
   description: 'show players that can be kicked from the outfit',
   help: 'Usage:`{prefix}whotokick` - shows a list of players that can be kicked from the outfit',
-  callback: async ({ args, raw }) => {
+  callback: async ({ args, env }) => {
     validateArgumentNumber(args.length, 0)
     if (args.length > 0) return
 
@@ -105,29 +106,33 @@ export default new Command<discord.Message>({
       return 1
     })
 
-    return sendScrollEmbed(raw, membersToKick, (member, idx, active) => {
-      const kickEmbed = new discord.MessageEmbed()
-        .setTitle(
-          `**${member.character.name.first}** (${idx + 1}/${
-            membersToKick.length
-          })`,
-        )
-        .addField(
-          `${pluralize(
-            member.message?.match(/-/g)?.length || 1,
-            'Reason',
-            'Reasons',
-          )} to kick`,
-          member.message,
-        )
-        .setTimestamp()
+    return sendScrollEmbed(
+      env.message,
+      membersToKick,
+      (member, idx, active) => {
+        const kickEmbed = new discord.MessageEmbed()
+          .setTitle(
+            `**${member.character.name.first}** (${idx + 1}/${
+              membersToKick.length
+            })`,
+          )
+          .addField(
+            `${pluralize(
+              member.message?.match(/-/g)?.length || 1,
+              'Reason',
+              'Reasons',
+            )} to kick`,
+            member.message,
+          )
+          .setTimestamp()
 
-      if (active) {
-        kickEmbed.setFooter('Interactive').setColor('#647CC4')
-      } else {
-        kickEmbed.setFooter('Interaction ended').setColor('#1D2439')
-      }
-      return kickEmbed
-    })
+        if (active) {
+          kickEmbed.setFooter('Interactive').setColor('#647CC4')
+        } else {
+          kickEmbed.setFooter('Interaction ended').setColor('#1D2439')
+        }
+        return kickEmbed
+      },
+    )
   },
 })

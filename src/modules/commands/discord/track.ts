@@ -1,6 +1,7 @@
 import discord from 'discord.js'
 import { PlayerNotFoundError } from '@app/errors'
 import { Command } from '@commands/CommandHandler'
+import { DiscordParams } from '@commands/params'
 import { validateArgumentNumber } from '@commands/validators'
 import { dmTrackerDatabase } from '@database/dmtracker'
 import { client } from '@discord/client'
@@ -36,18 +37,18 @@ streamingApi.on('playerLogout', async ({ characterId }) => {
   await sendCharacterStatus(characterId, false)
 })
 
-export default new Command<discord.Message>({
+export default new Command<DiscordParams>({
   keyword: 'track',
   alias: ['donottrack'],
   description: 'track PlanetSide 2 characters',
   help: 'Usage:\n`{prefix}track <character>` - starts tracking character\n`{prefix}donottrack <character>` - stops tracking character',
-  callback: async ({ alias, args, reply, env, raw }) => {
+  callback: async ({ alias, args, reply, env }) => {
     if (args.length === 0) {
       return reply(env.command.getHelp(env.handler))
     }
     validateArgumentNumber(args.length, 1)
     validatePlayerName(args[0])
-    const channel = raw.channel
+    const channel = env.message.channel
     if (!(channel instanceof discord.DMChannel)) {
       return reply('This command can only be used in direct messages.')
     }

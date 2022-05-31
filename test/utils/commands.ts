@@ -16,7 +16,7 @@ export const getCommandRunner = (command: Command) => {
           mention: '@testrunner',
         },
         reply: resolve,
-        raw: null,
+        params: null,
       }
       void handler.process(message)
     })
