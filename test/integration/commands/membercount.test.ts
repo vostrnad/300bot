@@ -14,7 +14,7 @@ describe('membercount', () => {
     const requestData = mockCensusApi({ outfit_list: [outfit] })
     const reply = await runCommand('+membercount')
     expect(requestData).toMatchSnapshot()
-    expect(reply).toEqual('The outfit Test Outfit have 42 members.')
+    expect(reply).toEqual('The outfit **Test Outfit** has 42 members.')
   })
 
   it('should work for a custom outfit', async () => {
@@ -26,7 +26,7 @@ describe('membercount', () => {
     const requestData = mockCensusApi({ outfit_list: [outfit] })
     const reply = await runCommand('+membercount cstm')
     expect(requestData).toMatchSnapshot()
-    expect(reply).toEqual('The outfit Custom Outfit have 123 members.')
+    expect(reply).toEqual('The outfit **Custom Outfit** has 123 members.')
   })
 
   it('should reply with an error when the outfit does not exist', async () => {

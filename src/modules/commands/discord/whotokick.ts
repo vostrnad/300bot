@@ -1,12 +1,11 @@
 import discord from 'discord.js'
 import { OutfitAliasNotFoundError } from '@app/errors'
-import { constants } from '@app/global/constants'
 import { pluralize } from '@app/utils/language'
 import { divide } from '@app/utils/math'
 import { getShortDate } from '@app/utils/time'
 import { Command } from '@commands/CommandHandler'
 import { DiscordParams } from '@commands/params'
-import { validateArgumentNumber } from '@commands/validators'
+import { validateDefaultOutfitId } from '@commands/validators'
 import { sendScrollEmbed } from '@discord/embed'
 import { censusApi } from '@planetside/CensusApi'
 import { CharacterStatHistoryStripped, OutfitMember } from '@planetside/types'
@@ -16,11 +15,12 @@ export default new Command<DiscordParams>({
   description: 'show players that can be kicked from the outfit',
   help: 'Usage:`{prefix}whotokick` - shows a list of players that can be kicked from the outfit',
   callback: async ({ args, env }) => {
-    validateArgumentNumber(args.length, 0)
     if (args.length > 0) return
 
+    validateDefaultOutfitId(env.settings.outfitId, env.handler.prefix)
+
     let memberStats = await censusApi.getOutfitMembersStatsById(
-      constants.planetside.outfitIds.spartans,
+      env.settings.outfitId,
     )
 
     if (memberStats === null) throw new OutfitAliasNotFoundError()

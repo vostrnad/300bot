@@ -1,21 +1,26 @@
 import { OutfitAliasNotFoundError } from '@app/errors'
-import { constants } from '@app/global/constants'
 import { sentence } from '@app/utils/language'
 import { Command } from '@commands/CommandHandler'
-import { validateArgumentRange } from '@commands/validators'
+import { SettingsParams } from '@commands/params'
+import {
+  validateArgumentRange,
+  validateDefaultOutfitId,
+} from '@commands/validators'
 import { censusApi } from '@planetside/CensusApi'
 import { validateOutfitAlias } from '@planetside/validators'
 
-export default new Command({
+export default new Command<SettingsParams>({
   keyword: 'whoisonline',
   description: 'check who is online',
   help: 'Usage:\n`{prefix}whoisonline` - checks who is online\n`{prefix}whoisonline <outfit tag>` - list online members of a specific outfit',
-  callback: async ({ args, reply }) => {
+  callback: async ({ args, reply, env }) => {
     validateArgumentRange(args.length, 0, 1)
 
     if (args.length === 0) {
+      validateDefaultOutfitId(env.settings.outfitId, env.handler.prefix)
+
       const names = await censusApi.getOnlineOutfitMembers(
-        constants.planetside.outfitIds.spartans,
+        env.settings.outfitId,
       )
 
       if (names.length === 0) {

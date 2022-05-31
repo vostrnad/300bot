@@ -8,7 +8,7 @@ import { censusApi } from '@planetside/CensusApi'
 export default new Command({
   keyword: 'outfitstats',
   description: 'show PS2 outfit stats',
-  help: "Usage:\n`{prefix}outfitstats <alias>` - shows an outfit's players average stats\n`{prefix}outfitstats <alias> active` - shows an outfit's active players average stats",
+  help: "Usage:\n`{prefix}outfitstats <outfit tag>` - shows an outfit's players average stats\n`{prefix}outfitstats <outfit tag> active` - shows an outfit's active players average stats",
   callback: async ({ args, reply, env }) => {
     if (args.length === 0) {
       return reply(env.command.getHelp(env.handler))

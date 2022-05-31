@@ -1,4 +1,8 @@
-import { ArgumentNumberError, ArgumentRangeError } from '@app/errors'
+import {
+  ArgumentNumberError,
+  ArgumentRangeError,
+  DefaultOutfitIdNotSetError,
+} from '@app/errors'
 
 export const validateArgumentNumber = (
   actual: number,
@@ -19,5 +23,14 @@ export const validateArgumentRange = (
     (max !== undefined && actual > max)
   ) {
     throw new ArgumentRangeError(actual, min, max)
+  }
+}
+
+export const validateDefaultOutfitId: (
+  outfitId: string | undefined,
+  prefix: string,
+) => asserts outfitId is string = (outfitId, prefix) => {
+  if (!outfitId) {
+    throw new DefaultOutfitIdNotSetError(prefix)
   }
 }
