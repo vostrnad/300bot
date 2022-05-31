@@ -81,3 +81,9 @@ export class CensusApiNoDataFoundError extends CustomError {
     super('Daybreak API no longer supports this query')
   }
 }
+
+export class DefaultOutfitIdNotSetError extends CustomError {
+  constructor(prefix: string) {
+    super(`No default outfit set, use \`${prefix}setoutfit\``)
+  }
+}

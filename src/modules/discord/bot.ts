@@ -155,8 +155,10 @@ client.on('message', (message: discord.Message) => {
     void message.channel.send(formatWithEmojis(message.channel, text))
   }
 
-  const guild = message.guild
-  const prefix = (guild && guildDatabase.get(guild.id))?.prefix || '+'
+  const guildOrPrivateChannelId = message.guild?.id ?? message.channel.id
+  const localSettings = guildDatabase.get(guildOrPrivateChannelId)
+
+  const prefix = localSettings?.prefix ?? '+'
 
   // eslint-disable-next-line unicorn/prefer-includes
   if (message.mentions.users.some((user) => user === client.user)) {
@@ -184,6 +186,12 @@ client.on('message', (message: discord.Message) => {
     },
     params: {
       message,
+      settings: {
+        prefix,
+        outfitId: localSettings?.outfitId,
+      },
+      updateSettings: async (key, value) =>
+        guildDatabase.update(guildOrPrivateChannelId, { [key]: value }),
     },
   }
 

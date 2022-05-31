@@ -11,7 +11,7 @@ import { censusApi } from '@planetside/CensusApi'
 export default new Command<DiscordParams>({
   keyword: 'outfitscoreboard',
   description: 'show PS2 outfit player scoreboard',
-  help: "Usage:\n`{prefix}outfitscoreboard <alias> <stat>` - shows an outfit's player scoreboard\n`{prefix}outfitstats <alias> <stat> shame` - shows an outfit's players scoreboard starting from the worst",
+  help: "Usage:\n`{prefix}outfitscoreboard <outfit tag> <stat>` - shows an outfit's player scoreboard\n`{prefix}outfitstats <outfit tag> <stat> shame` - shows an outfit's players scoreboard starting from the worst",
   callback: async ({ args, reply, env }) => {
     if (args.length === 0) {
       return reply(env.command.getHelp(env.handler))

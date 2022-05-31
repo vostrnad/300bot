@@ -1,18 +1,23 @@
-import { constants } from '@app/global/constants'
 import { Command } from '@commands/CommandHandler'
-import { validateArgumentRange } from '@commands/validators'
+import { SettingsParams } from '@commands/params'
+import {
+  validateArgumentRange,
+  validateDefaultOutfitId,
+} from '@commands/validators'
 import { censusApi } from '@planetside/CensusApi'
 
-export default new Command({
+export default new Command<SettingsParams>({
   keyword: 'membercount',
   description: 'count outfit members',
-  help: 'Usage:\n`{prefix}membercount` - counts outfit members\n`{prefix}membercount <alias>` - counts members of the specified outfit',
-  callback: async ({ args, reply }) => {
+  help: 'Usage:\n`{prefix}membercount` - counts outfit members\n`{prefix}membercount <outfit tag>` - counts members of the specified outfit',
+  callback: async ({ args, reply, env }) => {
     validateArgumentRange(args.length, 0, 1)
     let outfit
     if (args.length === 0) {
+      validateDefaultOutfitId(env.settings.outfitId, env.handler.prefix)
+
       outfit = await censusApi.getOutfit({
-        outfitId: constants.planetside.outfitIds.spartans,
+        outfitId: env.settings.outfitId,
       })
     } else {
       outfit = await censusApi.getOutfit({
@@ -21,6 +26,6 @@ export default new Command({
     }
 
     if (outfit === null) return reply('No outfit corresponds to this request.')
-    reply(`The outfit ${outfit.name} have ${outfit.memberCount} members.`)
+    reply(`The outfit **${outfit.name}** has ${outfit.memberCount} members.`)
   },
 })

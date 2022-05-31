@@ -1,4 +1,3 @@
-import { Command } from '@commands/CommandHandler'
 import brucharacters from './brucharacters'
 import brudistance from './brudistance'
 import certs from './certs'
@@ -16,11 +15,12 @@ import playerstats from './playerstats'
 import population from './population'
 import recentstats from './recentstats'
 import restartsocket from './restartsocket'
+import setoutfit from './setoutfit'
 import uptime from './uptime'
 import whoisleading from './whoisleading'
 import whoisonline from './whoisonline'
 
-export const commonCommands: Command[] = [
+export const commonCommands = [
   brucharacters,
   brudistance,
   certs,
@@ -38,6 +38,7 @@ export const commonCommands: Command[] = [
   population,
   recentstats,
   restartsocket,
+  setoutfit,
   uptime,
   whoisleading,
   whoisonline,

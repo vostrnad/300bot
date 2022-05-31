@@ -22,7 +22,7 @@ exports[`membercount should work for the default outfit 1`] = `
 Object {
   "pathname": "/s:test/get/ps2:v2/outfit",
   "searchParams": Object {
-    "outfit_id": "37581022577821398",
+    "outfit_id": "test-outfit-id",
   },
 }
 `;

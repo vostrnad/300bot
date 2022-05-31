@@ -1,12 +1,8 @@
 export const constants = {
   planetside: {
     characterIds: {
-      // JohnKonnor1
-      bru: '8258984096545401457',
-    },
-    outfitIds: {
-      // TR Consolidation
-      spartans: '37581022577821398',
+      // BruceAImighty
+      bru: '5429261574101249937',
     },
     worldIds: {
       miller: 10,
