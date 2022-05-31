@@ -1,6 +1,7 @@
 import discord from 'discord.js'
 import { getUTCShort } from '@app/utils/time'
 import { Command } from '@commands/CommandHandler'
+import { DiscordParams } from '@commands/params'
 import { validateArgumentNumber } from '@commands/validators'
 import { alertTrackerDatabase } from '@database/alerttracker'
 import { client } from '@discord/client'
@@ -80,11 +81,11 @@ streamingApi.on('metagameEvent', (event) => {
   }
 })
 
-export default new Command<discord.Message>({
+export default new Command<DiscordParams>({
   keyword: 'alerttracker',
   description: 'configure the alert tracker',
   help: 'Usage: `{prefix}alerttracker <on/off>` - turns the alert tracker on or off',
-  callback: async ({ args, reply, env, raw }) => {
+  callback: async ({ args, reply, env }) => {
     if (args.length === 0) {
       return reply(env.command.getHelp(env.handler))
     }
@@ -93,7 +94,7 @@ export default new Command<discord.Message>({
     if (option !== 'on' && option !== 'off') {
       return reply('Error: The argument must be either "on" or "off".')
     }
-    const channel = raw.channel
+    const channel = env.message.channel
     if (!(channel instanceof discord.TextChannel)) {
       return reply('Error: This type of channel is not supported.')
     }

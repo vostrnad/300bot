@@ -2,27 +2,30 @@ import assert from 'assert'
 import discord from 'discord.js'
 import { randomChoice, randomInteger } from '@app/utils/random'
 import { Command } from '@commands/CommandHandler'
+import { DiscordParams } from '@commands/params'
 import { killMember } from '@discord/revive'
 
-export default new Command<discord.Message>({
+export default new Command<DiscordParams>({
   keyword: 'russianroulette',
   description: 'kill yourself for fun purposes',
   help: 'Usage: `{prefix}russianroulette` - kill yourself for fun purposes',
-  callback: async ({ args, author, reply, raw }) => {
+  callback: async ({ args, author, reply, env }) => {
     if (args.length > 0) return
     const rounds = 6
     const rolled = randomInteger(rounds)
-    const deadRole = raw.guild?.roles.cache.find((role) => role.name === 'Dead')
+    const deadRole = env.message.guild?.roles.cache.find(
+      (role) => role.name === 'Dead',
+    )
 
     if (!(deadRole instanceof discord.Role)) {
       return reply('The Dead role is not defined.')
     }
 
     // should never fail
-    assert(raw.member)
+    assert(env.message.member)
 
     if (rolled === 0) {
-      await killMember(raw.member, deadRole, 3600 * 1000)
+      await killMember(env.message.member, deadRole, 3600 * 1000)
       reply(
         `**${author.displayName}** ` +
           randomChoice([

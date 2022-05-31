@@ -5,6 +5,7 @@ import { log } from '@app/utils/log'
 import { getUTCShort } from '@app/utils/time'
 import { CommandHandler, CommandMessage } from '@commands/CommandHandler'
 import { commands } from '@commands/index'
+import { DiscordParams } from '@commands/params'
 import { bruCharactersDatabase } from '@database/brucharacters'
 import { guildDatabase } from '@database/guilds'
 import { client } from '@discord/client'
@@ -164,12 +165,12 @@ client.on('message', (message: discord.Message) => {
     )
   }
 
-  const commandHandler = new CommandHandler<discord.Message>({
+  const commandHandler = new CommandHandler<DiscordParams>({
     prefix,
     commands,
   })
 
-  const commandMessage: CommandMessage<discord.Message> = {
+  const commandMessage: CommandMessage<DiscordParams> = {
     text: message.content,
     reply,
     author: {
@@ -181,7 +182,9 @@ client.on('message', (message: discord.Message) => {
           discord.Permissions.FLAGS.ADMINISTRATOR,
         ) || false,
     },
-    raw: message,
+    params: {
+      message,
+    },
   }
 
   void commandHandler.process(commandMessage)

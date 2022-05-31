@@ -1,21 +1,24 @@
 import discord from 'discord.js'
 import got from 'got'
-import { env } from '@app/env'
+import { env as appEnv } from '@app/env'
 import { log } from '@app/utils/log'
 import { Command } from '@commands/CommandHandler'
+import { DiscordParams } from '@commands/params'
 
-if (env.wordsServiceQuery === null) {
+if (appEnv.wordsServiceQuery === null) {
   log.warn('Words service not configured')
 }
 
 const activeChannels = new Set()
 
-export default new Command<discord.Message>({
+export default new Command<DiscordParams>({
   keyword: 'hangman',
   description: 'play a game of hangman',
   help: 'Usage: `{prefix}hangman` - play a game of hangman',
-  callback: async ({ args, raw, reply }) => {
+  callback: async ({ args, reply, env }) => {
     if (args.length > 0) return
+
+    const channel = env.message.channel
 
     const hangmanPics = [
       `  +---+
@@ -95,17 +98,17 @@ export default new Command<discord.Message>({
       return str.slice(0, index) + chr + str.slice(index + 1)
     }
 
-    if (env.wordsServiceQuery === null) {
+    if (appEnv.wordsServiceQuery === null) {
       return reply('The words service is not configured.')
     }
 
-    if (activeChannels.has(raw.channel.id)) {
+    if (activeChannels.has(channel.id)) {
       return reply('A game of hangman is already running in this channel.')
     }
 
-    const word: string = await got(env.wordsServiceQuery).json()
+    const word: string = await got(appEnv.wordsServiceQuery).json()
 
-    activeChannels.add(raw.channel.id)
+    activeChannels.add(channel.id)
 
     let guesses = ''
     let tries = 0
@@ -116,7 +119,7 @@ export default new Command<discord.Message>({
     let wordDisplay = '🔵'.repeat(word.length)
 
     let hangmanEmbed = genHangmanEmbed(wordDisplay, guesses, tries)
-    const embedMessage = await raw.channel.send({
+    const embedMessage = await channel.send({
       embed: hangmanEmbed,
     })
 
@@ -125,7 +128,7 @@ export default new Command<discord.Message>({
       /^[a-z]+$/i.test(m.content) &&
       (m.content.length === 1 || m.content.length === word.length)
 
-    const messageCollector = raw.channel.createMessageCollector(filter)
+    const messageCollector = channel.createMessageCollector(filter)
 
     messageCollector.on('collect', (m: discord.Message) => {
       void (async () => {
@@ -192,7 +195,7 @@ export default new Command<discord.Message>({
             .setColor('#1D2439')
             .setTimestamp()
           await embedMessage.edit({ embed: hangmanEmbed })
-          activeChannels.delete(raw.channel.id)
+          activeChannels.delete(channel.id)
         } else {
           hangmanEmbed = genHangmanEmbed(wordDisplay, guesses, tries)
           await embedMessage.edit({ embed: hangmanEmbed })
@@ -205,7 +208,7 @@ export default new Command<discord.Message>({
             .setColor('#1D2439')
             .setTimestamp()
           await embedMessage.edit({ embed: hangmanEmbed })
-          activeChannels.delete(raw.channel.id)
+          activeChannels.delete(channel.id)
         }
       })()
     })

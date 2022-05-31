@@ -3,15 +3,16 @@ import { OutfitAliasNotFoundError } from '@app/errors'
 import { partition } from '@app/utils/array'
 import { divide } from '@app/utils/math'
 import { Command } from '@commands/CommandHandler'
+import { DiscordParams } from '@commands/params'
 import { validateArgumentRange } from '@commands/validators'
 import { sendScrollEmbed } from '@discord/embed'
 import { censusApi } from '@planetside/CensusApi'
 
-export default new Command<discord.Message>({
+export default new Command<DiscordParams>({
   keyword: 'outfitscoreboard',
   description: 'show PS2 outfit player scoreboard',
   help: "Usage:\n`{prefix}outfitscoreboard <alias> <stat>` - shows an outfit's player scoreboard\n`{prefix}outfitstats <alias> <stat> shame` - shows an outfit's players scoreboard starting from the worst",
-  callback: async ({ args, reply, raw, env }) => {
+  callback: async ({ args, reply, env }) => {
     if (args.length === 0) {
       return reply(env.command.getHelp(env.handler))
     }
@@ -192,7 +193,7 @@ export default new Command<discord.Message>({
 
     const pages = partition(displayScoreboard, linesPerDisplay * columns)
 
-    return sendScrollEmbed(raw, pages, (page, index, active) => {
+    return sendScrollEmbed(env.message, pages, (page, index, active) => {
       const scoreboardEmbed = new discord.MessageEmbed()
         .setTitle(
           `**${outfit.name}** - ${stat} ${

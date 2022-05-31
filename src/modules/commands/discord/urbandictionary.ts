@@ -3,6 +3,7 @@ import discord from 'discord.js'
 import got from 'got'
 import { isRecord } from '@app/validators/object'
 import { Command } from '@commands/CommandHandler'
+import { DiscordParams } from '@commands/params'
 import { sendScrollEmbed } from '@discord/embed'
 
 type Definition = {
@@ -19,7 +20,7 @@ type Definition = {
   thumbsDown: number
 }
 
-export default new Command<discord.Message>({
+export default new Command<DiscordParams>({
   keyword: 'urbandictionary',
   description: 'get the modern definition of a word or expression',
   help: 'Usage: `{prefix}urbandictionary [expression]` - get the modern definition of a word or expression',
@@ -27,7 +28,7 @@ export default new Command<discord.Message>({
   options: {
     lastArgNumber: 1,
   },
-  callback: async ({ args, reply, env, raw }) => {
+  callback: async ({ args, reply, env }) => {
     if (args.length === 0) return reply(env.command.getHelp(env.handler))
 
     const word = args[0]
@@ -79,7 +80,7 @@ export default new Command<discord.Message>({
       else return -1
     })
 
-    return sendScrollEmbed(raw, list, (definition, index, active) => {
+    return sendScrollEmbed(env.message, list, (definition, index, active) => {
       const definitionEmbed = new discord.MessageEmbed()
         .setTitle(`${definition.word} (N°${index + 1}/${list.length})`)
         .setURL(definition.permalink)
