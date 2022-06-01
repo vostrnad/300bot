@@ -4,6 +4,7 @@ import { env as appEnv } from '@app/env'
 import { log } from '@app/utils/log'
 import { Command } from '@commands/CommandHandler'
 import { DiscordParams } from '@commands/params'
+import { validateArgumentRange } from '@commands/validators'
 
 if (appEnv.wordsServiceQuery === null) {
   log.warn('Words service not configured')
@@ -14,11 +15,15 @@ const activeChannels = new Set()
 export default new Command<DiscordParams>({
   keyword: 'hangman',
   description: 'play a game of hangman',
-  help: 'Usage: `{prefix}hangman` - play a game of hangman',
+  help: 'Usage:\n`{prefix}hangman` - play a game of hangman\n`{prefix}hangman custom` - play hangman with a custom word',
   callback: async ({ args, reply, env }) => {
-    if (args.length > 0) return
+    validateArgumentRange(args.length, 0, 1)
 
     const channel = env.message.channel
+
+    if (activeChannels.has(channel.id)) {
+      return reply('A game of hangman is already running in this channel.')
+    }
 
     const hangmanPics = [
       `  +---+
@@ -97,15 +102,65 @@ export default new Command<DiscordParams>({
       return wordEmbed
     }
 
-    if (appEnv.wordsServiceQuery === null) {
-      return reply('The words service is not configured.')
+    let word: string
+
+    if (args[0] === 'custom') {
+      const dmChannel = await env.message.author.createDM()
+
+      const getWordFromDm = async (): Promise<string> => {
+        await dmChannel.send('What word do you choose?')
+
+        let dmWord: string | undefined
+
+        while (!dmWord) {
+          const dmReplyMessage = (
+            await dmChannel.awaitMessages(() => true, { max: 1 })
+          ).first()
+          const dmReply = dmReplyMessage?.content
+
+          if (!dmReply) {
+            await dmChannel.send('Something went wrong. Please try again.')
+            continue
+          }
+
+          if (dmReply.includes(' ')) {
+            await dmChannel.send(
+              'The word cannot contain any spaces. Please try again.',
+            )
+            continue
+          }
+
+          if (!/^[a-z]+$/i.test(dmReply)) {
+            await dmChannel.send(
+              'The word contains invalid characters. Please try again.',
+            )
+            continue
+          }
+
+          dmWord = dmReply
+        }
+
+        return dmWord
+      }
+
+      word = await getWordFromDm()
+
+      if (activeChannels.has(channel.id)) {
+        await dmChannel.send(
+          'A game of hangman is already running in the channel. Please try again later.',
+        )
+        return
+      }
+
+      await dmChannel.send('Your word has been registered.')
+    } else {
+      if (appEnv.wordsServiceQuery === null) {
+        return reply('The words service is not configured.')
+      }
+
+      word = await got(appEnv.wordsServiceQuery).json()
     }
 
-    if (activeChannels.has(channel.id)) {
-      return reply('A game of hangman is already running in this channel.')
-    }
-
-    const word: string = await got(appEnv.wordsServiceQuery).json()
     const wordLowercase = word.toLowerCase()
 
     activeChannels.add(channel.id)
