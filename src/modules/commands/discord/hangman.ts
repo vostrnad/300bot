@@ -74,28 +74,27 @@ export default new Command<DiscordParams>({
     ]
 
     const genHangmanEmbed = (
-      wordDisplay: string,
-      guesses: string,
+      word: string | string[],
+      guesses: string[],
       tries: number,
     ): discord.MessageEmbed => {
+      const wordString = typeof word === 'string' ? word : word.join('')
       const wordEmbed = new discord.MessageEmbed()
         .setColor('#647CC4')
         .setTitle(`Hangman game`)
-        .addField('Word', wordDisplay)
+        .addField('Word', wordString.toUpperCase())
         .setFooter('Interactive')
         .setTimestamp()
 
-      if (guesses !== '') wordEmbed.addField('Guesses', guesses)
-      else wordEmbed.addField('Guesses', 'No guesses yet')
+      if (guesses.length > 0) {
+        wordEmbed.addField('Guesses', guesses.join('').toUpperCase())
+      } else {
+        wordEmbed.addField('Guesses', 'No guesses yet')
+      }
 
       wordEmbed.addField('Hanging Bru', '`' + hangmanPics[tries] + '`')
 
       return wordEmbed
-    }
-
-    const setCharAt = (str: string, index: number, chr: string) => {
-      if (index > str.length - 1) return str
-      return str.slice(0, index) + chr + str.slice(index + 1)
     }
 
     if (appEnv.wordsServiceQuery === null) {
@@ -107,16 +106,18 @@ export default new Command<DiscordParams>({
     }
 
     const word: string = await got(appEnv.wordsServiceQuery).json()
+    const wordLowercase = word.toLowerCase()
 
     activeChannels.add(channel.id)
 
-    let guesses = ''
     let tries = 0
     let lettersDiscovered = 0
+    const guesses: string[] = []
+    const wholeWordGuesses = new Set<string>()
 
     let won = false
 
-    let wordDisplay = '🔵'.repeat(word.length)
+    const wordDisplay = Array<string>(word.length).fill('🔵')
 
     let hangmanEmbed = genHangmanEmbed(wordDisplay, guesses, tries)
     const embedMessage = await channel.send({
@@ -132,84 +133,94 @@ export default new Command<DiscordParams>({
 
     messageCollector.on('collect', (m: discord.Message) => {
       void (async () => {
-        let addAttempt = true
-        let deleteMsg = true
-
-        // If letter hasn't been guessed yet, add it to the guessed list
-        if (
-          !guesses.includes(m.content.toUpperCase()) &&
-          m.content.length === 1
-        ) {
-          guesses += m.content.toUpperCase()
+        if (won || tries >= hangmanPics.length - 1) {
+          return
         }
 
-        // If it's a right guess, refresh the word display
-        if (
-          m.content.length === 1 &&
-          word.toLowerCase().includes(m.content.toLowerCase())
-        ) {
-          addAttempt = false
-          for (let k = 0; k < word.length; k++) {
-            if (word.charAt(k).toLowerCase() === m.content.toLowerCase()) {
-              lettersDiscovered += 1
-              wordDisplay = setCharAt(
-                wordDisplay,
-                k * 2,
-                m.content.toUpperCase(),
-              )
-            }
-          }
-        }
+        let deleteMessage = false
+        let updateEmbed = false
 
+        const guess = m.content.toLowerCase()
+
+        // Check single letter guess
         if (
-          lettersDiscovered === word.length ||
-          m.content.toLowerCase() === word.toLowerCase()
+          guess.length === 1 &&
+          (/[a-z]/.test(guess) || wordLowercase.includes(guess))
         ) {
-          addAttempt = false
-          won = true
-          wordDisplay = word
-        } else {
-          if (word.length === m.content.length) {
-            for (let k = 0; k < word.length; k++) {
-              if (
-                guesses.includes(word.charAt(k).toUpperCase()) &&
-                m.content.charAt(k).toLowerCase() !==
-                  word.charAt(k).toLowerCase()
-              ) {
-                addAttempt = false
-                deleteMsg = false
+          deleteMessage = true
+
+          if (!guesses.includes(guess)) {
+            guesses.push(guess)
+            updateEmbed = true
+
+            if (wordLowercase.includes(guess)) {
+              for (let i = 0; i < word.length; i++) {
+                if (wordLowercase.charAt(i) === guess) {
+                  lettersDiscovered += 1
+                  wordDisplay[i] = guess
+                }
               }
+              if (lettersDiscovered >= word.length) {
+                won = true
+              }
+            } else {
+              tries += 1
             }
           }
         }
 
-        if (addAttempt) tries += 1
+        // Check whole word guesses
+        if (guess.length === word.length && !wholeWordGuesses.has(guess)) {
+          // Check if the word fits the currently available letters
+          for (let i = 0; i < word.length; i++) {
+            const guessChar = guess.charAt(i)
+            const wordChar = wordLowercase.charAt(i)
+            if (
+              guessChar !== wordChar &&
+              (guesses.includes(guessChar) || guesses.includes(wordChar))
+            ) {
+              return
+            }
+          }
 
-        if (deleteMsg) void m.delete()
+          wholeWordGuesses.add(guess)
+          updateEmbed = true
+
+          if (wordLowercase === guess) {
+            won = true
+            await m.react('🎉')
+          } else {
+            tries += 1
+            await m.react('❌')
+          }
+        }
+
+        const authorName = m.member?.displayName || m.author.username
 
         if (tries >= hangmanPics.length - 1) {
           messageCollector.stop()
           hangmanEmbed = genHangmanEmbed(word, guesses, tries)
           hangmanEmbed
-            .setFooter(`Game lost by ${m.author.username}`)
+            .setFooter(`Game lost by ${authorName}`)
             .setColor('#1D2439')
             .setTimestamp()
           await embedMessage.edit({ embed: hangmanEmbed })
           activeChannels.delete(channel.id)
-        } else {
+        } else if (won) {
+          messageCollector.stop()
+          hangmanEmbed = genHangmanEmbed(word, guesses, tries)
+          hangmanEmbed
+            .setFooter(`Game won by ${authorName}`)
+            .setColor('#1D2439')
+            .setTimestamp()
+          await embedMessage.edit({ embed: hangmanEmbed })
+          activeChannels.delete(channel.id)
+        } else if (updateEmbed) {
           hangmanEmbed = genHangmanEmbed(wordDisplay, guesses, tries)
           await embedMessage.edit({ embed: hangmanEmbed })
         }
 
-        if (won) {
-          messageCollector.stop()
-          hangmanEmbed
-            .setFooter(`Game won by ${m.author.username}`)
-            .setColor('#1D2439')
-            .setTimestamp()
-          await embedMessage.edit({ embed: hangmanEmbed })
-          activeChannels.delete(channel.id)
-        }
+        if (deleteMessage) await m.delete()
       })()
     })
   },
