@@ -60,6 +60,17 @@ export const formatWithEmojis = (
   }
 }
 
+export const addReaction = async (
+  message: discord.Message,
+  emoji: discord.EmojiIdentifierResolvable,
+): Promise<void> => {
+  try {
+    await message.react(emoji)
+  } catch (error) {
+    log.error('Error reacting to message:', error)
+  }
+}
+
 export const removeReaction = async (
   reaction: discord.MessageReaction,
   user: discord.User,
