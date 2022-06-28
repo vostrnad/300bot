@@ -5,6 +5,7 @@ import { log } from '@app/utils/log'
 import { Command } from '@commands/CommandHandler'
 import { DiscordParams } from '@commands/params'
 import { validateArgumentRange } from '@commands/validators'
+import { addReaction } from '@discord/utils'
 
 if (appEnv.wordsServiceQuery === null) {
   log.warn('Words service not configured')
@@ -243,10 +244,10 @@ export default new Command<DiscordParams>({
 
           if (wordLowercase === guess) {
             won = true
-            await m.react('🎉')
+            await addReaction(m, '🎉')
           } else {
             tries += 1
-            await m.react('❌')
+            await addReaction(m, '❌')
           }
         }
 
@@ -275,7 +276,13 @@ export default new Command<DiscordParams>({
           await embedMessage.edit({ embed: hangmanEmbed })
         }
 
-        if (deleteMessage) await m.delete()
+        if (deleteMessage && m.channel instanceof discord.TextChannel) {
+          try {
+            await m.delete()
+          } catch (e) {
+            log.error('Error deleting message:', e)
+          }
+        }
       })()
     })
   },
