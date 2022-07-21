@@ -7,7 +7,7 @@ import { CommandHandler, CommandMessage } from '@commands/CommandHandler'
 import { commands } from '@commands/index'
 import { DiscordParams } from '@commands/params'
 import { bruCharactersDatabase } from '@database/brucharacters'
-import { guildDatabase } from '@database/guilds'
+import { guildDatabase, upsertGuild } from '@database/guilds'
 import { client } from '@discord/client'
 import {
   checkNewMemberDeadRole,
@@ -191,7 +191,7 @@ client.on('message', (message: discord.Message) => {
         outfitId: localSettings?.outfitId,
       },
       updateSettings: async (key, value) =>
-        guildDatabase.update(guildOrPrivateChannelId, { [key]: value }),
+        upsertGuild(guildOrPrivateChannelId, { [key]: value }),
     },
   }
 

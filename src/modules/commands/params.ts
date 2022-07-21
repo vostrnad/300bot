@@ -10,7 +10,7 @@ export type SettingsParams = {
   updateSettings: <K extends keyof Settings>(
     key: K,
     value: Settings[K],
-  ) => Promise<void>
+  ) => void | Promise<void>
 }
 
 export type DiscordParams = SettingsParams & {
