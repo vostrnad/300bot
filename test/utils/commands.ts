@@ -24,7 +24,11 @@ export const getCommandRunner = (
         author: {
           id: 'testrunner',
           displayName: 'Test Runner',
-          admin: true,
+          permissions: {
+            botAdmin: true,
+            botManager: true,
+            localAdmin: true,
+          },
           mention: '@testrunner',
         },
         reply: (replyText) => {

@@ -18,8 +18,14 @@ interface MessageAuthor {
   displayName: string
   /** String that can be used to mention user. */
   mention: string
-  /** Determines if user has admin/moderator permissions. */
-  admin: boolean
+  permissions: {
+    /** Determines if user can change all settings. */
+    botAdmin: boolean
+    /** Determines if user can change global bot settings. */
+    botManager: boolean
+    /** Determines if user has admin rights to their guild/channel. */
+    localAdmin: boolean
+  }
 }
 
 export interface CommandCallbackData<T = unknown> {

@@ -14,8 +14,8 @@ export default new Command<SettingsParams>({
     }
     validateArgumentNumber(args.length, 1)
 
-    if (!author.admin) {
-      return reply('You are not an admin or a bot operator in this server.')
+    if (!author.permissions.localAdmin) {
+      return reply('You are not an admin in this server.')
     }
 
     const outfit = await censusApi.getOutfit({

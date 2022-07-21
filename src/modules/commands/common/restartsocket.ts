@@ -10,8 +10,8 @@ export default new Command({
   },
   callback: ({ args, author, reply }) => {
     if (args.length > 0) return
-    if (!author.admin) {
-      return reply('You are not an admin or a bot operator in this server.')
+    if (!author.permissions.botManager) {
+      return reply('This command can only be used by bot managers.')
     }
 
     streamingApi.restart()

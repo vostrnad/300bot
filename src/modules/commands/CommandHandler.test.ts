@@ -26,8 +26,12 @@ const dummyCommandMessage: CommandMessage = {
   author: {
     id: 'testrunner',
     displayName: 'Test Runner',
-    admin: true,
     mention: '@testrunner',
+    permissions: {
+      botAdmin: true,
+      botManager: true,
+      localAdmin: true,
+    },
   },
   reply: () => null,
   params: null,

@@ -22,7 +22,7 @@ export default new Command<DiscordParams>({
     if (!(channel instanceof discord.TextChannel)) {
       return reply('Error: This type of channel is not supported.')
     }
-    if (!author.admin) {
+    if (!author.permissions.localAdmin) {
       return reply('You are not an admin in this server.')
     }
     const deadRole = channel.guild.roles.cache.find(

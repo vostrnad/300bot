@@ -11,8 +11,8 @@ export default new Command<SettingsParams>({
       return reply(env.command.getHelp(env.handler))
     }
     validateArgumentNumber(args.length, 1)
-    if (!author.admin) {
-      return reply('You are not an admin or a bot operator in this server.')
+    if (!author.permissions.localAdmin) {
+      return reply('You are not an admin in this server.')
     }
 
     await env.updateSettings('prefix', args[0])
