@@ -5,7 +5,6 @@ import hangman from './hangman'
 import hasbrulefttheserver from './hasbrulefttheserver'
 import kill from './kill'
 import outfitscoreboard from './outfitscoreboard'
-import prefix from './prefix'
 import russianroulette from './russianroulette'
 import track from './track'
 import urbandictionary from './urbandictionary'
@@ -19,7 +18,6 @@ export const discordCommands = [
   hangman,
   kill,
   outfitscoreboard,
-  prefix,
   russianroulette,
   track,
   urbandictionary,

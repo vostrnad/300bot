@@ -13,6 +13,7 @@ import outfitstats from './outfitstats'
 import playersearch from './playersearch'
 import playerstats from './playerstats'
 import population from './population'
+import prefix from './prefix'
 import recentstats from './recentstats'
 import restartsocket from './restartsocket'
 import setoutfit from './setoutfit'
@@ -36,6 +37,7 @@ export const commonCommands = [
   playersearch,
   playerstats,
   population,
+  prefix,
   recentstats,
   restartsocket,
   setoutfit,

@@ -1,14 +1,25 @@
-import { Command, CommandHandler } from '@commands/CommandHandler'
-import { SettingsParams } from '@commands/params'
+import {
+  Command,
+  CommandHandler,
+  CommandMessage,
+} from '@commands/CommandHandler'
+import { Settings, SettingsParams } from '@commands/params'
 
-export const getCommandRunner = (command: Command<SettingsParams>) => {
-  return async (text: string): Promise<string> =>
-    new Promise((resolve) => {
+export const getCommandRunner = (
+  command: Command<SettingsParams>,
+): ((text: string) => Promise<string | null>) => {
+  const settings: Settings = {
+    prefix: '+',
+    outfitId: 'test-outfit-id',
+  }
+  return async (text) =>
+    new Promise((resolve, reject) => {
+      let replied = false
       const handler = new CommandHandler({
-        prefix: '+',
+        prefix: settings.prefix,
         commands: [command],
       })
-      const message = {
+      const message: CommandMessage<SettingsParams> = {
         text,
         author: {
           id: 'testrunner',
@@ -16,16 +27,27 @@ export const getCommandRunner = (command: Command<SettingsParams>) => {
           admin: true,
           mention: '@testrunner',
         },
-        reply: resolve,
+        reply: (replyText) => {
+          replied = true
+          resolve(replyText)
+        },
         params: {
-          settings: {
-            prefix: '+',
-            outfitId: 'test-outfit-id',
+          settings,
+          updateSettings: (key, value) => {
+            settings[key] = value
           },
-          // eslint-disable-next-line @typescript-eslint/no-empty-function
-          updateSettings: async () => {},
         },
       }
-      void handler.process(message)
+      void (async () => {
+        try {
+          await handler.process(message)
+          // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+          if (!replied) {
+            resolve(null)
+          }
+        } catch (e) {
+          reject(e)
+        }
+      })()
     })
 }
