@@ -172,6 +172,12 @@ client.on('message', (message: discord.Message) => {
     commands,
   })
 
+  const isBotAdmin = message.author.id === constants.discord.userIds.alfav
+  const isBotManager = isBotAdmin || false
+  const isLocalAdmin =
+    message.member?.hasPermission(discord.Permissions.FLAGS.ADMINISTRATOR) ||
+    message.channel === message.author.dmChannel
+
   const commandMessage: CommandMessage<DiscordParams> = {
     text: message.content,
     reply,
@@ -179,10 +185,11 @@ client.on('message', (message: discord.Message) => {
       id: message.author.id,
       displayName: message.member?.displayName ?? message.author.username,
       mention: `<@${message.author.id}>`,
-      admin:
-        message.member?.hasPermission(
-          discord.Permissions.FLAGS.ADMINISTRATOR,
-        ) || false,
+      permissions: {
+        botAdmin: isBotAdmin,
+        botManager: isBotManager,
+        localAdmin: isLocalAdmin,
+      },
     },
     params: {
       message,

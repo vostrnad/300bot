@@ -18,8 +18,8 @@ export default new Command({
 
     switch (args[0]) {
       case 'add': {
-        if (!author.admin) {
-          return reply('You are not an admin or a bot operator in this server.')
+        if (!author.permissions.botManager) {
+          return reply('This command can only be used by bot managers.')
         }
         validateArgumentNumber(args.length, 2)
         validatePlayerName(args[1])
@@ -45,8 +45,8 @@ export default new Command({
         }
       }
       case 'remove': {
-        if (!author.admin) {
-          return reply('You are not an admin or a bot operator in this server.')
+        if (!author.permissions.botManager) {
+          return reply('This command can only be used by bot managers.')
         }
         validateArgumentNumber(args.length, 2)
         validatePlayerName(args[1])

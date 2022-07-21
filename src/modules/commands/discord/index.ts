@@ -4,6 +4,7 @@ import cooldown from './cooldown'
 import hangman from './hangman'
 import hasbrulefttheserver from './hasbrulefttheserver'
 import kill from './kill'
+import managers from './managers'
 import outfitscoreboard from './outfitscoreboard'
 import russianroulette from './russianroulette'
 import track from './track'
@@ -17,6 +18,7 @@ export const discordCommands = [
   cooldown,
   hangman,
   kill,
+  managers,
   outfitscoreboard,
   russianroulette,
   track,

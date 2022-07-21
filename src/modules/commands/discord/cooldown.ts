@@ -8,8 +8,8 @@ export default new Command<DiscordParams>({
   description: 'close a channel temporarily',
   help: 'Usage: `{prefix}cooldown` - temporarily disables sending messages in the channel',
   callback: async ({ author, reply, env }) => {
-    if (!author.admin) {
-      return reply('You are not an admin or a bot operator in this server.')
+    if (!author.permissions.localAdmin) {
+      return reply('You are not an admin in this server.')
     }
 
     const channel = env.message.channel
