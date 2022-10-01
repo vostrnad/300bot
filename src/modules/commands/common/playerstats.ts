@@ -46,7 +46,9 @@ export default new Command({
         character.outfit
           ? `${
               character.outfit.isLeader ? 'Leader' : 'Member'
-            } of the outfit "${character.outfit.name}" since ${getShortDate(
+            } of the outfit "[${character.outfit.alias}] ${
+              character.outfit.name
+            }" since ${getShortDate(
               new Date(Number(character.outfit.memberSince) * 1000),
             )}.\n`
           : ''
