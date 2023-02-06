@@ -102,7 +102,7 @@ describe('isbruonline', () => {
     const requestData = mockCensusApi({
       character_list: [
         {
-          character_id: '5428631729584582401',
+          character_id: 'testlist',
           name: { first: 'MiroitoVS', first_lower: 'miroitovs' },
           faction_id: '1',
           head_id: '5',
@@ -142,7 +142,7 @@ describe('isbruonline', () => {
           },
         },
         {
-          character_id: '5429210842260871009',
+          character_id: 'testlist',
           name: { first: 'Number5Johnny', first_lower: 'number5johnny' },
           faction_id: '4',
           head_id: '5',
