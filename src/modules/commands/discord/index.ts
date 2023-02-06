@@ -3,6 +3,7 @@ import alts from './alts'
 import cooldown from './cooldown'
 import hangman from './hangman'
 import hasbrulefttheserver from './hasbrulefttheserver'
+import isbruonline from './isbruonline'
 import kill from './kill'
 import managers from './managers'
 import outfitscoreboard from './outfitscoreboard'
@@ -26,4 +27,5 @@ export const discordCommands = [
   weaponstats,
   whotokick,
   hasbrulefttheserver,
+  isbruonline,
 ]

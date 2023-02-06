@@ -2,27 +2,33 @@
 
 exports[`isbruonline should reverse the reply when isbruoffline alias is used 1`] = `
 Object {
-  "pathname": "/s:test/get/ps2:v2/characters_online_status",
+  "pathname": "/s:test/get/ps2:v2/character",
   "searchParams": Object {
-    "character_id": "5429261574101249937",
+    "c:join": "outfit_member^show:outfit_id^inject_at:outfit_member(outfit^inject_at:outfit^show:leader_character_id(character^on:leader_character_id^to:character_id^show:faction_id^inject_at:leader))",
+    "c:resolve": "online_status",
+    "character_id": "testlist",
   },
 }
 `;
 
 exports[`isbruonline should say Bru is offline 1`] = `
 Object {
-  "pathname": "/s:test/get/ps2:v2/characters_online_status",
+  "pathname": "/s:test/get/ps2:v2/character",
   "searchParams": Object {
-    "character_id": "5429261574101249937",
+    "c:join": "outfit_member^show:outfit_id^inject_at:outfit_member(outfit^inject_at:outfit^show:leader_character_id(character^on:leader_character_id^to:character_id^show:faction_id^inject_at:leader))",
+    "c:resolve": "online_status",
+    "character_id": "testlist",
   },
 }
 `;
 
-exports[`isbruonline should say Bru is online 1`] = `
+exports[`isbruonline should say Bru is online and list the character(s) he is online with 1`] = `
 Object {
-  "pathname": "/s:test/get/ps2:v2/characters_online_status",
+  "pathname": "/s:test/get/ps2:v2/character",
   "searchParams": Object {
-    "character_id": "5429261574101249937",
+    "c:join": "outfit_member^show:outfit_id^inject_at:outfit_member(outfit^inject_at:outfit^show:leader_character_id(character^on:leader_character_id^to:character_id^show:faction_id^inject_at:leader))",
+    "c:resolve": "online_status",
+    "character_id": "testlist",
   },
 }
 `;

@@ -9,6 +9,7 @@ import { DiscordParams } from '@commands/params'
 import { bruCharactersDatabase } from '@database/brucharacters'
 import { guildDatabase, upsertGuild } from '@database/guilds'
 import { client } from '@discord/client'
+import { factionEmojis } from '@discord/resources'
 import {
   checkNewMemberDeadRole,
   scheduleRevivesOnStartup,
@@ -42,14 +43,6 @@ client.on('ready', () => {
   log.info('Discord bot ready')
 
   streamingApi.init()
-
-  const factionEmojis = [
-    'Unknown Faction',
-    '{emoji:faction_logo_vs|VS}',
-    '{emoji:faction_logo_nc|NC}',
-    '{emoji:faction_logo_tr|TR}',
-    '{emoji:faction_logo_ns|NS}',
-  ]
 
   streamingApi.on('playerLogin', async ({ characterId }) => {
     if (bruCharactersDatabase.get(characterId)) {

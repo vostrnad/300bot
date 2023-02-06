@@ -6,7 +6,6 @@ import diceroll from './diceroll'
 import directive from './directive'
 import hello from './hello'
 import help from './help'
-import isbruonline from './isbruonline'
 import math from './math'
 import membercount from './membercount'
 import outfitstats from './outfitstats'
@@ -30,7 +29,6 @@ export const commonCommands = [
   directive,
   hello,
   help,
-  isbruonline,
   math,
   membercount,
   outfitstats,
