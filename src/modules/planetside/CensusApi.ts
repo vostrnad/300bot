@@ -19,6 +19,7 @@ import {
   CharacterResolvedStatHistory,
   CharacterStatHistoryStripped,
   CharacterWithOutfitWithLeader,
+  CharacterWithOutfitWithLeaderAndOnlineStatus,
   CharactersItem,
   CharactersOnlineStatus,
   DirectiveTreeCategory,
@@ -372,7 +373,7 @@ class CensusApi {
     const list = (await censusApi.getList('character', query, {
       join: 'outfit_member^show:outfit_id^inject_at:outfit_member(outfit^inject_at:outfit^show:leader_character_id(character^on:leader_character_id^to:character_id^show:faction_id^inject_at:leader))',
       resolve: 'online_status',
-    })) as CharacterWithOutfitWithLeader[]
+    })) as CharacterWithOutfitWithLeaderAndOnlineStatus[]
     if (list.length === 0) return null
 
     return list
