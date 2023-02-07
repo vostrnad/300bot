@@ -6,7 +6,10 @@ Object {
   "searchParams": Object {
     "c:join": "outfit_member^show:outfit_id^inject_at:outfit_member(outfit^inject_at:outfit^show:leader_character_id(character^on:leader_character_id^to:character_id^show:faction_id^inject_at:leader))",
     "c:resolve": "online_status",
-    "character_id": "testlist",
+    "character_id": Array [
+      "miroitovs",
+      "number5johnny",
+    ],
   },
 }
 `;
@@ -17,7 +20,10 @@ Object {
   "searchParams": Object {
     "c:join": "outfit_member^show:outfit_id^inject_at:outfit_member(outfit^inject_at:outfit^show:leader_character_id(character^on:leader_character_id^to:character_id^show:faction_id^inject_at:leader))",
     "c:resolve": "online_status",
-    "character_id": "testlist",
+    "character_id": Array [
+      "miroitovs",
+      "number5johnny",
+    ],
   },
 }
 `;
@@ -28,7 +34,10 @@ Object {
   "searchParams": Object {
     "c:join": "outfit_member^show:outfit_id^inject_at:outfit_member(outfit^inject_at:outfit^show:leader_character_id(character^on:leader_character_id^to:character_id^show:faction_id^inject_at:leader))",
     "c:resolve": "online_status",
-    "character_id": "testlist",
+    "character_id": Array [
+      "miroitovs",
+      "number5johnny",
+    ],
   },
 }
 `;

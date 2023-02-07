@@ -24,13 +24,13 @@ export const getDMChannel = async (
 }
 
 export const formatWithEmojis = (
-  channel: discord.Channel | null,
+  channel: discord.Channel,
   message: string,
 ): string => {
   // eslint-disable-next-line unicorn/no-unsafe-regex
   const emojiExpressionRegex = /{emoji:([^|}]*)(?:\|([^}]*))?}/g
 
-  if (channel && channel instanceof discord.TextChannel) {
+  if (channel instanceof discord.TextChannel) {
     return message.replace(
       emojiExpressionRegex,
       (_match, emojiName, fallbackText) => {

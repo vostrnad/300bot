@@ -233,15 +233,5 @@ export type CharacterWithOutfitWithLeader = Character & {
   }
 }
 
-export type CharacterWithOutfitWithLeaderAndOnlineStatus = Character &
-  CharactersOnlineStatus & {
-    outfitMember?: {
-      outfitId: string
-      outfit: {
-        leaderCharacterId: string
-        leader: {
-          factionId: string
-        }
-      }
-    }
-  }
+export type CharacterWithOutfitWithLeaderAndOnlineStatus =
+  CharacterWithOutfitWithLeader & CharactersOnlineStatus

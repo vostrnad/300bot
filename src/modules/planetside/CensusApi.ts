@@ -367,7 +367,7 @@ class CensusApi {
     return character
   }
 
-  async getCharacterOutfitLeaderFactionAndOnlineStatus(
+  async getCharactersWithOutfitLeaderAndOnlineStatus(
     query: QueryObject<Character>,
   ) {
     const list = (await censusApi.getList('character', query, {

@@ -4,12 +4,12 @@ import { constants } from '@app/global/constants'
 import { log } from '@app/utils/log'
 import { getUTCShort } from '@app/utils/time'
 import { CommandHandler, CommandMessage } from '@commands/CommandHandler'
+import { formatChacarcterWithFaction } from '@commands/formatting'
 import { commands } from '@commands/index'
 import { DiscordParams } from '@commands/params'
 import { bruCharactersDatabase } from '@database/brucharacters'
 import { guildDatabase, upsertGuild } from '@database/guilds'
 import { client } from '@discord/client'
-import { factionEmojis } from '@discord/resources'
 import {
   checkNewMemberDeadRole,
   scheduleRevivesOnStartup,
@@ -61,17 +61,7 @@ client.on('ready', () => {
             client,
             constants.discord.channelIds.brutracker,
           ) as discord.Channel,
-          `Bru is online as **${character.name.first}** ${
-            factionEmojis[Number(character.factionId)] ?? factionEmojis[0]
-          }${
-            character.factionId === '4' && character.outfitMember
-              ? `${
-                  factionEmojis[
-                    Number(character.outfitMember.outfit.leader.factionId)
-                  ]
-                }`
-              : ''
-          }!`,
+          `Bru is online as ${formatChacarcterWithFaction(character)}!`,
         ),
       )
     }
@@ -90,9 +80,9 @@ client.on('ready', () => {
             client,
             constants.discord.channelIds.brutracker,
           ) as discord.Channel,
-          `Bru has just logged off as **${character.name.first}** ${
-            factionEmojis[Number(character.factionId)] ?? factionEmojis[0]
-          }.`,
+          `Bru has just logged off as ${formatChacarcterWithFaction(
+            character,
+          )}.`,
         ),
       )
     }

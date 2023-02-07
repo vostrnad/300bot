@@ -1,4 +1,3 @@
-import discord from 'discord.js'
 import {
   Command,
   CommandHandler,
@@ -6,12 +5,8 @@ import {
 } from '@commands/CommandHandler'
 import { Settings, SettingsParams } from '@commands/params'
 
-export type TestDiscordParams = SettingsParams & {
-  message: discord.Message | null
-}
-
-export const getCommandRunner = <T extends TestDiscordParams | SettingsParams>(
-  command: Command<T>,
+export const getCommandRunner = (
+  command: Command<SettingsParams>,
 ): ((text: string) => Promise<string | null>) => {
   const settings: Settings = {
     prefix: '+',
@@ -24,16 +19,7 @@ export const getCommandRunner = <T extends TestDiscordParams | SettingsParams>(
         prefix: settings.prefix,
         commands: [command],
       })
-
-      const params: TestDiscordParams = {
-        settings,
-        updateSettings: (key, value) => {
-          settings[key] = value
-        },
-        message: null,
-      }
-
-      const message: CommandMessage<T> = {
+      const message: CommandMessage<SettingsParams> = {
         text,
         author: {
           id: 'testrunner',
@@ -49,7 +35,12 @@ export const getCommandRunner = <T extends TestDiscordParams | SettingsParams>(
           replied = true
           resolve(replyText)
         },
-        params: params as T, // This only works because we're lucky enough that DiscordParams includes SettingsParams
+        params: {
+          settings,
+          updateSettings: (key, value) => {
+            settings[key] = value
+          },
+        },
       }
       void (async () => {
         try {
