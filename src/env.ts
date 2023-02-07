@@ -10,7 +10,7 @@ if (process.env.NODE_ENV === 'test') {
 
 const databaseDirPath =
   process.env.NODE_ENV === 'test'
-    ? resolve(__dirname, '../.data/test')
+    ? resolve(__dirname, `../.data/test-${process.env.JEST_WORKER_ID || '0'}`)
     : resolve(__dirname, '../.data')
 
 export const env = {

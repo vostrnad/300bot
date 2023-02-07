@@ -4,6 +4,7 @@ import { constants } from '@app/global/constants'
 import { log } from '@app/utils/log'
 import { getUTCShort } from '@app/utils/time'
 import { CommandHandler, CommandMessage } from '@commands/CommandHandler'
+import { formatChacarcterWithFaction } from '@commands/formatting'
 import { commands } from '@commands/index'
 import { DiscordParams } from '@commands/params'
 import { bruCharactersDatabase } from '@database/brucharacters'
@@ -43,14 +44,6 @@ client.on('ready', () => {
 
   streamingApi.init()
 
-  const factionEmojis = [
-    'Unknown Faction',
-    '{emoji:faction_logo_vs|VS}',
-    '{emoji:faction_logo_nc|NC}',
-    '{emoji:faction_logo_tr|TR}',
-    '{emoji:faction_logo_ns|NS}',
-  ]
-
   streamingApi.on('playerLogin', async ({ characterId }) => {
     if (bruCharactersDatabase.get(characterId)) {
       const character = await censusApi.getCharacterOutfitLeaderFaction({
@@ -68,17 +61,7 @@ client.on('ready', () => {
             client,
             constants.discord.channelIds.brutracker,
           ) as discord.Channel,
-          `Bru is online as **${character.name.first}** ${
-            factionEmojis[Number(character.factionId)] ?? factionEmojis[0]
-          }${
-            character.factionId === '4' && character.outfitMember
-              ? `${
-                  factionEmojis[
-                    Number(character.outfitMember.outfit.leader.factionId)
-                  ]
-                }`
-              : ''
-          }!`,
+          `Bru is online as ${formatChacarcterWithFaction(character)}!`,
         ),
       )
     }
@@ -97,9 +80,9 @@ client.on('ready', () => {
             client,
             constants.discord.channelIds.brutracker,
           ) as discord.Channel,
-          `Bru has just logged off as **${character.name.first}** ${
-            factionEmojis[Number(character.factionId)] ?? factionEmojis[0]
-          }.`,
+          `Bru has just logged off as ${formatChacarcterWithFaction(
+            character,
+          )}.`,
         ),
       )
     }

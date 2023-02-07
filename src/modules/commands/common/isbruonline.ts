@@ -1,5 +1,7 @@
-import { constants } from '@app/global/constants'
+import { sentence } from '@app/utils/language'
 import { Command } from '@commands/CommandHandler'
+import { formatChacarcterWithFaction } from '@commands/formatting'
+import { bruCharactersDatabase } from '@database/brucharacters'
 import { censusApi } from '@planetside/CensusApi'
 
 export default new Command({
@@ -10,17 +12,32 @@ export default new Command({
   callback: async ({ args, alias, reply }) => {
     if (args.length > 0) return
 
-    const status = await censusApi.getCharactersOnlineStatus(
-      constants.planetside.characterIds.bru,
-    )
+    const statuses =
+      await censusApi.getCharactersWithOutfitLeaderAndOnlineStatus({
+        characterId: bruCharactersDatabase.keys,
+      })
 
-    if (status === null) {
-      return reply('Bru has deleted this character.')
+    if (!statuses) {
+      return reply('Bru has no existing characters.')
     }
+
+    const formattedCharacters = statuses
+      .filter((character) => character.onlineStatus !== '0')
+      .map(formatChacarcterWithFaction)
+
+    const online = formattedCharacters.length > 0
     if (alias === 'isbruonline') {
-      return reply(status ? 'Yes, Bru is online!' : 'No, Bru is offline.')
+      return reply(
+        online
+          ? `Yes, Bru is online as ${sentence(formattedCharacters)}!`
+          : 'No, Bru is offline.',
+      )
     } else {
-      return reply(status ? 'No, Bru is online.' : 'Yes, Bru is offline!')
+      return reply(
+        online
+          ? `No, Bru is online as ${sentence(formattedCharacters)}.`
+          : 'Yes, Bru is offline!',
+      )
     }
   },
 })

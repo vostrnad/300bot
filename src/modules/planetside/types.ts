@@ -232,3 +232,6 @@ export type CharacterWithOutfitWithLeader = Character & {
     }
   }
 }
+
+export type CharacterWithOutfitWithLeaderAndOnlineStatus =
+  CharacterWithOutfitWithLeader & CharactersOnlineStatus
