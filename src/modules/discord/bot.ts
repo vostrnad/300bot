@@ -68,7 +68,9 @@ client.on('ready', () => {
   })
   streamingApi.on('playerLogout', async ({ characterId }) => {
     if (bruCharactersDatabase.get(characterId)) {
-      const character = await censusApi.getCharacter({ characterId })
+      const character = await censusApi.getCharacterOutfitLeaderFaction({
+        characterId,
+      })
       if (!character) {
         return
       }
