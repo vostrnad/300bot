@@ -62,3 +62,28 @@ export const getAlertState = (
 ): 'started' | 'ended' | null => {
   return alertStates[metagameEventStateId] || null
 }
+
+const servers = {
+  '1': 'Connery',
+  '10': 'Miller',
+  '13': 'Cobalt',
+  '17': 'Emerald',
+  '19': 'Jaeger',
+  '24': 'Apex',
+  '25': 'Briggs',
+  '40': 'SolTech',
+} as const
+
+export const getServerByName = (
+  input: string,
+): [id: number, name: string] | null => {
+  input = input.toLowerCase()
+
+  for (const [id, name] of Object.entries(servers)) {
+    if (name.toLowerCase() === input) {
+      return [Number(id), name]
+    }
+  }
+
+  return null
+}
