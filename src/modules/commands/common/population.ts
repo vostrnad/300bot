@@ -2,9 +2,11 @@ import camelcaseKeys from 'camelcase-keys'
 import got from 'got'
 import { constants } from '@app/global/constants'
 import { divide } from '@app/utils/math'
+import { isDefined } from '@app/validators'
 import { isRecord } from '@app/validators/object'
 import { Command } from '@commands/CommandHandler'
 import { validateArgumentRange } from '@commands/validators'
+import { getServerByName } from '@planetside/resources'
 
 type Result = {
   worldId: number
@@ -19,18 +21,42 @@ type Result = {
 export default new Command({
   keyword: 'population',
   description: 'display the current population',
-  help: 'Usage:\n`{prefix}population` - displays the current population\n`{prefix}population numbers` - diplays the current population with numbers',
+  help: 'Usage:\n`{prefix}population` - displays the current population\n`{prefix}population <server>` - diplays the current population in a specific server\n`{prefix}population numbers` - diplays the current population with numbers',
   alias: ['pop'],
   callback: async ({ args, reply, env }) => {
-    validateArgumentRange(args.length, 0, 1)
+    validateArgumentRange(args.length, 0, 2)
 
-    if (args.length === 1 && args[0] !== 'numbers') {
-      return reply(env.command.getHelp(env.handler))
+    let worldId = constants.planetside.worldIds.miller
+    let worldName = 'Miller'
+    let numbersBool = false
+
+    if (args.length > 0) {
+      let argsProcessed = 0
+
+      if (args.includes('numbers')) {
+        numbersBool = true
+        argsProcessed++
+      }
+
+      const serverArgs = args
+        .map((arg) => getServerByName(arg))
+        .filter(isDefined)
+
+      if (serverArgs.length > 0) {
+        if (serverArgs.length > 1) {
+          return reply('Error: Cannot search multiple servers at once.')
+        }
+
+        ;[worldId, worldName] = serverArgs[0]
+        argsProcessed++
+      }
+
+      if (argsProcessed !== args.length) {
+        return reply(env.command.getHelp(env.handler))
+      }
     }
 
-    const numbersBool = args.length === 1 && args[0] === 'numbers'
-
-    const url = `https://ps2.fisu.pw/api/population/?world=${constants.planetside.worldIds.miller}`
+    const url = `https://ps2.fisu.pw/api/population/?world=${worldId}`
 
     const population = (await got(url)
       .json()
@@ -53,7 +79,7 @@ export default new Command({
     const totalPop =
       population.tr + population.nc + population.vs + population.ns
 
-    let message = `**Miller population:** ${totalPop}\n`
+    let message = `**${worldName} population:** ${totalPop}\n`
     message += [
       `{emoji:faction_logo_tr| TR} ${
         numbersBool
