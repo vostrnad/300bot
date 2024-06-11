@@ -120,13 +120,17 @@ const events: Record<string, [string, string]> = {
 const separationTree = new SeparationTree(constants.planetside.characterIds.bru)
 
 streamingApi.init()
-streamingApi.on('gainExperience', ({ characterId, otherId, experienceId }) => {
-  if (!(experienceId in events)) return
-  if (characterId.length !== otherId.length) return
-  if (characterId === otherId) return
+streamingApi.on(
+  'gainExperience',
+  ({ worldId, characterId, otherId, experienceId }) => {
+    if (Number(worldId) !== constants.planetside.worldIds.miller) return
+    if (!(experienceId in events)) return
+    if (characterId.length !== otherId.length) return
+    if (characterId === otherId) return
 
-  separationTree.add(characterId, otherId, experienceId)
-})
+    separationTree.add(characterId, otherId, experienceId)
+  },
+)
 streamingApi.on('playerLogout', ({ characterId }) => {
   if (characterId === constants.planetside.characterIds.bru) {
     separationTree.clear()

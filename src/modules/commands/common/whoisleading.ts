@@ -1,3 +1,4 @@
+import { constants } from '@app/global/constants'
 import { TimeoutSet } from '@app/utils/TimeoutSet'
 import { sentence } from '@app/utils/language'
 import { Command } from '@commands/CommandHandler'
@@ -10,15 +11,20 @@ const squadLeaders = new TimeoutSet(1800 * 1000)
 const platoonLeaders = new TimeoutSet(1800 * 1000)
 
 streamingApi.init()
-streamingApi.on('achievementEarned', ({ characterId, achievementId }) => {
-  if (achievementId === '90039' || achievementId === '90040') {
-    squadLeaders.add(characterId)
-  }
-  if (achievementId === '90041' || achievementId === '90042') {
-    platoonLeaders.add(characterId)
-  }
-})
-streamingApi.on('playerLogout', ({ characterId }) => {
+streamingApi.on(
+  'achievementEarned',
+  ({ worldId, characterId, achievementId }) => {
+    if (Number(worldId) !== constants.planetside.worldIds.miller) return
+    if (achievementId === '90039' || achievementId === '90040') {
+      squadLeaders.add(characterId)
+    }
+    if (achievementId === '90041' || achievementId === '90042') {
+      platoonLeaders.add(characterId)
+    }
+  },
+)
+streamingApi.on('playerLogout', ({ worldId, characterId }) => {
+  if (Number(worldId) !== constants.planetside.worldIds.miller) return
   squadLeaders.remove(characterId)
   platoonLeaders.remove(characterId)
 })

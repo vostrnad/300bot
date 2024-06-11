@@ -9,27 +9,34 @@ import { isRecord } from '@app/validators/object'
 
 type EventMap = {
   playerLogin: {
+    worldId: string
     characterId: string
   }
   playerLogout: {
+    worldId: string
     characterId: string
   }
   achievementEarned: {
+    worldId: string
     characterId: string
     achievementId: string
   }
   gainExperience: {
+    worldId: string
     characterId: string
     otherId: string
     experienceId: string
   }
   continentLock: {
+    worldId: string
     zoneId: string
   }
   continentUnlock: {
+    worldId: string
     zoneId: string
   }
   metagameEvent: {
+    worldId: string
     zoneId: string
     metagameEventId: string
     metagameEventState: string
@@ -111,7 +118,7 @@ class StreamingApi {
       const initialCommand = {
         service: 'event',
         action: 'subscribe',
-        worlds: ['10'],
+        worlds: ['all'],
         characters: ['all'],
         logicalAndCharactersWithWorlds: true,
         eventNames: Object.keys(this._listeners).map((e) => pascalCase(e)),
