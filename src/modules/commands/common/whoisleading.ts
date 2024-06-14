@@ -86,8 +86,7 @@ export default new Command({
     if (Number(worldId) in platoonLeaders) {
       platoonLeaderIds = platoonLeaders[worldId].getAll()
     }
-    // const squadLeaderIds = squadLeaders[worldId].getAll()
-    // const platoonLeaderIds = platoonLeaders[worldId].getAll()
+
     const allIds = [
       ...Array.from(squadLeaderIds),
       ...Array.from(platoonLeaderIds),
