@@ -80,10 +80,10 @@ export default new Command({
 
     let squadLeaderIds = new Set()
     let platoonLeaderIds = new Set()
-    if (Number(worldId) in squadLeaders) {
+    if (worldId in squadLeaders) {
       squadLeaderIds = squadLeaders[worldId].getAll()
     }
-    if (Number(worldId) in platoonLeaders) {
+    if (worldId in platoonLeaders) {
       platoonLeaderIds = platoonLeaders[worldId].getAll()
     }
 
