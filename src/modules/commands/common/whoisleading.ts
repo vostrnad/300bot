@@ -9,8 +9,6 @@ import { streamingApi } from '@planetside/StreamingApi'
 import { getServerByName } from '@planetside/resources'
 import { Character, Outfit } from '@planetside/types'
 
-// const squadLeaders = new TimeoutSet(1800 * 1000)
-// const platoonLeaders = new TimeoutSet(1800 * 1000)
 const squadLeaders: { [worldId: number]: TimeoutSet } = {}
 const platoonLeaders: { [worldId: number]: TimeoutSet } = {}
 
