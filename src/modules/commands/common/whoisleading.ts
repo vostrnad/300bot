@@ -1,45 +1,94 @@
 import { constants } from '@app/global/constants'
 import { TimeoutSet } from '@app/utils/TimeoutSet'
 import { sentence } from '@app/utils/language'
+import { isDefined } from '@app/validators'
 import { Command } from '@commands/CommandHandler'
 import { validateArgumentRange } from '@commands/validators'
 import { censusApi } from '@planetside/CensusApi'
 import { streamingApi } from '@planetside/StreamingApi'
+import { getServerByName } from '@planetside/resources'
 import { Character, Outfit } from '@planetside/types'
 
-const squadLeaders = new TimeoutSet(1800 * 1000)
-const platoonLeaders = new TimeoutSet(1800 * 1000)
+// const squadLeaders = new TimeoutSet(1800 * 1000)
+// const platoonLeaders = new TimeoutSet(1800 * 1000)
+const squadLeaders: { [worldId: number]: TimeoutSet } = {}
+const platoonLeaders: { [worldId: number]: TimeoutSet } = {}
 
 streamingApi.init()
 streamingApi.on(
   'achievementEarned',
   ({ worldId, characterId, achievementId }) => {
-    if (Number(worldId) !== constants.planetside.worldIds.miller) return
+    const worldIdInt = Number(worldId)
     if (achievementId === '90039' || achievementId === '90040') {
-      squadLeaders.add(characterId)
+      if (!(worldIdInt in squadLeaders)) {
+        squadLeaders[worldIdInt] = new TimeoutSet(1800 * 1000)
+      }
+      squadLeaders[Number(worldId)].add(characterId)
     }
     if (achievementId === '90041' || achievementId === '90042') {
-      platoonLeaders.add(characterId)
+      if (!(worldIdInt in platoonLeaders)) {
+        platoonLeaders[worldIdInt] = new TimeoutSet(1800 * 1000)
+      }
+      platoonLeaders[Number(worldId)].add(characterId)
     }
   },
 )
 streamingApi.on('playerLogout', ({ worldId, characterId }) => {
-  if (Number(worldId) !== constants.planetside.worldIds.miller) return
-  squadLeaders.remove(characterId)
-  platoonLeaders.remove(characterId)
+  if (Number(worldId) in squadLeaders) {
+    squadLeaders[Number(worldId)].remove(characterId)
+  }
+  if (Number(worldId) in platoonLeaders) {
+    platoonLeaders[Number(worldId)].remove(characterId)
+  }
 })
 
 export default new Command({
   keyword: 'whoisleading',
   description: 'check who is leading',
-  help: 'Usage:\n`{prefix}whoisleading` - checks who is leading\n`{prefix}whoisleading full` - always includes squad leaders',
-  callback: async ({ args, reply }) => {
-    validateArgumentRange(args.length, 0, 1)
+  help: 'Usage:\n`{prefix}whoisleading` - checks who is leading\n`{prefix}whoisleading <server>` - checks who is leading in a specific server\n`{prefix}whoisleading full` - always includes squad leaders',
+  callback: async ({ args, reply, env }) => {
+    validateArgumentRange(args.length, 0, 2)
 
-    const showFull = args[0] === 'full'
+    let worldId = constants.planetside.worldIds.miller
+    let worldName = 'Miller'
+    let showFull = false
 
-    const squadLeaderIds = squadLeaders.getAll()
-    const platoonLeaderIds = platoonLeaders.getAll()
+    if (args.length > 0) {
+      let argsProcessed = 0
+
+      if (args.includes('full')) {
+        showFull = true
+        argsProcessed++
+      }
+
+      const serverArgs = args
+        .map((arg) => getServerByName(arg))
+        .filter(isDefined)
+
+      if (serverArgs.length > 0) {
+        if (serverArgs.length > 1) {
+          return reply('Error: Cannot search multiple servers at once.')
+        }
+
+        ;[worldId, worldName] = serverArgs[0]
+        argsProcessed++
+      }
+
+      if (argsProcessed !== args.length) {
+        return reply(env.command.getHelp(env.handler))
+      }
+    }
+
+    let squadLeaderIds = new Set()
+    let platoonLeaderIds = new Set()
+    if (Number(worldId) in squadLeaders) {
+      squadLeaderIds = squadLeaders[worldId].getAll()
+    }
+    if (Number(worldId) in platoonLeaders) {
+      platoonLeaderIds = platoonLeaders[worldId].getAll()
+    }
+    // const squadLeaderIds = squadLeaders[worldId].getAll()
+    // const platoonLeaderIds = platoonLeaders[worldId].getAll()
     const allIds = [
       ...Array.from(squadLeaderIds),
       ...Array.from(platoonLeaderIds),
@@ -67,7 +116,9 @@ export default new Command({
     ) as CharacterWithOutfit[]
 
     if (list.length === 0) {
-      return reply('Nobody is leading on any faction at the moment.')
+      return reply(
+        `Nobody is leading on any faction at the moment on ${worldName}.`,
+      )
     }
 
     type FactionCode = 'vs' | 'nc' | 'tr'
@@ -112,7 +163,7 @@ export default new Command({
       return `**${outfitAliasPrefix}${character.name.first}**`
     }
 
-    let message = ''
+    let message = `Current leaders on ${worldName}:\n`
     for (const factionCode of ['tr', 'nc', 'vs'] as const) {
       const factionName = factionCode.toUpperCase()
       const faction = factions[factionCode]
