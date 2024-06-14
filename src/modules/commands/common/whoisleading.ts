@@ -93,7 +93,9 @@ export default new Command({
     ]
 
     if (allIds.length === 0) {
-      return reply('Nobody is leading on any faction at the moment.')
+      return reply(
+        `Nobody is leading on any faction at the moment on ${worldName}.`,
+      )
     }
 
     type CharacterWithOutfit = Character & { outfit?: Outfit }
