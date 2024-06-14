@@ -21,22 +21,23 @@ streamingApi.on(
       if (!(worldIdInt in squadLeaders)) {
         squadLeaders[worldIdInt] = new TimeoutSet(1800 * 1000)
       }
-      squadLeaders[Number(worldId)].add(characterId)
+      squadLeaders[worldIdInt].add(characterId)
     }
     if (achievementId === '90041' || achievementId === '90042') {
       if (!(worldIdInt in platoonLeaders)) {
         platoonLeaders[worldIdInt] = new TimeoutSet(1800 * 1000)
       }
-      platoonLeaders[Number(worldId)].add(characterId)
+      platoonLeaders[worldIdInt].add(characterId)
     }
   },
 )
 streamingApi.on('playerLogout', ({ worldId, characterId }) => {
-  if (Number(worldId) in squadLeaders) {
-    squadLeaders[Number(worldId)].remove(characterId)
+  const worldIdInt = Number(worldId)
+  if (worldIdInt in squadLeaders) {
+    squadLeaders[worldIdInt].remove(characterId)
   }
-  if (Number(worldId) in platoonLeaders) {
-    platoonLeaders[Number(worldId)].remove(characterId)
+  if (worldIdInt in platoonLeaders) {
+    platoonLeaders[worldIdInt].remove(characterId)
   }
 })
 
