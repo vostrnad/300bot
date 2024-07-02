@@ -9,6 +9,7 @@ import { commands } from '@commands/index'
 import { DiscordParams } from '@commands/params'
 import { bruCharactersDatabase } from '@database/brucharacters'
 import { guildDatabase, upsertGuild } from '@database/guilds'
+import { managerDatabase } from '@database/managers'
 import { client } from '@discord/client'
 import {
   checkNewMemberDeadRole,
@@ -156,7 +157,7 @@ client.on('message', (message: discord.Message) => {
   })
 
   const isBotAdmin = message.author.id === constants.discord.userIds.alfav
-  const isBotManager = isBotAdmin || false
+  const isBotManager = isBotAdmin || managerDatabase.has(message.author.id)
   const isLocalAdmin =
     message.member?.hasPermission(discord.Permissions.FLAGS.ADMINISTRATOR) ||
     message.channel === message.author.dmChannel
