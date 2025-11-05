@@ -26,19 +26,19 @@ const sendAlertMessage = (message: string) => {
 
 streamingApi.init()
 streamingApi.on('continentLock', ({ worldId, zoneId }) => {
-  if (Number(worldId) !== constants.planetside.worldIds.miller) return
+  if (Number(worldId) !== constants.planetside.worldIds.wainwright) return
   const continentName = getContinentName(zoneId)
   if (!continentName) return
   sendAlertMessage(`:lock: **${continentName}** has been locked.`)
 })
 streamingApi.on('continentUnlock', ({ worldId, zoneId }) => {
-  if (Number(worldId) !== constants.planetside.worldIds.miller) return
+  if (Number(worldId) !== constants.planetside.worldIds.wainwright) return
   const continentName = getContinentName(zoneId)
   if (!continentName) return
   sendAlertMessage(`:unlock: **${continentName}** has been unlocked.`)
 })
 streamingApi.on('metagameEvent', (event) => {
-  if (Number(event.worldId) !== constants.planetside.worldIds.miller) return
+  if (Number(event.worldId) !== constants.planetside.worldIds.wainwright) return
   const alertType = getAlertType(event.metagameEventId)
   const alertState = getAlertState(event.metagameEventState)
   if (!alertType || !alertState) return

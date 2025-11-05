@@ -26,8 +26,8 @@ export default new Command({
   callback: async ({ args, reply, env }) => {
     validateArgumentRange(args.length, 0, 2)
 
-    let worldId = constants.planetside.worldIds.miller
-    let worldName = 'Miller'
+    let worldId = constants.planetside.worldIds.wainwright
+    let worldName = 'Wainwright'
     let numbersBool = false
 
     if (args.length > 0) {

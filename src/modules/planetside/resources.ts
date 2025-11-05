@@ -1,4 +1,4 @@
-type ContinentName = 'Indar' | 'Hossin' | 'Amerish' | 'Esamir' | 'Koltyr'
+type ContinentName = 'Indar' | 'Hossin' | 'Amerish' | 'Esamir' | 'Oshur'
 type FactionName =
   | 'Vanu Sovereignty'
   | 'New Conglomerate'
@@ -22,6 +22,7 @@ const continents: Record<string, ContinentName | undefined> = {
   '4': 'Hossin',
   '6': 'Amerish',
   '8': 'Esamir',
+  '344': 'Oshur',
 }
 
 export const getContinentName = (continentId: string): ContinentName | null => {
@@ -41,9 +42,9 @@ const alertTypes: Record<string, [ContinentName, FactionAlias] | undefined> = {
   '156': ['Amerish', 'TR'],
   '157': ['Amerish', 'VS'],
   '158': ['Amerish', 'NC'],
-  '208': ['Koltyr', 'NC'],
-  '209': ['Koltyr', 'TR'],
-  '210': ['Koltyr', 'VS'],
+  '222': ['Oshur', 'NC'],
+  '223': ['Oshur', 'TR'],
+  '224': ['Oshur', 'VS'],
 }
 
 export const getAlertType = (
@@ -64,10 +65,8 @@ export const getAlertState = (
 }
 
 const servers = {
-  '1': 'Connery',
-  '10': 'Miller',
-  '13': 'Cobalt',
-  '17': 'Emerald',
+  '1': 'Osprey',
+  '10': 'Wainwright',
   '19': 'Jaeger',
   '24': 'Apex',
   '25': 'Briggs',

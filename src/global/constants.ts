@@ -1,11 +1,11 @@
 export const constants = {
   planetside: {
     characterIds: {
-      // BruceAImighty
-      bru: '5429261574101249937',
+      // VeryGoodPlayerVS
+      bru: '5429715633112762753',
     },
     worldIds: {
-      miller: 10,
+      wainwright: 10,
     },
   },
   discord: {

@@ -123,7 +123,7 @@ streamingApi.init()
 streamingApi.on(
   'gainExperience',
   ({ worldId, characterId, otherId, experienceId }) => {
-    if (Number(worldId) !== constants.planetside.worldIds.miller) return
+    if (Number(worldId) !== constants.planetside.worldIds.wainwright) return
     if (!(experienceId in events)) return
     if (characterId.length !== otherId.length) return
     if (characterId === otherId) return
