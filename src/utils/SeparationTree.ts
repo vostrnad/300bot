@@ -184,8 +184,8 @@ export class SeparationTree {
    * second node, zero if they're equal and a positive value otherwise.
    */
   private compareNodeDistances(key1: string, key2: string): -1 | 0 | 1 {
-    const timestamps1 = this.getTimestamps(key1).sort()
-    const timestamps2 = this.getTimestamps(key2).sort()
+    const timestamps1 = this.getTimestamps(key1).sort((a, b) => a - b)
+    const timestamps2 = this.getTimestamps(key2).sort((a, b) => a - b)
     const length = Math.max(timestamps1.length, timestamps2.length)
     for (let i = 0; i < length; i++) {
       const timestamp1 = timestamps1[i]
