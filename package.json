@@ -34,7 +34,7 @@
     "nodatabase": "^1.2.0",
     "pascal-case": "^4.0.0",
     "snake-case": "^4.0.0",
-    "snakecase-keys": "^9.0.2",
+    "snakecase-keys": "^8",
     "winston": "^3.18.3",
     "workerpool": "^10.0.0",
     "ws": "^8.18.3"
