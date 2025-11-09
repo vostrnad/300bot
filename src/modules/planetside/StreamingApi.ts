@@ -107,10 +107,13 @@ class StreamingApi {
 
       const updateSocketTimeout = () => {
         clearTimeout(socketTimeout)
-        socketTimeout = setTimeout(() => {
-          log.warn('Restarting Streaming API')
-          client.close()
-        }, 5 * 60 * 1000)
+        socketTimeout = setTimeout(
+          () => {
+            log.warn('Restarting Streaming API')
+            client.close()
+          },
+          5 * 60 * 1000,
+        )
       }
 
       updateSocketTimeout()

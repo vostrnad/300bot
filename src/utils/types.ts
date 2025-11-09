@@ -32,5 +32,5 @@ export type PathValue<
       : never
     : never
   : P extends keyof T
-  ? T[P]
-  : never
+    ? T[P]
+    : never

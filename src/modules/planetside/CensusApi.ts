@@ -257,10 +257,13 @@ class CensusApi {
       },
       { limit: '100' },
     )
-    return list.reduce((prev, curr) => {
-      prev[curr.characterId] = curr
-      return prev
-    }, {} as Record<string, CharacterName>)
+    return list.reduce(
+      (prev, curr) => {
+        prev[curr.characterId] = curr
+        return prev
+      },
+      {} as Record<string, CharacterName>,
+    )
   }
 
   async getOutfit(query: QueryObject<Outfit>) {

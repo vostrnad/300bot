@@ -42,12 +42,12 @@ export const getShortDate = (date: Date): string => {
     dayLeadDigit === 1
       ? `${day}th`
       : dayTrailDigit === 1
-      ? `${day}st`
-      : dayTrailDigit === 2
-      ? `${day}nd`
-      : dayTrailDigit === 3
-      ? `${day}rd`
-      : `${day}th`
+        ? `${day}st`
+        : dayTrailDigit === 2
+          ? `${day}nd`
+          : dayTrailDigit === 3
+            ? `${day}rd`
+            : `${day}th`
   const monthName = months[month.toString()] || 'unknown'
   return `${dayName} ${monthName} ${year}`
 }
