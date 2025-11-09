@@ -32,16 +32,19 @@ export default new Command<DiscordParams>({
   keyword: 'alts',
   description: "show player's alts",
   help: "Usage: `{prefix}alts <player name>` - shows player's alts",
+  options: {
+    hidden: !appEnv.altsServiceAddress,
+  },
   callback: async ({ args, reply, env }) => {
+    if (!appEnv.altsServiceAddress) {
+      return reply('This command is currently disabled.')
+    }
+
     if (args.length === 0) return reply(env.command.getHelp(env.handler))
     validateArgumentNumber(args.length, 1)
 
     const characterName = args[0]
     validatePlayerName(characterName)
-
-    if (!appEnv.altsServiceAddress) {
-      return reply('The alts service is not configured.')
-    }
 
     const list = await censusApi.getList('characterName', {
       name: { firstLower: characterName.toLowerCase() },
