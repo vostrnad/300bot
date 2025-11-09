@@ -83,6 +83,7 @@ class CensusApi {
     modifiers?: Partial<Record<QueryModifier, string | string[]>>,
   ): Promise<Array<CollectionMap[T]>> {
     const collectionSnakeCase = snakeCase(collection)
+    // @ts-expect-error snakecaseKeys produces an incompatible type
     const params = new URLSearchParams(flatten(snakecaseKeys(query)))
     Object.entries(modifiers ?? {}).forEach(([modifier, values]) => {
       objectToArray(values).forEach((value) => {
@@ -106,12 +107,12 @@ class CensusApi {
               throw new CensusApiNoDataFoundError()
 
             default:
-              // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
+              // eslint-disable-next-line @typescript-eslint/restrict-template-expressions, @typescript-eslint/no-base-to-string
               throw new Error(`Query error: ${data.error}`)
           }
         }
         if (data.errorCode) {
-          // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
+          // eslint-disable-next-line @typescript-eslint/restrict-template-expressions, @typescript-eslint/no-base-to-string
           throw new Error(`Query error: ${data.errorCode}`)
         }
         const collectionListName = `${collectionSnakeCase}_list`
@@ -257,13 +258,10 @@ class CensusApi {
       },
       { limit: '100' },
     )
-    return list.reduce(
-      (prev, curr) => {
-        prev[curr.characterId] = curr
-        return prev
-      },
-      {} as Record<string, CharacterName>,
-    )
+    return list.reduce<Record<string, CharacterName>>((prev, curr) => {
+      prev[curr.characterId] = curr
+      return prev
+    }, {})
   }
 
   async getOutfit(query: QueryObject<Outfit>) {

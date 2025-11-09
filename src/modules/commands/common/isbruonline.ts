@@ -1,8 +1,8 @@
 import { sentence } from '@app/utils/language'
-import { Command } from '@commands/CommandHandler'
+import { Command } from '@commands/command-handler'
 import { formatChacarcterWithFaction } from '@commands/formatting'
 import { bruCharactersDatabase } from '@database/brucharacters'
-import { censusApi } from '@planetside/CensusApi'
+import { censusApi } from '@planetside/census-api'
 
 export default new Command({
   keyword: 'isbruonline',

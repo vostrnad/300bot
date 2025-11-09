@@ -1,8 +1,8 @@
 import { OutfitAliasNotFoundError } from '@app/errors'
-import { Command } from '@commands/CommandHandler'
+import { Command } from '@commands/command-handler'
 import { SettingsParams } from '@commands/params'
 import { validateArgumentNumber } from '@commands/validators'
-import { censusApi } from '@planetside/CensusApi'
+import { censusApi } from '@planetside/census-api'
 
 export default new Command<SettingsParams>({
   keyword: 'setoutfit',

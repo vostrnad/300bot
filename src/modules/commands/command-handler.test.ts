@@ -4,7 +4,7 @@ import {
   CommandHandler,
   CommandHandlerConfig,
   CommandMessage,
-} from './CommandHandler'
+} from './command-handler'
 
 const dummyCommandConfig: CommandConfig = {
   keyword: 'testcommand',
@@ -48,12 +48,12 @@ const testCommandHandler = async (
   })
   const handler = new CommandHandler({
     ...dummyCommandHandlerConfig,
-    ...(commandHandlerConfig || {}),
+    ...commandHandlerConfig,
     commands: [command],
   })
   const message = {
     ...dummyCommandMessage,
-    ...(commandMessage || {}),
+    ...commandMessage,
   }
   return handler.process(message)
 }

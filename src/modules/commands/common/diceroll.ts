@@ -1,6 +1,6 @@
 import { randomBigInt } from '@app/utils/random'
 import { isDigit } from '@app/validators/string'
-import { Command } from '@commands/CommandHandler'
+import { Command } from '@commands/command-handler'
 import { validateArgumentNumber } from '@commands/validators'
 
 export default new Command({

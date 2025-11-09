@@ -1,6 +1,6 @@
 import { Promise as WorkerPoolPromise } from 'workerpool'
 import { pools } from '@app/workers'
-import { Command } from '@commands/CommandHandler'
+import { Command } from '@commands/command-handler'
 
 export default new Command({
   keyword: 'math',
@@ -19,7 +19,7 @@ export default new Command({
     try {
       const res = (await pools.math
         .exec('evaluate', [expression])
-        .timeout(2000)) as string
+        .timeout(3000)) as string
       return reply(`= ${res}`)
     } catch (e) {
       if (e instanceof WorkerPoolPromise.TimeoutError) {

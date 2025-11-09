@@ -17,12 +17,12 @@ export const flatten = (
     const item = query[key]
     if (Array.isArray(item)) {
       item.forEach((subitem) => {
-        result.push([(c + '.' + key).replace(/^\./, ''), subitem])
+        result.push([`${c}.${key}`.replace(/^\./, ''), subitem])
       })
     } else if (typeof item === 'string') {
-      result.push([(c + '.' + key).replace(/^\./, ''), item])
+      result.push([`${c}.${key}`.replace(/^\./, ''), item])
     } else if (typeof item === 'object') {
-      result.push(...flatten(item, c + '.' + key))
+      result.push(...flatten(item, `${c}.${key}`))
     }
   }
   return result

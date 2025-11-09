@@ -1,5 +1,5 @@
 import { getLongTimeDelta } from '@app/utils/time'
-import { Command } from '@commands/CommandHandler'
+import { Command } from '@commands/command-handler'
 
 const startTime = new Date()
 

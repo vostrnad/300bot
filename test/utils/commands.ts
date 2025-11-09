@@ -2,7 +2,7 @@ import {
   Command,
   CommandHandler,
   CommandMessage,
-} from '@commands/CommandHandler'
+} from '@commands/command-handler'
 import { Settings, SettingsParams } from '@commands/params'
 
 export const getCommandRunner = (
@@ -50,6 +50,7 @@ export const getCommandRunner = (
             resolve(null)
           }
         } catch (e) {
+          // eslint-disable-next-line @typescript-eslint/prefer-promise-reject-errors
           reject(e)
         }
       })()

@@ -2,11 +2,7 @@ import { pluralize, sentence } from './language'
 import { divmod } from './math'
 
 const padTime = (input: string | number) => {
-  input = input.toString()
-  while (input.length < 2) {
-    input = '0' + input
-  }
-  return input
+  return input.toString().padStart(2, '0')
 }
 
 export const getUTCShort = (): string => {
@@ -65,6 +61,7 @@ export const getShortAgo = (prev: Date, now: Date): string => {
 export const getLongTimeDelta = (prev: Date, now: Date): string => {
   const delta = Math.floor((now.getTime() - prev.getTime()) / 1000)
 
+  // eslint-disable-next-line no-useless-assignment
   let [s, m, h, d] = [0, 0, 0, 0]
 
   ;[m, s] = divmod(delta, 60)

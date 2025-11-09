@@ -1,27 +1,27 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
 
 exports[`membercount should reply with an error when the outfit does not exist 1`] = `
-Object {
+{
   "pathname": "/s:test/get/ps2:v2/outfit",
-  "searchParams": Object {
+  "searchParams": {
     "alias_lower": "nope",
   },
 }
 `;
 
 exports[`membercount should work for a custom outfit 1`] = `
-Object {
+{
   "pathname": "/s:test/get/ps2:v2/outfit",
-  "searchParams": Object {
+  "searchParams": {
     "alias_lower": "cstm",
   },
 }
 `;
 
 exports[`membercount should work for the default outfit 1`] = `
-Object {
+{
   "pathname": "/s:test/get/ps2:v2/outfit",
-  "searchParams": Object {
+  "searchParams": {
     "outfit_id": "test-outfit-id",
   },
 }

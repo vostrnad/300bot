@@ -1,11 +1,11 @@
 import { PlayerNotFoundError } from '@app/errors'
 import { constants } from '@app/global/constants'
-import { SeparationTree } from '@app/utils/SeparationTree'
+import { SeparationTree } from '@app/utils/separation-tree'
 import { getShortAgo } from '@app/utils/time'
-import { Command } from '@commands/CommandHandler'
+import { Command } from '@commands/command-handler'
 import { validateArgumentNumber } from '@commands/validators'
-import { censusApi } from '@planetside/CensusApi'
-import { streamingApi } from '@planetside/StreamingApi'
+import { censusApi } from '@planetside/census-api'
+import { streamingApi } from '@planetside/streaming-api'
 import { validatePlayerName } from '@planetside/validators'
 
 const events: Record<string, [string, string]> = {
@@ -200,13 +200,13 @@ export default new Command({
       if (interactionString.includes('{1}')) {
         interactionString = interactionString.replace('{1}', prevName)
       } else {
-        interactionString = prevName + ' ' + interactionString
+        interactionString = `${prevName} ${interactionString}`
       }
 
       if (interactionString.includes('{2}')) {
         interactionString = interactionString.replace('{2}', thisName)
       } else {
-        interactionString = interactionString + ' ' + thisName
+        interactionString = `${interactionString} ${thisName}`
       }
 
       message += `${getShortAgo(

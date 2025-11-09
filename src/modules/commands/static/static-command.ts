@@ -1,4 +1,4 @@
-import { Command } from '@commands/CommandHandler'
+import { Command } from '@commands/command-handler'
 
 export interface StaticCommandConfig {
   keyword: string

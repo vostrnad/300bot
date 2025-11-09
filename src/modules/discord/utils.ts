@@ -1,4 +1,4 @@
-import discord from 'discord.js'
+import * as discord from 'discord.js'
 import { log } from '@app/utils/log'
 
 export const getTextChannel = (
@@ -24,14 +24,13 @@ export const getDMChannel = async (
 }
 
 export const formatWithEmojis = (
-  channel: discord.Channel,
+  channel: discord.TextBasedChannel,
   message: string,
 ): string => {
-  // eslint-disable-next-line unicorn/no-unsafe-regex
   const emojiExpressionRegex = /{emoji:([^|}]*)(?:\|([^}]*))?}/g
 
   if (channel instanceof discord.TextChannel) {
-    return message.replace(
+    return message.replaceAll(
       emojiExpressionRegex,
       (_match, emojiName, fallbackText) => {
         const emoji = channel.guild.emojis.cache.find(
@@ -47,7 +46,7 @@ export const formatWithEmojis = (
       },
     )
   } else {
-    return message.replace(
+    return message.replaceAll(
       emojiExpressionRegex,
       (_match, _emojiName, fallbackText) => {
         if (typeof fallbackText === 'string') {

@@ -1,6 +1,6 @@
 import { sentence } from '@app/utils/language'
-import { Command } from '@commands/CommandHandler'
-import { censusApi } from '@planetside/CensusApi'
+import { Command } from '@commands/command-handler'
+import { censusApi } from '@planetside/census-api'
 import { validatePlayerName } from '@planetside/validators'
 
 export default new Command({

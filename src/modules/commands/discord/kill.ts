@@ -1,5 +1,5 @@
 import discord from 'discord.js'
-import { Command } from '@commands/CommandHandler'
+import { Command } from '@commands/command-handler'
 import { DiscordParams } from '@commands/params'
 import { validateArgumentNumber } from '@commands/validators'
 import { killMember } from '@discord/revive'

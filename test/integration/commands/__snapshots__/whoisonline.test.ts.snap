@@ -1,19 +1,19 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
 
 exports[`whoisonline should work for a custom outfit 1`] = `
-Object {
+{
   "pathname": "/s:test/get/ps2:v2/outfit",
-  "searchParams": Object {
+  "searchParams": {
     "alias_lower": "test",
   },
 }
 `;
 
 exports[`whoisonline should work for a custom outfit 2`] = `
-Object {
+{
   "pathname": "/s:test/get/ps2:v2/outfit_member",
-  "searchParams": Object {
-    "c:join": Array [
+  "searchParams": {
+    "c:join": [
       "character_name^on:character_id^inject_at:character^show:name.first",
       "characters_online_status^on:character_id^inject_at:character^show:name.first",
     ],
@@ -25,10 +25,10 @@ Object {
 `;
 
 exports[`whoisonline should work when API response is empty 1`] = `
-Object {
+{
   "pathname": "/s:test/get/ps2:v2/outfit_member",
-  "searchParams": Object {
-    "c:join": Array [
+  "searchParams": {
+    "c:join": [
       "character_name^on:character_id^inject_at:character^show:name.first",
       "characters_online_status^on:character_id^inject_at:character^show:name.first",
     ],
@@ -40,10 +40,10 @@ Object {
 `;
 
 exports[`whoisonline should work when everyone is offline 1`] = `
-Object {
+{
   "pathname": "/s:test/get/ps2:v2/outfit_member",
-  "searchParams": Object {
-    "c:join": Array [
+  "searchParams": {
+    "c:join": [
       "character_name^on:character_id^inject_at:character^show:name.first",
       "characters_online_status^on:character_id^inject_at:character^show:name.first",
     ],
@@ -55,10 +55,10 @@ Object {
 `;
 
 exports[`whoisonline should work when one member is online 1`] = `
-Object {
+{
   "pathname": "/s:test/get/ps2:v2/outfit_member",
-  "searchParams": Object {
-    "c:join": Array [
+  "searchParams": {
+    "c:join": [
       "character_name^on:character_id^inject_at:character^show:name.first",
       "characters_online_status^on:character_id^inject_at:character^show:name.first",
     ],
@@ -70,10 +70,10 @@ Object {
 `;
 
 exports[`whoisonline should work when some members are online 1`] = `
-Object {
+{
   "pathname": "/s:test/get/ps2:v2/outfit_member",
-  "searchParams": Object {
-    "c:join": Array [
+  "searchParams": {
+    "c:join": [
       "character_name^on:character_id^inject_at:character^show:name.first",
       "characters_online_status^on:character_id^inject_at:character^show:name.first",
     ],

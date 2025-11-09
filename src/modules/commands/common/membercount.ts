@@ -1,10 +1,10 @@
-import { Command } from '@commands/CommandHandler'
+import { Command } from '@commands/command-handler'
 import { SettingsParams } from '@commands/params'
 import {
   validateArgumentRange,
   validateDefaultOutfitId,
 } from '@commands/validators'
-import { censusApi } from '@planetside/CensusApi'
+import { censusApi } from '@planetside/census-api'
 
 export default new Command<SettingsParams>({
   keyword: 'membercount',

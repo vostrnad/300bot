@@ -3,11 +3,11 @@ import { bruCharactersDatabase } from '@database/brucharacters'
 import { getCommandRunner } from '@test/utils/commands'
 import { mockCensusApi } from '@test/utils/planetside'
 
-beforeEach(async () => {
-  await bruCharactersDatabase.clear()
-})
-
 describe('brucharacters', () => {
+  beforeEach(async () => {
+    await bruCharactersDatabase.clear()
+  })
+
   const runCommand = getCommandRunner(brucharacters)
 
   it('should say that the character is already in the list', async () => {

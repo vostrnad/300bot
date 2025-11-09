@@ -106,7 +106,7 @@ export class Command<T = unknown> {
   }
 
   public getHelp(handler: CommandHandler<T>): string {
-    return this._help.replace(/{prefix}/g, handler.prefix)
+    return this._help.replaceAll('{prefix}', handler.prefix)
   }
 }
 
@@ -160,7 +160,7 @@ export class CommandHandler<T = unknown> {
         if (message.text.startsWith(`${prefix}${alias}`)) {
           commandString = message.text.slice(prefix.length)
         } else if (
-          command.options.requirePrefix === false &&
+          !command.options.requirePrefix &&
           message.text.startsWith(alias)
         ) {
           commandString = message.text
@@ -174,7 +174,7 @@ export class CommandHandler<T = unknown> {
           argString = ''
         } else if (commandString.startsWith(`${alias} `)) {
           argString = commandString.slice(alias.length + 1)
-        } else if (command.options.firstArgSpace === false) {
+        } else if (!command.options.firstArgSpace) {
           argString = commandString.slice(alias.length)
         } else {
           continue
@@ -218,6 +218,7 @@ export class CommandHandler<T = unknown> {
         }
 
         try {
+          // eslint-disable-next-line no-await-in-loop
           await command.callback({
             alias,
             args: filteredArgs,
@@ -242,7 +243,7 @@ export class CommandHandler<T = unknown> {
       }
     }
 
-    if (message.text.startsWith(`${prefix}`)) {
+    if (message.text.startsWith(prefix)) {
       const commandsAliases: string[] = []
       this._commands.forEach((command) => {
         commandsAliases.push(command.keyword, ...command.alias)

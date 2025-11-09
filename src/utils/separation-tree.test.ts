@@ -1,6 +1,6 @@
-import { SeparationTree, TreeNode } from './SeparationTree'
 import { forEachKey } from './object'
 import { randomInteger } from './random'
+import { SeparationTree, TreeNode } from './separation-tree'
 
 const buildExpectedIndex = (tree: SeparationTree) => {
   const expectedIndex: Record<string, string[]> = {}

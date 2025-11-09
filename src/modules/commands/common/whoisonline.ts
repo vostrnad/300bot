@@ -1,12 +1,12 @@
 import { OutfitAliasNotFoundError } from '@app/errors'
 import { sentence } from '@app/utils/language'
-import { Command } from '@commands/CommandHandler'
+import { Command } from '@commands/command-handler'
 import { SettingsParams } from '@commands/params'
 import {
   validateArgumentRange,
   validateDefaultOutfitId,
 } from '@commands/validators'
-import { censusApi } from '@planetside/CensusApi'
+import { censusApi } from '@planetside/census-api'
 import { validateOutfitAlias } from '@planetside/validators'
 
 export default new Command<SettingsParams>({

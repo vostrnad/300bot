@@ -1,8 +1,8 @@
-import discord from 'discord.js'
+import * as discord from 'discord.js'
 import got from 'got'
 import { env as appEnv } from '@app/env'
 import { log } from '@app/utils/log'
-import { Command } from '@commands/CommandHandler'
+import { Command } from '@commands/command-handler'
 import { DiscordParams } from '@commands/params'
 import { validateArgumentRange } from '@commands/validators'
 import { addReaction } from '@discord/utils'
@@ -88,17 +88,23 @@ export default new Command<DiscordParams>({
       const wordEmbed = new discord.MessageEmbed()
         .setColor('#647CC4')
         .setTitle(`Hangman game`)
-        .addField('Word', wordString.toUpperCase())
-        .setFooter('Interactive')
+        .addFields({ name: 'Word', value: wordString.toUpperCase() })
+        .setFooter({ text: 'Interactive' })
         .setTimestamp()
 
       if (guesses.length > 0) {
-        wordEmbed.addField('Guesses', guesses.join('').toUpperCase())
+        wordEmbed.addFields({
+          name: 'Guesses',
+          value: guesses.join('').toUpperCase(),
+        })
       } else {
-        wordEmbed.addField('Guesses', 'No guesses yet')
+        wordEmbed.addFields({ name: 'Guesses', value: 'No guesses yet' })
       }
 
-      wordEmbed.addField('Hanging Bru', '`' + hangmanPics[tries] + '`')
+      wordEmbed.addFields({
+        name: 'Hanging Bru',
+        value: `\`${hangmanPics[tries]}\``,
+      })
 
       return wordEmbed
     }
@@ -114,17 +120,18 @@ export default new Command<DiscordParams>({
         let dmWord: string | undefined
 
         while (!dmWord) {
-          const dmReplyMessage = (
-            await dmChannel.awaitMessages(() => true, { max: 1 })
-          ).first()
+          const dmReplyMessage = // eslint-disable-next-line no-await-in-loop
+            (await dmChannel.awaitMessages({ max: 1 })).first()
           const dmReply = dmReplyMessage?.content
 
           if (!dmReply) {
+            // eslint-disable-next-line no-await-in-loop
             await dmChannel.send('Something went wrong. Please try again.')
             continue
           }
 
           if (dmReply.includes(' ')) {
+            // eslint-disable-next-line no-await-in-loop
             await dmChannel.send(
               'The word cannot contain any spaces. Please try again.',
             )
@@ -132,6 +139,7 @@ export default new Command<DiscordParams>({
           }
 
           if (!/^[a-z]+$/i.test(dmReply)) {
+            // eslint-disable-next-line no-await-in-loop
             await dmChannel.send(
               'The word contains invalid characters. Please try again.',
             )
@@ -177,7 +185,7 @@ export default new Command<DiscordParams>({
 
     let hangmanEmbed = genHangmanEmbed(wordDisplay, guesses, tries)
     const embedMessage = await channel.send({
-      embed: hangmanEmbed,
+      embeds: [hangmanEmbed],
     })
 
     // Listen for inputs
@@ -185,7 +193,7 @@ export default new Command<DiscordParams>({
       /^[a-z]+$/i.test(m.content) &&
       (m.content.length === 1 || m.content.length === word.length)
 
-    const messageCollector = channel.createMessageCollector(filter)
+    const messageCollector = channel.createMessageCollector({ filter })
 
     messageCollector.on('collect', (m: discord.Message) => {
       void (async () => {
@@ -257,23 +265,23 @@ export default new Command<DiscordParams>({
           messageCollector.stop()
           hangmanEmbed = genHangmanEmbed(word, guesses, tries)
           hangmanEmbed
-            .setFooter(`Game lost by ${authorName}`)
+            .setFooter({ text: `Game lost by ${authorName}` })
             .setColor('#1D2439')
             .setTimestamp()
-          await embedMessage.edit({ embed: hangmanEmbed })
+          await embedMessage.edit({ embeds: [hangmanEmbed] })
           activeChannels.delete(channel.id)
         } else if (won) {
           messageCollector.stop()
           hangmanEmbed = genHangmanEmbed(word, guesses, tries)
           hangmanEmbed
-            .setFooter(`Game won by ${authorName}`)
+            .setFooter({ text: `Game won by ${authorName}` })
             .setColor('#1D2439')
             .setTimestamp()
-          await embedMessage.edit({ embed: hangmanEmbed })
+          await embedMessage.edit({ embeds: [hangmanEmbed] })
           activeChannels.delete(channel.id)
         } else if (updateEmbed) {
           hangmanEmbed = genHangmanEmbed(wordDisplay, guesses, tries)
-          await embedMessage.edit({ embed: hangmanEmbed })
+          await embedMessage.edit({ embeds: [hangmanEmbed] })
         }
 
         if (deleteMessage && m.channel instanceof discord.TextChannel) {

@@ -1,17 +1,22 @@
-/* eslint-disable node/no-process-env */
+/* eslint-disable n/no-process-env */
 import { resolve } from 'path'
 import dotenv from 'dotenv'
 
-if (process.env.NODE_ENV === 'test') {
-  dotenv.config({ path: resolve(__dirname, '../test/.env.test') })
-} else {
-  dotenv.config({ path: resolve(__dirname, '../.env') })
-}
+dotenv.config({
+  quiet: true,
+  path: resolve(
+    import.meta.dirname,
+    process.env.NODE_ENV === 'test' ? '../test/.env.test' : '../.env',
+  ),
+})
 
 const databaseDirPath =
   process.env.NODE_ENV === 'test'
-    ? resolve(__dirname, `../.data/test-${process.env.JEST_WORKER_ID || '0'}`)
-    : resolve(__dirname, '../.data')
+    ? resolve(
+        import.meta.dirname,
+        `../.data/test-${process.env.JEST_WORKER_ID || '0'}`,
+      )
+    : resolve(import.meta.dirname, '../.data')
 
 export const env = {
   logLevel: process.env.LOG_LEVEL,

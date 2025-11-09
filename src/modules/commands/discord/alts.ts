@@ -1,16 +1,15 @@
 import path from 'path'
 import camelcaseKeys from 'camelcase-keys'
-import discord from 'discord.js'
 import got from 'got'
 import { env as appEnv } from '@app/env'
 import { PlayerNotFoundError } from '@app/errors'
 import { constants } from '@app/global/constants'
 import { pluralize, sentence } from '@app/utils/language'
 import { log } from '@app/utils/log'
-import { Command } from '@commands/CommandHandler'
+import { Command } from '@commands/command-handler'
 import { DiscordParams } from '@commands/params'
 import { validateArgumentNumber } from '@commands/validators'
-import { censusApi } from '@planetside/CensusApi'
+import { censusApi } from '@planetside/census-api'
 import { validatePlayerName } from '@planetside/validators'
 
 if (appEnv.altsServiceAddress === null) {
@@ -94,15 +93,13 @@ export default new Command<DiscordParams>({
     } else {
       const sent = await env.message.channel.send(textShort)
       await sent.react(constants.discord.emojis.checkMark)
-      const collector = sent.createReactionCollector(
-        (reaction: discord.MessageReaction, user: discord.User) =>
+      const collector = sent.createReactionCollector({
+        max: 1,
+        time: 86_400 * 1000,
+        filter: (reaction, user) =>
           reaction.emoji.toString() === constants.discord.emojis.checkMark &&
           user.id === constants.discord.userIds.alfav,
-        {
-          max: 1,
-          time: 86_400 * 1000,
-        },
-      )
+      })
       collector.on('collect', () => {
         void sent.edit(textLong)
       })

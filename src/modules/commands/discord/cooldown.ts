@@ -1,6 +1,6 @@
-import discord from 'discord.js'
+import * as discord from 'discord.js'
 import { sleep } from '@app/utils/async'
-import { Command } from '@commands/CommandHandler'
+import { Command } from '@commands/command-handler'
 import { DiscordParams } from '@commands/params'
 
 export default new Command<DiscordParams>({
@@ -16,14 +16,14 @@ export default new Command<DiscordParams>({
     if (!(channel instanceof discord.TextChannel)) {
       return reply('This type of channel is not supported.')
     }
-    await channel.updateOverwrite(channel.guild.roles.everyone, {
+    await channel.permissionOverwrites.edit(channel.guild.roles.everyone, {
       SEND_MESSAGES: false,
     })
     reply('This channel is now on cooldown.')
 
     await sleep(300 * 1000)
 
-    await channel.updateOverwrite(channel.guild.roles.everyone, {
+    await channel.permissionOverwrites.edit(channel.guild.roles.everyone, {
       SEND_MESSAGES: null,
     })
   },

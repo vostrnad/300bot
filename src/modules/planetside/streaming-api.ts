@@ -3,7 +3,7 @@ import camelcaseKeys from 'camelcase-keys'
 import { pascalCase } from 'pascal-case'
 import Ws from 'ws'
 import { env } from '@app/env'
-import { ExponentialBackoff } from '@app/utils/ExponentialBackoff'
+import { ExponentialBackoff } from '@app/utils/exponential-backoff'
 import { log } from '@app/utils/log'
 import { isRecord } from '@app/validators/object'
 
@@ -132,7 +132,7 @@ class StreamingApi {
       client.on('message', (message) => {
         let data
         try {
-          // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+          // eslint-disable-next-line @typescript-eslint/no-base-to-string, @typescript-eslint/no-unsafe-assignment
           data = camelcaseKeys(JSON.parse(message.toString()), { deep: true })
         } catch (e) {
           log.error('Error reading Streaming API message:', e)

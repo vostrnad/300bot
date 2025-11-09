@@ -27,6 +27,7 @@ export const scheduleRevivesOnStartup = (): void => {
 
         if (now >= reviveAt) {
           log.debug(`Reviving member ${guildId}:${userId}`)
+          // eslint-disable-next-line no-await-in-loop
           await reviveUser()
         } else {
           const delay = reviveAt - now
