@@ -1,13 +1,13 @@
-import discord from 'discord.js'
+import * as discord from 'discord.js'
 import { OutfitAliasNotFoundError } from '@app/errors'
 import { pluralize } from '@app/utils/language'
 import { divide } from '@app/utils/math'
 import { getShortDate } from '@app/utils/time'
-import { Command } from '@commands/CommandHandler'
+import { Command } from '@commands/command-handler'
 import { DiscordParams } from '@commands/params'
 import { validateDefaultOutfitId } from '@commands/validators'
 import { sendScrollEmbed } from '@discord/embed'
-import { censusApi } from '@planetside/CensusApi'
+import { censusApi } from '@planetside/census-api'
 import { CharacterStatHistoryStripped, OutfitMember } from '@planetside/types'
 
 export default new Command<DiscordParams>({
@@ -26,10 +26,7 @@ export default new Command<DiscordParams>({
     if (memberStats === null) throw new OutfitAliasNotFoundError()
 
     memberStats = memberStats.filter((outfitMember) => {
-      return (
-        typeof outfitMember.character !== 'undefined' &&
-        typeof outfitMember.character.stats[8] !== 'undefined'
-      )
+      return typeof outfitMember.character.stats[8] !== 'undefined'
     })
 
     const inactiveThreshold = 2 * 30.5 * 24 * 3600 // 2 months
@@ -116,20 +113,20 @@ export default new Command<DiscordParams>({
               membersToKick.length
             })`,
           )
-          .addField(
-            `${pluralize(
+          .addFields({
+            name: `${pluralize(
               member.message?.match(/-/g)?.length || 1,
               'Reason',
               'Reasons',
             )} to kick`,
-            member.message,
-          )
+            value: member.message || '',
+          })
           .setTimestamp()
 
         if (active) {
-          kickEmbed.setFooter('Interactive').setColor('#647CC4')
+          kickEmbed.setFooter({ text: 'Interactive' }).setColor('#647CC4')
         } else {
-          kickEmbed.setFooter('Interaction ended').setColor('#1D2439')
+          kickEmbed.setFooter({ text: 'Interaction ended' }).setColor('#1D2439')
         }
         return kickEmbed
       },

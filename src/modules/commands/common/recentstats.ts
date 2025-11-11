@@ -1,8 +1,8 @@
 import { PlayerNotFoundError } from '@app/errors'
 import { divide } from '@app/utils/math'
-import { Command } from '@commands/CommandHandler'
+import { Command } from '@commands/command-handler'
 import { validateArgumentNumber } from '@commands/validators'
-import { censusApi } from '@planetside/CensusApi'
+import { censusApi } from '@planetside/census-api'
 import { validatePlayerName } from '@planetside/validators'
 
 export default new Command({

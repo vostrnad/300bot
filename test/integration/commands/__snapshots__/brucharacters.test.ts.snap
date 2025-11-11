@@ -1,36 +1,36 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
 
 exports[`brucharacters should add and remove characters from the database regardless of case 1`] = `
-Object {
+{
   "pathname": "/s:test/get/ps2:v2/character_name",
-  "searchParams": Object {
+  "searchParams": {
     "name.first_lower": "customchar",
   },
 }
 `;
 
 exports[`brucharacters should add and remove characters from the database regardless of case 2`] = `
-Object {
+{
   "pathname": "/s:test/get/ps2:v2/character_name",
-  "searchParams": Object {
+  "searchParams": {
     "name.first_lower": "customchar",
   },
 }
 `;
 
 exports[`brucharacters should display the list of characters in the database 1`] = `
-Object {
+{
   "pathname": "/s:test/get/ps2:v2/character_name",
-  "searchParams": Object {
+  "searchParams": {
     "name.first_lower": "customcharlist",
   },
 }
 `;
 
 exports[`brucharacters should display the list of characters in the database 2`] = `
-Object {
+{
   "pathname": "/s:test/get/ps2:v2/character_name",
-  "searchParams": Object {
+  "searchParams": {
     "c:limit": "100",
     "character_id": "testlist",
   },
@@ -38,27 +38,27 @@ Object {
 `;
 
 exports[`brucharacters should not remove a character that is not in the list 1`] = `
-Object {
+{
   "pathname": "/s:test/get/ps2:v2/character_name",
-  "searchParams": Object {
+  "searchParams": {
     "name.first_lower": "unknownchar",
   },
 }
 `;
 
 exports[`brucharacters should say that the character is already in the list 1`] = `
-Object {
+{
   "pathname": "/s:test/get/ps2:v2/character_name",
-  "searchParams": Object {
+  "searchParams": {
     "name.first_lower": "customchardup",
   },
 }
 `;
 
 exports[`brucharacters should say that the character is already in the list 2`] = `
-Object {
+{
   "pathname": "/s:test/get/ps2:v2/character_name",
-  "searchParams": Object {
+  "searchParams": {
     "name.first_lower": "customchardup",
   },
 }

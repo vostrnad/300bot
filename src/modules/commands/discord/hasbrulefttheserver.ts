@@ -1,5 +1,5 @@
 import { constants } from '@app/global/constants'
-import { Command } from '@commands/CommandHandler'
+import { Command } from '@commands/command-handler'
 import { DiscordParams } from '@commands/params'
 
 export default new Command<DiscordParams>({

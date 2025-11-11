@@ -1,12 +1,12 @@
 import { constants } from '@app/global/constants'
-import { TimeoutSet } from '@app/utils/TimeoutSet'
 import { sentence } from '@app/utils/language'
+import { TimeoutSet } from '@app/utils/timeout-set'
 import { isDefined } from '@app/validators'
-import { Command } from '@commands/CommandHandler'
+import { Command } from '@commands/command-handler'
 import { validateArgumentRange } from '@commands/validators'
-import { censusApi } from '@planetside/CensusApi'
-import { streamingApi } from '@planetside/StreamingApi'
+import { censusApi } from '@planetside/census-api'
 import { getServerByName } from '@planetside/resources'
+import { streamingApi } from '@planetside/streaming-api'
 import { Character, Outfit } from '@planetside/types'
 
 const squadLeaders: { [worldId: number]: TimeoutSet } = {}

@@ -1,9 +1,9 @@
-import discord from 'discord.js'
+import * as discord from 'discord.js'
 import { env } from '@app/env'
 import { constants } from '@app/global/constants'
 import { log } from '@app/utils/log'
 import { getUTCShort } from '@app/utils/time'
-import { CommandHandler, CommandMessage } from '@commands/CommandHandler'
+import { CommandHandler, CommandMessage } from '@commands/command-handler'
 import { formatChacarcterWithFaction } from '@commands/formatting'
 import { commands } from '@commands/index'
 import { DiscordParams } from '@commands/params'
@@ -16,8 +16,8 @@ import {
   scheduleRevivesOnStartup,
 } from '@discord/revive'
 import { formatWithEmojis, getTextChannel } from '@discord/utils'
-import { censusApi } from '@planetside/CensusApi'
-import { streamingApi } from '@planetside/StreamingApi'
+import { censusApi } from '@planetside/census-api'
+import { streamingApi } from '@planetside/streaming-api'
 
 /**
  * Sends a message with UTC timestamp and optionally an emoji.
@@ -36,7 +36,7 @@ const sendAnnouncement = (
     ? channel.guild.emojis.cache.find(({ name }) => name === emojiName)
     : null
   void channel.send(
-    `[${getUTCShort()}] ${emoji ? emoji.toString() + ' ' : ''}${message}`,
+    `[${getUTCShort()}] ${emoji ? `${emoji.toString()} ` : ''}${message}`,
   )
 }
 
@@ -61,7 +61,7 @@ client.on('ready', () => {
           getTextChannel(
             client,
             constants.discord.channelIds.brutracker,
-          ) as discord.Channel,
+          ) as discord.TextBasedChannel,
           `Bru is online as ${formatChacarcterWithFaction(character)}!`,
         ),
       )
@@ -80,7 +80,7 @@ client.on('ready', () => {
           getTextChannel(
             client,
             constants.discord.channelIds.brutracker,
-          ) as discord.Channel,
+          ) as discord.TextBasedChannel,
           `Bru has just logged off as ${formatChacarcterWithFaction(
             character,
           )}.`,
@@ -116,7 +116,7 @@ client.on('error', (e) => {
   log.error('Discord bot error:', e)
 })
 
-client.on('message', (message: discord.Message) => {
+client.on('messageCreate', (message: discord.Message) => {
   if (message.channel instanceof discord.DMChannel) {
     const recipient = message.channel.recipient
     const recipientTag = `${recipient.username}#${recipient.discriminator}`
@@ -159,7 +159,7 @@ client.on('message', (message: discord.Message) => {
   const isBotAdmin = message.author.id === constants.discord.userIds.alfav
   const isBotManager = isBotAdmin || managerDatabase.has(message.author.id)
   const isLocalAdmin =
-    message.member?.hasPermission(discord.Permissions.FLAGS.ADMINISTRATOR) ||
+    message.member?.permissions.has(discord.Permissions.FLAGS.ADMINISTRATOR) ||
     message.channel === message.author.dmChannel
 
   const commandMessage: CommandMessage<DiscordParams> = {

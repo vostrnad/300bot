@@ -1,4 +1,4 @@
-import { Command } from '@commands/CommandHandler'
+import { Command } from '@commands/command-handler'
 import { validateArgumentRange } from '@commands/validators'
 
 export default new Command({

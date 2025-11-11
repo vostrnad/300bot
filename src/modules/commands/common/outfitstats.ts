@@ -1,9 +1,9 @@
 import { OutfitAliasNotFoundError } from '@app/errors'
 import { divide } from '@app/utils/math'
 import { getShortDate } from '@app/utils/time'
-import { Command } from '@commands/CommandHandler'
+import { Command } from '@commands/command-handler'
 import { validateArgumentRange } from '@commands/validators'
-import { censusApi } from '@planetside/CensusApi'
+import { censusApi } from '@planetside/census-api'
 
 export default new Command({
   keyword: 'outfitstats',
@@ -28,16 +28,10 @@ export default new Command({
     let playTime = 0
 
     outfit.members = outfit.members.filter((member) => {
-      return (
-        typeof member.character !== 'undefined' &&
-        typeof member.character.stats[8] !== 'undefined'
-      )
+      return typeof member.character.stats[8] !== 'undefined'
     })
 
-    let subtitle =
-      '*Average stats for **' +
-      outfit.members.length.toString() +
-      '** members:*'
+    let subtitle = `*Average stats for **${outfit.members.length.toString()}** members:*`
 
     if (args.length > 1) {
       switch (args[1]) {
@@ -48,17 +42,11 @@ export default new Command({
               Math.floor(Date.now() / 1000) - 2_592_000
             )
           })
-          subtitle =
-            '*Average stats for **' +
-            outfit.members.length.toString() +
-            '** active members:*'
+          subtitle = `*Average stats for **${outfit.members.length.toString()}** active members:*`
           break
 
         default:
-          subtitle =
-            '*Average stats for **' +
-            outfit.members.length.toString() +
-            '** members:*'
+          subtitle = `*Average stats for **${outfit.members.length.toString()}** members:*`
           break
       }
     }
@@ -133,7 +121,7 @@ export default new Command({
       new Date(Number(outfit.timeCreated) * 1000),
     )}, led by **${outfit.leader.name.first}**.\n\n${subtitle}\nBattle Rank **${
       avgBr > 100
-        ? '{emoji:asp| ☆}' + (avgBr - 100).toFixed(0).toString()
+        ? `{emoji:asp| ☆}${(avgBr - 100).toFixed(0).toString()}`
         : avgBr.toFixed(0)
     }** | KDR **${avgKdr.toFixed(3)}** | SPM **${avgSpm.toFixed(
       0,

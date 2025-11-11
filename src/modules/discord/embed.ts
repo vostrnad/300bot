@@ -13,7 +13,7 @@ export const sendScrollEmbed = async <T>(
   // no need to handle interactions when there's only one item
   if (list.length === 1) {
     await message.channel.send({
-      embed: factory(list[0], 0, false),
+      embeds: [factory(list[0], 0, false)],
     })
     return
   }
@@ -21,7 +21,7 @@ export const sendScrollEmbed = async <T>(
   let currentIndex = 0
 
   const embedMessage = await message.channel.send({
-    embed: factory(list[currentIndex], currentIndex, true),
+    embeds: [factory(list[currentIndex], currentIndex, true)],
   })
 
   const leftArrowReaction = await embedMessage.react(
@@ -31,16 +31,15 @@ export const sendScrollEmbed = async <T>(
     constants.discord.emojis.arrowRight,
   )
 
-  const collector = embedMessage.createReactionCollector(
-    (reaction: discord.MessageReaction, user: discord.User) =>
+  const collector = embedMessage.createReactionCollector({
+    time: timeout,
+    filter: (reaction, user) =>
       [
         constants.discord.emojis.arrowLeft,
         constants.discord.emojis.arrowRight,
-      ].includes(reaction.emoji.name) && user.id === message.author.id,
-    {
-      time: timeout,
-    },
-  )
+      ].includes(reaction.emoji.name as string) &&
+      user.id === message.author.id,
+  })
 
   collector.on('collect', (reaction: discord.MessageReaction) => {
     if (reaction.emoji.name === constants.discord.emojis.arrowRight) {
@@ -53,7 +52,7 @@ export const sendScrollEmbed = async <T>(
 
     void (async () => {
       await embedMessage.edit({
-        embed: factory(list[currentIndex], currentIndex, true),
+        embeds: [factory(list[currentIndex], currentIndex, true)],
       })
       if (message.channel instanceof discord.TextChannel) {
         await removeReaction(reaction, message.author)
@@ -64,7 +63,7 @@ export const sendScrollEmbed = async <T>(
   collector.on('end', () => {
     void (async () => {
       await embedMessage.edit({
-        embed: factory(list[currentIndex], currentIndex, false),
+        embeds: [factory(list[currentIndex], currentIndex, false)],
       })
       await rightArrowReaction.remove()
       await leftArrowReaction.remove()

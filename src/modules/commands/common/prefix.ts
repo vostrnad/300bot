@@ -1,4 +1,4 @@
-import { Command } from '@commands/CommandHandler'
+import { Command } from '@commands/command-handler'
 import { SettingsParams } from '@commands/params'
 import { validateArgumentNumber } from '@commands/validators'
 

@@ -1,18 +1,18 @@
 import discord from 'discord.js'
 import { constants } from '@app/global/constants'
 import { getUTCShort } from '@app/utils/time'
-import { Command } from '@commands/CommandHandler'
+import { Command } from '@commands/command-handler'
 import { DiscordParams } from '@commands/params'
 import { validateArgumentNumber } from '@commands/validators'
 import { alertTrackerDatabase } from '@database/alerttracker'
 import { client } from '@discord/client'
 import { formatWithEmojis, getTextChannel } from '@discord/utils'
-import { streamingApi } from '@planetside/StreamingApi'
 import {
   getAlertState,
   getAlertType,
   getContinentName,
 } from '@planetside/resources'
+import { streamingApi } from '@planetside/streaming-api'
 
 const sendAlertMessage = (message: string) => {
   message = `[${getUTCShort()}] ${message}`

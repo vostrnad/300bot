@@ -1,13 +1,13 @@
-import discord from 'discord.js'
+import * as discord from 'discord.js'
 import { PlayerNotFoundError } from '@app/errors'
-import { Command } from '@commands/CommandHandler'
+import { Command } from '@commands/command-handler'
 import { DiscordParams } from '@commands/params'
 import { validateArgumentNumber } from '@commands/validators'
 import { dmTrackerDatabase } from '@database/dmtracker'
 import { client } from '@discord/client'
 import { getDMChannel } from '@discord/utils'
-import { censusApi } from '@planetside/CensusApi'
-import { streamingApi } from '@planetside/StreamingApi'
+import { censusApi } from '@planetside/census-api'
+import { streamingApi } from '@planetside/streaming-api'
 import { validatePlayerName } from '@planetside/validators'
 
 const sendCharacterStatus = async (characterId: string, online: boolean) => {

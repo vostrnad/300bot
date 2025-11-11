@@ -1,5 +1,5 @@
-import { Command } from '@commands/CommandHandler'
-import { streamingApi } from '@planetside/StreamingApi'
+import { Command } from '@commands/command-handler'
+import { streamingApi } from '@planetside/streaming-api'
 
 export default new Command({
   keyword: 'restartsocket',

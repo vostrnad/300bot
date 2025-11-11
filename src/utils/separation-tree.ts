@@ -47,7 +47,6 @@ export class SeparationTree {
         this.updateInteraction(keyNode, interaction, true)
       } else {
         // nodes have the same distance
-        return
       }
     } else if (this.isNodeInTree(initiator)) {
       const keyNode = this.addNewKeyToParent(other, initiator, timestamp)
@@ -55,8 +54,6 @@ export class SeparationTree {
     } else if (this.isNodeInTree(other)) {
       const keyNode = this.addNewKeyToParent(initiator, other, timestamp)
       this.updateInteraction(keyNode, interaction, true)
-    } else {
-      return
     }
   }
 

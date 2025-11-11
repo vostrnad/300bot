@@ -2,7 +2,7 @@ import path from 'path'
 import * as workerpool from 'workerpool'
 
 const dirNameDist = path
-  .resolve(__dirname)
+  .resolve(import.meta.dirname)
   .replace(/(\/|\\)src(\/|\\)workers(\/|\\|$)/, '$1dist$2workers$3')
 
 const createWorkerPool = (scriptName: string) => {

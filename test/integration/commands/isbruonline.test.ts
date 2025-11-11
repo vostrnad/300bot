@@ -3,13 +3,13 @@ import { bruCharactersDatabase } from '@database/brucharacters'
 import { getCommandRunner } from '@test/utils/commands'
 import { mockCensusApi } from '@test/utils/planetside'
 
-beforeEach(async () => {
-  await bruCharactersDatabase.clear()
-  await bruCharactersDatabase.set('miroitovs', 1)
-  await bruCharactersDatabase.set('number5johnny', 1)
-})
-
 describe('isbruonline', () => {
+  beforeEach(async () => {
+    await bruCharactersDatabase.clear()
+    await bruCharactersDatabase.set('miroitovs', 1)
+    await bruCharactersDatabase.set('number5johnny', 1)
+  })
+
   const runCommand = getCommandRunner(isbruonline)
 
   it('should say Bru is online and list the character(s) he is online with', async () => {

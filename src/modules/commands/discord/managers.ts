@@ -1,4 +1,4 @@
-import { Command } from '@commands/CommandHandler'
+import { Command } from '@commands/command-handler'
 import { DiscordParams } from '@commands/params'
 import { validateArgumentNumber } from '@commands/validators'
 import { managerDatabase } from '@database/managers'
@@ -34,8 +34,7 @@ export default new Command<DiscordParams>({
     }
 
     const userId = mentioned.id
-    const userDisplayName =
-      'displayName' in mentioned ? mentioned.displayName : mentioned.username
+    const userDisplayName = mentioned.displayName
 
     if (action === 'add') {
       if (managerDatabase.has(userId)) {

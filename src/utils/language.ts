@@ -16,7 +16,7 @@ export const sentence = (
 export const pluralize = (
   n: number,
   singular: string,
-  plural = singular + 's',
+  plural = `${singular}s`,
 ): string => {
   return n === 1 ? singular : plural
 }

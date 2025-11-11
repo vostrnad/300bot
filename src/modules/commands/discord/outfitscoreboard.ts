@@ -1,12 +1,12 @@
-import discord from 'discord.js'
+import * as discord from 'discord.js'
 import { OutfitAliasNotFoundError } from '@app/errors'
 import { partition } from '@app/utils/array'
 import { divide } from '@app/utils/math'
-import { Command } from '@commands/CommandHandler'
+import { Command } from '@commands/command-handler'
 import { DiscordParams } from '@commands/params'
 import { validateArgumentRange } from '@commands/validators'
 import { sendScrollEmbed } from '@discord/embed'
-import { censusApi } from '@planetside/CensusApi'
+import { censusApi } from '@planetside/census-api'
 
 export default new Command<DiscordParams>({
   keyword: 'outfitscoreboard',
@@ -29,7 +29,7 @@ export default new Command<DiscordParams>({
     const stat = acronyms.includes(args[1].toLowerCase())
       ? args[1].toUpperCase()
       : args[1]
-          .replace(/\s+/g, ' ')
+          .replaceAll(/\s+/g, ' ')
           .split(' ')
           .map((s) => s.charAt(0).toUpperCase() + s.slice(1).toLowerCase())
           .join(' ')
@@ -38,10 +38,7 @@ export default new Command<DiscordParams>({
     if (outfit === null) throw new OutfitAliasNotFoundError()
 
     outfit.members = outfit.members.filter((member) => {
-      return (
-        typeof member.character !== 'undefined' &&
-        typeof member.character.stats[8] !== 'undefined'
-      )
+      return typeof member.character.stats[8] !== 'undefined'
     })
 
     let scoreboard: typeof outfit.members
@@ -200,14 +197,26 @@ export default new Command<DiscordParams>({
             shame === 1 ? 'shame' : ''
           } scoreboard  (Page N°${index + 1}/${pages.length})`,
         )
-        .addField(stat, page.slice(0, page.length / 2).join('\n'), true)
-        .addField(stat, page.slice(page.length / 2).join('\n'), true)
+        .addFields([
+          {
+            name: stat,
+            value: page.slice(0, page.length / 2).join('\n'),
+            inline: true,
+          },
+          {
+            name: stat,
+            value: page.slice(page.length / 2).join('\n'),
+            inline: true,
+          },
+        ])
         .setTimestamp()
 
       if (active) {
-        scoreboardEmbed.setFooter('Interactive').setColor('#647CC4')
+        scoreboardEmbed.setFooter({ text: 'Interactive' }).setColor('#647CC4')
       } else {
-        scoreboardEmbed.setFooter('Interaction ended').setColor('#1D2439')
+        scoreboardEmbed
+          .setFooter({ text: 'Interaction ended' })
+          .setColor('#1D2439')
       }
       return scoreboardEmbed
     })

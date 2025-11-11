@@ -1,9 +1,7 @@
-import 'module-alias/register'
-import 'source-map-support/register'
 import { globalIntervals, globalTimeouts } from '@app/global/timeouts'
 import { terminateAllPools } from '@app/workers'
 import * as bot from '@discord/bot'
-import { streamingApi } from '@planetside/StreamingApi'
+import { streamingApi } from '@planetside/streaming-api'
 
 void bot.init()
 

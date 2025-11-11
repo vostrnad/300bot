@@ -4,7 +4,7 @@ import { constants } from '@app/global/constants'
 import { divide } from '@app/utils/math'
 import { isDefined } from '@app/validators'
 import { isRecord } from '@app/validators/object'
-import { Command } from '@commands/CommandHandler'
+import { Command } from '@commands/command-handler'
 import { validateArgumentRange } from '@commands/validators'
 import { getServerByName } from '@planetside/resources'
 
@@ -84,22 +84,22 @@ export default new Command({
       `{emoji:faction_logo_tr| TR} ${
         numbersBool
           ? population.tr
-          : Math.round(divide(population.tr, totalPop) * 100).toString() + '%'
+          : `${Math.round(divide(population.tr, totalPop) * 100).toString()}%`
       }`,
       `{emoji:faction_logo_nc| NC} ${
         numbersBool
           ? population.nc
-          : Math.round(divide(population.nc, totalPop) * 100).toString() + '%'
+          : `${Math.round(divide(population.nc, totalPop) * 100).toString()}%`
       }`,
       `{emoji:faction_logo_vs| VS} ${
         numbersBool
           ? population.vs
-          : Math.round(divide(population.vs, totalPop) * 100).toString() + '%'
+          : `${Math.round(divide(population.vs, totalPop) * 100).toString()}%`
       }`,
       `{emoji:faction_logo_ns| NS} ${
         numbersBool
           ? population.ns
-          : Math.round(divide(population.ns, totalPop) * 100).toString() + '%'
+          : `${Math.round(divide(population.ns, totalPop) * 100).toString()}%`
       }`,
     ].join('    ')
 

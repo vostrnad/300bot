@@ -1,7 +1,7 @@
 import assert from 'assert'
-import discord from 'discord.js'
+import * as discord from 'discord.js'
 import { randomChoice, randomInteger } from '@app/utils/random'
-import { Command } from '@commands/CommandHandler'
+import { Command } from '@commands/command-handler'
 import { DiscordParams } from '@commands/params'
 import { killMember } from '@discord/revive'
 
@@ -27,23 +27,21 @@ export default new Command<DiscordParams>({
     if (rolled === 0) {
       await killMember(env.message.member, deadRole, 3600 * 1000)
       reply(
-        `**${author.displayName}** ` +
-          randomChoice([
-            'died.',
-            'failed at this game.',
-            'brutally died.',
-            'now has a sixth hole in their head.',
-          ]),
+        `**${author.displayName}** ${randomChoice([
+          'died.',
+          'failed at this game.',
+          'brutally died.',
+          'now has a sixth hole in their head.',
+        ])}`,
       )
     } else {
       reply(
-        `**${author.displayName}** ` +
-          randomChoice([
-            'gets to live another day.',
-            'was lucky this time.',
-            'survived this round.',
-            'should stop playing this dangerous game before it is too late.',
-          ]),
+        `**${author.displayName}** ${randomChoice([
+          'gets to live another day.',
+          'was lucky this time.',
+          'survived this round.',
+          'should stop playing this dangerous game before it is too late.',
+        ])}`,
       )
     }
   },

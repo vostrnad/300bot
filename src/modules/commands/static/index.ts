@@ -1,4 +1,4 @@
-import { StaticCommand } from './StaticCommand'
+import { StaticCommand } from './static-command'
 
 export const staticCommands: StaticCommand[] = [
   new StaticCommand({

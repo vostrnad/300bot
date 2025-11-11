@@ -1,12 +1,12 @@
 import { camelCase } from 'camel-case'
-import discord from 'discord.js'
+import * as discord from 'discord.js'
 import { PlayerNotFoundError } from '@app/errors'
 import { divide } from '@app/utils/math'
-import { Command } from '@commands/CommandHandler'
+import { Command } from '@commands/command-handler'
 import { DiscordParams } from '@commands/params'
 import { validateArgumentRange } from '@commands/validators'
 import { sendScrollEmbed } from '@discord/embed'
-import { censusApi } from '@planetside/CensusApi'
+import { censusApi } from '@planetside/census-api'
 import {
   CharacterWeaponStats,
   CharacterWeaponStatsByFaction,
@@ -55,8 +55,19 @@ export default new Command<DiscordParams>({
 
     if (character === null) throw new PlayerNotFoundError()
 
-    const factionColorsActive = ['#FFFFFF', '#951CFF', '#0165FF', '#FF311F'] // VS NC TR
-    const factionColorsEnd = ['#000000', '#4B0E80', '#003380', '#80180F'] // VS NC TR
+    // VS NC TR
+    const factionColorsActive = [
+      '#FFFFFF',
+      '#951CFF',
+      '#0165FF',
+      '#FF311F',
+    ] as const
+    const factionColorsEnd = [
+      '#000000',
+      '#4B0E80',
+      '#003380',
+      '#80180F',
+    ] as const
 
     const weaponStatsList = await censusApi.getPlayerWeaponStats(
       character.characterId,
@@ -117,18 +128,19 @@ export default new Command<DiscordParams>({
               index + 1
             }/${weaponStatsReformatted.length})`,
           )
-          .setDescription('**' + weapon.item.name.en + '**')
+          .setDescription(`**${weapon.item.name.en}**`)
           .setThumbnail(
             `http://census.daybreakgames.com${weapon.item.imagePath}`,
           )
           .addFields(
             {
               name: 'Kills',
-              value:
+              value: (
                 Number(weapon.weaponStatsByFaction.weaponKills?.valueNc) +
                   Number(weapon.weaponStatsByFaction.weaponKills?.valueTr) +
                   Number(weapon.weaponStatsByFaction.weaponKills?.valueVs) ||
-                'N/A',
+                'N/A'
+              ).toString(),
               inline: true,
             },
             {
@@ -138,14 +150,13 @@ export default new Command<DiscordParams>({
             },
             {
               name: 'Playtime',
-              value:
-                (
-                  divide(
-                    Number(weapon.weaponStats.weaponPlayTime?.value),
-                    3600,
-                    0,
-                  ) || 'N/A'
-                ).toString() + ' hours',
+              value: `${
+                divide(
+                  Number(weapon.weaponStats.weaponPlayTime?.value),
+                  3600,
+                  0,
+                ) || 'N/A'
+              } hours`,
               inline: true,
             },
           )
@@ -156,19 +167,20 @@ export default new Command<DiscordParams>({
             .addFields(
               {
                 name: 'KDR',
-                value:
+                value: (
                   divide(
                     Number(weapon.weaponStatsByFaction.weaponKills?.valueNc) +
                       Number(weapon.weaponStatsByFaction.weaponKills?.valueTr) +
                       Number(weapon.weaponStatsByFaction.weaponKills?.valueVs),
                     Number(weapon.weaponStats.weaponDeaths?.value),
                     3,
-                  ) || 'N/A',
+                  ) || 'N/A'
+                ).toString(),
                 inline: true,
               },
               {
                 name: 'KPM',
-                value:
+                value: (
                   divide(
                     (Number(weapon.weaponStatsByFaction.weaponKills?.valueNc) +
                       Number(weapon.weaponStatsByFaction.weaponKills?.valueTr) +
@@ -178,70 +190,67 @@ export default new Command<DiscordParams>({
                       60,
                     Number(weapon.weaponStats.weaponPlayTime?.value),
                     3,
-                  ) || 'N/A',
+                  ) || 'N/A'
+                ).toString(),
                 inline: true,
               },
               {
                 name: 'SPM',
-                value:
+                value: (
                   divide(
                     Number(weapon.weaponStats.weaponScore?.value) * 60,
                     Number(weapon.weaponStats.weaponPlayTime?.value),
                     0,
-                  ) || 'N/A',
+                  ) || 'N/A'
+                ).toString(),
                 inline: true,
               },
             )
             .addFields(
               {
                 name: 'Accuracy',
-                value:
-                  (
-                    divide(
-                      Number(weapon.weaponStats.weaponHitCount?.value) * 100,
-                      Number(weapon.weaponStats.weaponFireCount?.value),
-                      3,
-                    ) || 'N/A'
-                  ).toString() + ' %',
+                value: `${
+                  divide(
+                    Number(weapon.weaponStats.weaponHitCount?.value) * 100,
+                    Number(weapon.weaponStats.weaponFireCount?.value),
+                    3,
+                  ) || 'N/A'
+                } %`,
                 inline: true,
               },
               {
                 name: 'HSR',
-                value:
-                  (
-                    divide(
-                      (Number(
-                        weapon.weaponStatsByFaction.weaponHeadshots?.valueNc,
+                value: `${
+                  divide(
+                    (Number(
+                      weapon.weaponStatsByFaction.weaponHeadshots?.valueNc,
+                    ) +
+                      Number(
+                        weapon.weaponStatsByFaction.weaponHeadshots?.valueTr,
                       ) +
-                        Number(
-                          weapon.weaponStatsByFaction.weaponHeadshots?.valueTr,
-                        ) +
-                        Number(
-                          weapon.weaponStatsByFaction.weaponHeadshots?.valueVs,
-                        )) *
-                        100,
-                      Number(weapon.weaponStatsByFaction.weaponKills?.valueNc) +
-                        Number(
-                          weapon.weaponStatsByFaction.weaponKills?.valueTr,
-                        ) +
-                        Number(
-                          weapon.weaponStatsByFaction.weaponKills?.valueVs,
-                        ),
-                      3,
-                    ) || 'N/A'
-                  ).toString() + ' %',
+                      Number(
+                        weapon.weaponStatsByFaction.weaponHeadshots?.valueVs,
+                      )) *
+                      100,
+                    Number(weapon.weaponStatsByFaction.weaponKills?.valueNc) +
+                      Number(weapon.weaponStatsByFaction.weaponKills?.valueTr) +
+                      Number(weapon.weaponStatsByFaction.weaponKills?.valueVs),
+                    3,
+                  ) || 'N/A'
+                } %`,
                 inline: true,
               },
               {
                 name: 'HPK',
-                value:
+                value: (
                   divide(
                     Number(weapon.weaponStats.weaponHitCount?.value),
                     Number(weapon.weaponStatsByFaction.weaponKills?.valueNc) +
                       Number(weapon.weaponStatsByFaction.weaponKills?.valueTr) +
                       Number(weapon.weaponStatsByFaction.weaponKills?.valueVs),
                     0,
-                  ) || 'N/A',
+                  ) || 'N/A'
+                ).toString(),
                 inline: true,
               },
             )
@@ -249,11 +258,11 @@ export default new Command<DiscordParams>({
 
         if (active) {
           weaponEmbed
-            .setFooter('Interactive')
+            .setFooter({ text: 'Interactive' })
             .setColor(factionColorsActive[Number(character.factionId)])
         } else {
           weaponEmbed
-            .setFooter('Interaction ended')
+            .setFooter({ text: 'Interaction ended' })
             .setColor(factionColorsEnd[Number(character.factionId)])
         }
 

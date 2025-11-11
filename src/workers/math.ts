@@ -1,4 +1,3 @@
-import 'module-alias/register'
 import { evaluate, format } from 'mathjs'
 import { worker } from 'workerpool'
 import { roundIfClose } from '@app/utils/math'

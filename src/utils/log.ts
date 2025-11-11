@@ -1,3 +1,4 @@
+import { inspect } from 'util'
 import winston from 'winston'
 import { env } from '@app/env'
 
@@ -15,11 +16,10 @@ const consoleLogFormat = winston.format.combine(
   winston.format.colorize(),
   winston.format.timestamp(),
   winston.format.align(),
-  winston.format.printf(
-    ({ level, message, timestamp }: Record<string, string>) => {
-      return `${timestamp} ${level} ${message}`
-    },
-  ),
+  winston.format.printf(({ level, message, timestamp }) => {
+    // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
+    return `${timestamp} ${level} ${message}`
+  }),
 )
 
 class Logger {
@@ -41,10 +41,9 @@ class Logger {
   public error(message: string, error?: unknown): void {
     if (error) {
       if (error instanceof Error) {
-        this.log('error', `${message}\n${error.stack ?? error.message}`)
+        this.log('error', `${message}\n${inspect(error)}`)
       } else {
-        // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
-        this.log('error', `${message}\nNon-standard error: ${error}`)
+        this.log('error', `${message}\nNon-standard error: ${inspect(error)}`)
       }
     } else {
       this.log('error', message)

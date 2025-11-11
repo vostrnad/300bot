@@ -1,8 +1,8 @@
 import camelcaseKeys from 'camelcase-keys'
-import discord from 'discord.js'
+import * as discord from 'discord.js'
 import got from 'got'
 import { isRecord } from '@app/validators/object'
-import { Command } from '@commands/CommandHandler'
+import { Command } from '@commands/command-handler'
 import { DiscordParams } from '@commands/params'
 import { sendScrollEmbed } from '@discord/embed'
 
@@ -84,33 +84,54 @@ export default new Command<DiscordParams>({
       const definitionEmbed = new discord.MessageEmbed()
         .setTitle(`${definition.word} (N°${index + 1}/${list.length})`)
         .setURL(definition.permalink)
-        .setAuthor('Urban dictionary', '', 'https://www.urbandictionary.com')
+        .setAuthor({
+          name: 'Urban dictionary',
+          url: 'https://www.urbandictionary.com',
+        })
         .setThumbnail('https://i.imgur.com/A6nvY85.png')
         .addFields(
           {
             name: 'Definition',
             value:
               definition.definition.length > 0
-                ? definition.definition.replace(/\[|\]/g, '*')
+                ? // eslint-disable-next-line unicorn/better-regex
+                  definition.definition.replaceAll(/\[|\]/g, '*')
                 : '**No definition**',
           },
           {
             name: 'Example',
             value:
               definition.example.length > 0
-                ? definition.example.replace(/\[|\]/g, '*')
+                ? // eslint-disable-next-line unicorn/better-regex
+                  definition.example.replaceAll(/\[|\]/g, '*')
                 : '**No example**',
           },
         )
-        .addField('Written on', definition.writtenOn.slice(0, 10), true)
-        .addField('Thumbs up', definition.thumbsUp, true)
-        .addField('Thumbs down', definition.thumbsDown, true)
+        .addFields([
+          {
+            name: 'Written on',
+            value: definition.writtenOn.slice(0, 10),
+            inline: true,
+          },
+          {
+            name: 'Thumbs up',
+            value: definition.thumbsUp.toString(),
+            inline: true,
+          },
+          {
+            name: 'Thumbs down',
+            value: definition.thumbsDown.toString(),
+            inline: true,
+          },
+        ])
         .setTimestamp()
 
       if (active) {
-        definitionEmbed.setFooter('Interactive').setColor('#647CC4')
+        definitionEmbed.setFooter({ text: 'Interactive' }).setColor('#647CC4')
       } else {
-        definitionEmbed.setFooter('Interaction ended').setColor('#1D2439')
+        definitionEmbed
+          .setFooter({ text: 'Interaction ended' })
+          .setColor('#1D2439')
       }
 
       return definitionEmbed

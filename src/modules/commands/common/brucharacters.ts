@@ -1,12 +1,12 @@
 import { PlayerNotFoundError } from '@app/errors'
 import { sentence } from '@app/utils/language'
-import { Command } from '@commands/CommandHandler'
+import { Command } from '@commands/command-handler'
 import {
   validateArgumentNumber,
   validateArgumentRange,
 } from '@commands/validators'
 import { bruCharactersDatabase } from '@database/brucharacters'
-import { censusApi } from '@planetside/CensusApi'
+import { censusApi } from '@planetside/census-api'
 import { validatePlayerName } from '@planetside/validators'
 
 export default new Command({
@@ -58,13 +58,12 @@ export default new Command({
         const characterId = character.characterId
         const characterName = character.name.first
 
-        const dbPath = `${characterId}` as const
-        if (!bruCharactersDatabase.has(dbPath)) {
+        if (!bruCharactersDatabase.has(characterId)) {
           return reply(
             `**${characterName}** is not listed as one of Bru's characters.`,
           )
         } else {
-          await bruCharactersDatabase.delete(dbPath)
+          await bruCharactersDatabase.delete(characterId)
           return reply(
             `**${characterName}** has been removed from the list of Bru's characters.`,
           )
@@ -80,17 +79,15 @@ export default new Command({
         const characterNames = Object.values(characters).map((character) => {
           return `**${character.name.first}**`
         })
-        const message =
-          'Here is the list of all known Bru characters: ' +
-          sentence(characterNames) +
-          '.'
+        const message = `Here is the list of all known Bru characters: ${sentence(
+          characterNames,
+        )}.`
 
         return reply(message)
       }
 
-      default: {
+      default:
         return reply(env.command.getHelp(env.handler))
-      }
     }
   },
 })

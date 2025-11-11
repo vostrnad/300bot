@@ -24,12 +24,14 @@ export class Debounce {
         this._waitingResolvers = []
 
         try {
+          // eslint-disable-next-line no-await-in-loop
           await this._callback()
           resolvers.forEach(([resolve]) => resolve())
         } catch (e) {
           resolvers.forEach(([, reject]) => reject(e))
         }
 
+        // eslint-disable-next-line no-await-in-loop
         await sleep(this._delay)
       }
       this._active = false
