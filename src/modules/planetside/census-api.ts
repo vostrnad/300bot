@@ -225,6 +225,18 @@ class CensusApi {
     return list[0]
   }
 
+  async getCharacterNamesAndOnlineStatuses(characterIds: string[]) {
+    const list = (await this.getList(
+      'character',
+      { characterId: characterIds },
+      {
+        resolve: 'online_status',
+        show: 'character_id,name,online_status',
+      },
+    )) as Array<Character & CharactersOnlineStatus>
+    return list
+  }
+
   async getOnlineOutfitMembers(outfitId: string) {
     type Item = OutfitMember & {
       character: {

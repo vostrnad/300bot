@@ -4,6 +4,7 @@ import { SeparationTree } from '@app/utils/separation-tree'
 import { getShortAgo } from '@app/utils/time'
 import { Command } from '@commands/command-handler'
 import { validateArgumentNumber } from '@commands/validators'
+import { bruCharactersDatabase } from '@database/brucharacters'
 import { censusApi } from '@planetside/census-api'
 import { streamingApi } from '@planetside/streaming-api'
 import { validatePlayerName } from '@planetside/validators'
@@ -117,7 +118,15 @@ const events: Record<string, [string, string]> = {
   ],
 }
 
-const separationTree = new SeparationTree(constants.planetside.characterIds.bru)
+const separationTrees = new Map<string, SeparationTree>()
+
+const createBruCharactersSeparationTrees = () => {
+  bruCharactersDatabase.forEach((_, characterId) => {
+    if (!separationTrees.has(characterId)) {
+      separationTrees.set(characterId, new SeparationTree(characterId))
+    }
+  })
+}
 
 streamingApi.init()
 streamingApi.on(
@@ -128,13 +137,15 @@ streamingApi.on(
     if (characterId.length !== otherId.length) return
     if (characterId === otherId) return
 
-    separationTree.add(characterId, otherId, experienceId)
+    createBruCharactersSeparationTrees()
+
+    separationTrees.forEach((separationTree) =>
+      separationTree.add(characterId, otherId, experienceId),
+    )
   },
 )
 streamingApi.on('playerLogout', ({ characterId }) => {
-  if (characterId === constants.planetside.characterIds.bru) {
-    separationTree.clear()
-  }
+  separationTrees.get(characterId)?.clear()
 })
 
 export default new Command({
@@ -149,30 +160,41 @@ export default new Command({
     const characterName = args[0]
     validatePlayerName(characterName)
 
-    const [bru, character] = await Promise.all([
-      censusApi.getCharacterNameAndOnlineStatus({
-        characterId: constants.planetside.characterIds.bru,
-      }),
+    const bruCharacterIds = bruCharactersDatabase.keys
+    if (bruCharacterIds.length === 0) {
+      return reply('Error: Bru does not have any characters.')
+    }
+
+    const [bruCharacters, character] = await Promise.all([
+      censusApi.getCharacterNamesAndOnlineStatuses(bruCharacterIds),
       censusApi.getCharacterName({
         name: { firstLower: characterName.toLowerCase() },
       }),
     ])
 
     if (character === null) throw new PlayerNotFoundError()
-    if (bru === null) {
-      return reply('Error: Bru has deleted this character.')
+
+    if (bruCharacterIds.includes(character.characterId)) {
+      return reply(`**${character.name.first}** is Bru.`)
     }
 
-    if (bru.characterId === character.characterId) {
-      return reply(`**${bru.name.first}** is Bru.`)
-    }
+    const onlineBruCharacters = bruCharacters.filter(
+      (item) => item.onlineStatus !== '0',
+    )
 
-    if (bru.onlineStatus === '0') {
+    if (onlineBruCharacters.length === 0) {
       return reply('Bru is currently offline.')
     }
+    if (onlineBruCharacters.length > 1) {
+      return reply('Error: Bru is currently online on multiple characters.')
+    }
 
-    const chain = separationTree.getShortestChain(character.characterId)
-    if (chain.length === 0) {
+    const bru = onlineBruCharacters[0]
+
+    const chain = separationTrees
+      .get(bru.characterId)
+      ?.getShortestChain(character.characterId)
+    if (!chain || chain.length === 0) {
       return reply(
         `No interaction chain found between **${bru.name.first}** and **${character.name.first}**.`,
       )
