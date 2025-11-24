@@ -88,17 +88,6 @@ client.on('ready', () => {
       )
     }
   })
-
-  streamingApi.on('playerLogin', async ({ characterId }) => {
-    if (characterId === constants.planetside.characterIds.bru) {
-      const guild = client.guilds.resolve(constants.discord.guildIds.spartans)
-      if (!guild) {
-        log.error('Cannot find Spartan guild')
-        return
-      }
-      await guild.members.unban(constants.discord.userIds.bru)
-    }
-  })
 })
 
 client.on('guildMemberAdd', (member) => {

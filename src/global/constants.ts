@@ -1,9 +1,5 @@
 export const constants = {
   planetside: {
-    characterIds: {
-      // VeryGoodPlayerVS
-      bru: '5429715633112762753',
-    },
     worldIds: {
       wainwright: 10,
     },
